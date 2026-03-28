@@ -33,6 +33,33 @@ async def lifespan(app: FastAPI):
     )
     init_extractor(extractor)
 
+    # Intelligence 레이어 초기화 (MCP 서버 + 오케스트레이터)
+    from sqlalchemy import create_engine
+
+    from api.routes_intelligence import init_order_server
+    from api.routes_kg import init_kg_server
+    from api.routes_orchestrator import init_orchestrator
+    from mcp_servers.kg_server import KnowledgeGraphServer
+    from mcp_servers.order_server import OrderDataServer
+    from orchestrator.llm_orchestrator import LLMOrchestrator
+    from orchestrator.trace_logger import TraceLogger
+
+    sync_engine = create_engine(settings.database_url_sync)
+
+    kg_server = KnowledgeGraphServer(driver=neo4j_driver)
+    order_server = OrderDataServer(engine=sync_engine)
+    trace_logger = TraceLogger(engine=sync_engine, tool_to_server={})
+
+    orchestrator = LLMOrchestrator(
+        kg_server=kg_server,
+        order_server=order_server,
+        trace_logger=trace_logger,
+    )
+
+    init_kg_server(kg_server)
+    init_order_server(order_server)
+    init_orchestrator(orchestrator, trace_logger)
+
     yield
     await engine.dispose()
     neo4j_driver.close()
@@ -49,8 +76,14 @@ def create_app() -> FastAPI:
 
     from api.routes_health import router as health_router
     from api.routes_extract import router as extract_router
+    from api.routes_intelligence import router as intelligence_router
+    from api.routes_orchestrator import router as orchestrator_router
+    from api.routes_kg import router as kg_router
 
     app.include_router(health_router)
     app.include_router(extract_router)
+    app.include_router(intelligence_router)
+    app.include_router(orchestrator_router)
+    app.include_router(kg_router)
 
     return app
