@@ -194,6 +194,7 @@ class TraceLogger:
             return {
                 "answer": m["answer"],
                 "trace_id": m["trace_id"],
+                "user_query": m["user_query"],
                 "steps": m["steps"],
                 "total_steps": m["total_steps"],
                 "total_input_tokens": m["total_input_tokens"],

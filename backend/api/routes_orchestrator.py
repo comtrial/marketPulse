@@ -44,6 +44,7 @@ class AskRequest(BaseModel):
 class AskResponse(BaseModel):
     answer: str
     trace_id: str
+    user_query: str | None = None
     steps: list[dict]
     total_steps: int
     total_input_tokens: int

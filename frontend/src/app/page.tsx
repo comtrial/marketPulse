@@ -5,7 +5,7 @@ import { QueryPanel } from "@/components/query-panel";
 import { ResultPanel } from "@/components/result-panel";
 import { TracePanel } from "@/components/trace-panel";
 import { BottomBar } from "@/components/bottom-bar";
-import { Separator } from "@/components/ui/separator";
+import { HistoryPanel } from "@/components/history-panel";
 import { api } from "@/lib/api";
 import type { OrchestratorResult, ExtractResult } from "@/lib/api";
 
@@ -62,6 +62,23 @@ export default function DashboardPage() {
     setIsCollapsed(false);
   }, []);
 
+  const handleHistorySelect = useCallback(async (traceId: string) => {
+    setIsLoading(true);
+    setIsCollapsed(true);
+    setMode("intelligence");
+
+    try {
+      const res = await api.getResult(traceId);
+      setResult(res);
+      setExtractResult(null);
+      setQuery(res.user_query ?? `[이력] ${traceId.slice(0, 8)}...`);
+    } catch (err) {
+      console.error("Failed to load result:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <div className="flex h-screen flex-col bg-white">
       {/* TopBar */}
@@ -73,23 +90,29 @@ export default function DashboardPage() {
           <span className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-[10px] text-gray-500">
             v0.1
           </span>
-          <div className="ml-auto flex items-center gap-2 text-[10px] text-gray-400">
-            <span className="flex items-center gap-1">
-              <span className="inline-block size-1.5 rounded-full bg-blue-500" />
-              order
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block size-1.5 rounded-full bg-emerald-500" />
-              kg
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block size-1.5 rounded-full bg-violet-500" />
-              vector
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block size-1.5 rounded-full bg-orange-500" />
-              llm
-            </span>
+          <div className="ml-auto flex items-center gap-3">
+            <HistoryPanel
+              onSelect={handleHistorySelect}
+              currentTraceId={result?.trace_id}
+            />
+            <div className="flex items-center gap-2 text-[10px] text-gray-400">
+              <span className="flex items-center gap-1">
+                <span className="inline-block size-1.5 rounded-full bg-blue-500" />
+                order
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block size-1.5 rounded-full bg-emerald-500" />
+                kg
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block size-1.5 rounded-full bg-violet-500" />
+                vector
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block size-1.5 rounded-full bg-orange-500" />
+                llm
+              </span>
+            </div>
           </div>
         </div>
       </header>

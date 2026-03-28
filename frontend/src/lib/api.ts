@@ -28,6 +28,7 @@ export interface OrchestratorStep {
 export interface OrchestratorResult {
   answer: string;
   trace_id: string;
+  user_query?: string;
   steps: OrchestratorStep[];
   total_steps: number;
   total_input_tokens: number;
