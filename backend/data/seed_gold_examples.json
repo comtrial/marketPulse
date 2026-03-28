@@ -1,0 +1,724 @@
+[
+  {
+    "gold_id": "GOLD-SUN-001",
+    "raw_input": "이니스프리 데일리 UV 디펜스 선크림 SPF36 PA+++ 50ml",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단"],
+      "valueClaims": [],
+      "keyIngredients": ["센텔라"],
+      "spf": "36",
+      "pa": "+++",
+      "volume": "50ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-002",
+    "raw_input": "라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 40ml",
+    "extracted_output": {
+      "brand": "라운드랩",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단", "수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "40ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "라운드랩",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-003",
+    "raw_input": "토리든 다이브인 무기자차 선크림 SPF50+ PA++++ 60ml 비건",
+    "extracted_output": {
+      "brand": "토리든",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단", "수분공급"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["히알루론산", "징크옥사이드"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "60ml",
+      "filterType": "무기자차",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "토리든",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-004",
+    "raw_input": "[1+1] 코스알엑스 알로에 수딩 선크림 SPF50+ PA+++ 50ml 무향",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단", "진정"],
+      "valueClaims": ["무향"],
+      "keyIngredients": ["센텔라"],
+      "spf": "50+",
+      "pa": "+++",
+      "volume": "50ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-005",
+    "raw_input": "닥터지 그린 마일드 업 선플러스 SPF50+ PA++++ 35ml 유기자차 저자극",
+    "extracted_output": {
+      "brand": "닥터지",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단"],
+      "valueClaims": ["저자극"],
+      "keyIngredients": ["녹차"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "35ml",
+      "filterType": "유기자차",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "닥터지",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-006",
+    "raw_input": "★베스트★ 아누아 어성초 77 진정 선크림 SPF50+ PA++++ 50ml 혼합자차",
+    "extracted_output": {
+      "brand": "아누아",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단", "진정"],
+      "valueClaims": [],
+      "keyIngredients": ["어성초"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "50ml",
+      "filterType": "혼합자차",
+      "additionalAttrs": {"ingredientPercent": "77%"}
+    },
+    "product_type": "sunscreen",
+    "brand": "아누아",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-007",
+    "raw_input": "달바 워터풀 톤업 선크림 SPF50+ PA++++ 50ml 비건 클린뷰티",
+    "extracted_output": {
+      "brand": "달바",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단", "브라이트닝"],
+      "valueClaims": ["비건", "클린뷰티"],
+      "keyIngredients": ["나이아신아마이드"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "50ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "달바",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SUN-008",
+    "raw_input": "비플레인 녹두 마일드 선스틱 SPF50+ PA++++ 18.5g 무기자차 동물실험프리",
+    "extracted_output": {
+      "brand": "비플레인",
+      "productType": "sunscreen",
+      "functionalClaims": ["UV차단"],
+      "valueClaims": ["동물실험프리"],
+      "keyIngredients": ["녹차"],
+      "spf": "50+",
+      "pa": "++++",
+      "volume": "18.5g",
+      "filterType": "무기자차",
+      "additionalAttrs": {}
+    },
+    "product_type": "sunscreen",
+    "brand": "비플레인",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-001",
+    "raw_input": "이니스프리 그린티 씨드 히알루론산 토너 160ml",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "toner",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["녹차", "히알루론산"],
+      "volume": "160ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-002",
+    "raw_input": "라운드랩 독도 토너 200ml 약산성",
+    "extracted_output": {
+      "brand": "라운드랩",
+      "productType": "toner",
+      "functionalClaims": ["수분공급", "진정"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산"],
+      "volume": "200ml",
+      "phType": "약산성",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "라운드랩",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-003",
+    "raw_input": "코스알엑스 AHA/BHA 클래리파잉 트리트먼트 토너 150ml 약산성",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "toner",
+      "functionalClaims": ["피지조절", "브라이트닝"],
+      "valueClaims": [],
+      "keyIngredients": ["살리실산"],
+      "volume": "150ml",
+      "phType": "약산성",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-004",
+    "raw_input": "아누아 어성초 77 클리어 패드 토너 150ml 비건",
+    "extracted_output": {
+      "brand": "아누아",
+      "productType": "toner",
+      "functionalClaims": ["진정", "피지조절"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["어성초"],
+      "volume": "150ml",
+      "additionalAttrs": {"ingredientPercent": "77%"}
+    },
+    "product_type": "toner",
+    "brand": "아누아",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-005",
+    "raw_input": "NEW 리뉴얼 토리든 다이브인 저분자 히알루론산 토너 200ml",
+    "extracted_output": {
+      "brand": "토리든",
+      "productType": "toner",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산"],
+      "volume": "200ml",
+      "texture": "워터",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "토리든",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-006",
+    "raw_input": "닥터지 레드 블레미쉬 클리어 수딩 토너 200ml 약산성 저자극",
+    "extracted_output": {
+      "brand": "닥터지",
+      "productType": "toner",
+      "functionalClaims": ["진정"],
+      "valueClaims": ["저자극"],
+      "keyIngredients": ["센텔라"],
+      "volume": "200ml",
+      "phType": "약산성",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "닥터지",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-007",
+    "raw_input": "스킨푸드 당근 카로틴 카밍 토너패드 60매 비건 무향",
+    "extracted_output": {
+      "brand": "스킨푸드",
+      "productType": "toner",
+      "functionalClaims": ["진정", "항산화"],
+      "valueClaims": ["비건", "무향"],
+      "keyIngredients": ["당근"],
+      "volume": "60매",
+      "additionalAttrs": {}
+    },
+    "product_type": "toner",
+    "brand": "스킨푸드",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-TON-008",
+    "raw_input": "비플레인 녹두 약산성 클렌징 토너 200ml 마이크로바이옴",
+    "extracted_output": {
+      "brand": "비플레인",
+      "productType": "toner",
+      "functionalClaims": ["피지조절"],
+      "valueClaims": [],
+      "keyIngredients": ["녹차"],
+      "volume": "200ml",
+      "phType": "약산성",
+      "additionalAttrs": {"trend": "마이크로바이옴"}
+    },
+    "product_type": "toner",
+    "brand": "비플레인",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-001",
+    "raw_input": "토리든 다이브인 세럼 히알루론산 50ml",
+    "extracted_output": {
+      "brand": "토리든",
+      "productType": "serum",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산"],
+      "volume": "50ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "serum",
+    "brand": "토리든",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-002",
+    "raw_input": "코스알엑스 나이아신아마이드 15 세럼 20ml 브라이트닝",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "serum",
+      "functionalClaims": ["브라이트닝"],
+      "valueClaims": [],
+      "keyIngredients": ["나이아신아마이드"],
+      "volume": "20ml",
+      "texture": "에센스",
+      "additionalAttrs": {"ingredientPercent": "15%"}
+    },
+    "product_type": "serum",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-003",
+    "raw_input": "[1+1] 이니스프리 그린티 씨드 세럼 80ml 항산화",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "serum",
+      "functionalClaims": ["수분공급", "항산화"],
+      "valueClaims": [],
+      "keyIngredients": ["녹차"],
+      "volume": "80ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "serum",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-004",
+    "raw_input": "아누아 어성초 77 수딩 앰플 30ml 비건 진정",
+    "extracted_output": {
+      "brand": "아누아",
+      "productType": "serum",
+      "functionalClaims": ["진정"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["어성초"],
+      "volume": "30ml",
+      "additionalAttrs": {"ingredientPercent": "77%"}
+    },
+    "product_type": "serum",
+    "brand": "아누아",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-005",
+    "raw_input": "달바 화이트 트러플 퍼스트 스프레이 세럼 100ml 글루타치온",
+    "extracted_output": {
+      "brand": "달바",
+      "productType": "serum",
+      "functionalClaims": ["브라이트닝", "항산화"],
+      "valueClaims": [],
+      "keyIngredients": ["나이아신아마이드"],
+      "volume": "100ml",
+      "additionalAttrs": {"trend": "글루타치온"}
+    },
+    "product_type": "serum",
+    "brand": "달바",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-006",
+    "raw_input": "메디힐 마데카소사이드 앰플 50ml 센텔라 진정 클린뷰티",
+    "extracted_output": {
+      "brand": "메디힐",
+      "productType": "serum",
+      "functionalClaims": ["진정"],
+      "valueClaims": ["클린뷰티"],
+      "keyIngredients": ["센텔라"],
+      "volume": "50ml",
+      "additionalAttrs": {"trend": "병풀"}
+    },
+    "product_type": "serum",
+    "brand": "메디힐",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-007",
+    "raw_input": "비플레인 시카풀 앰플 Ⅱ 50ml 프로바이오틱스 저자극",
+    "extracted_output": {
+      "brand": "비플레인",
+      "productType": "serum",
+      "functionalClaims": ["진정"],
+      "valueClaims": ["저자극"],
+      "keyIngredients": ["센텔라", "프로폴리스"],
+      "volume": "50ml",
+      "additionalAttrs": {"trend": "프로바이오틱스"}
+    },
+    "product_type": "serum",
+    "brand": "비플레인",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-008",
+    "raw_input": "★베스트★ 스킨푸드 당근 카로틴 카밍 워터 패드 60매 비건",
+    "extracted_output": {
+      "brand": "스킨푸드",
+      "productType": "serum",
+      "functionalClaims": ["진정", "항산화"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["당근"],
+      "volume": "60매",
+      "additionalAttrs": {}
+    },
+    "product_type": "serum",
+    "brand": "스킨푸드",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-009",
+    "raw_input": "코스알엑스 프로폴리스 시너지 토닉 150ml 수분공급",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "serum",
+      "functionalClaims": ["수분공급", "항산화"],
+      "valueClaims": [],
+      "keyIngredients": ["프로폴리스"],
+      "volume": "150ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "serum",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-001",
+    "raw_input": "이니스프리 레티놀 시카 흔적 앰플 크림 50ml",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "cream",
+      "functionalClaims": ["진정", "브라이트닝"],
+      "valueClaims": [],
+      "keyIngredients": ["센텔라"],
+      "volume": "50ml",
+      "additionalAttrs": {"activeIngredient": "레티놀"}
+    },
+    "product_type": "cream",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-002",
+    "raw_input": "라운드랩 자작나무 수분 크림 80ml",
+    "extracted_output": {
+      "brand": "라운드랩",
+      "productType": "cream",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산", "세라마이드"],
+      "volume": "80ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "cream",
+    "brand": "라운드랩",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-003",
+    "raw_input": "코스알엑스 어드밴스드 스네일 92 올인원 크림 100ml",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "cream",
+      "functionalClaims": ["수분공급", "진정"],
+      "valueClaims": [],
+      "keyIngredients": ["히알루론산"],
+      "volume": "100ml",
+      "additionalAttrs": {"ingredientPercent": "92%"}
+    },
+    "product_type": "cream",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-004",
+    "raw_input": "NEW 리뉴얼 닥터지 레드 블레미쉬 클리어 크림 70ml 시카 진정",
+    "extracted_output": {
+      "brand": "닥터지",
+      "productType": "cream",
+      "functionalClaims": ["진정"],
+      "valueClaims": [],
+      "keyIngredients": ["센텔라"],
+      "volume": "70ml",
+      "additionalAttrs": {"trend": "병풀"}
+    },
+    "product_type": "cream",
+    "brand": "닥터지",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-005",
+    "raw_input": "토리든 다이브인 저분자 히알루론산 수분크림 100ml 비건 무향",
+    "extracted_output": {
+      "brand": "토리든",
+      "productType": "cream",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": ["비건", "무향"],
+      "keyIngredients": ["히알루론산", "세라마이드"],
+      "volume": "100ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "cream",
+    "brand": "토리든",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-006",
+    "raw_input": "메디힐 마데카소사이드 크림 50ml 클린뷰티 마이크로바이옴",
+    "extracted_output": {
+      "brand": "메디힐",
+      "productType": "cream",
+      "functionalClaims": ["진정"],
+      "valueClaims": ["클린뷰티"],
+      "keyIngredients": ["센텔라"],
+      "volume": "50ml",
+      "additionalAttrs": {"trend": "마이크로바이옴"}
+    },
+    "product_type": "cream",
+    "brand": "메디힐",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-007",
+    "raw_input": "달바 화이트 트러플 더블 레이어 모이스처 크림 50ml 글루타치온",
+    "extracted_output": {
+      "brand": "달바",
+      "productType": "cream",
+      "functionalClaims": ["수분공급", "브라이트닝"],
+      "valueClaims": [],
+      "keyIngredients": ["나이아신아마이드"],
+      "volume": "50ml",
+      "additionalAttrs": {"trend": "글루타치온"}
+    },
+    "product_type": "cream",
+    "brand": "달바",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-008",
+    "raw_input": "[1+1] 스킨푸드 당근 카로틴 카밍 워터 크림 55ml 동물실험프리",
+    "extracted_output": {
+      "brand": "스킨푸드",
+      "productType": "cream",
+      "functionalClaims": ["진정", "항산화"],
+      "valueClaims": ["동물실험프리"],
+      "keyIngredients": ["당근"],
+      "volume": "55ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "cream",
+    "brand": "스킨푸드",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-001",
+    "raw_input": "이니스프리 비비드 코튼 잉크 틴트 4g #09 코랄",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "lip",
+      "functionalClaims": [],
+      "valueClaims": [],
+      "keyIngredients": [],
+      "volume": "4g",
+      "shade": "#09 코랄",
+      "texture": "코튼잉크",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-002",
+    "raw_input": "라운드랩 벨벳 립 틴트 3.5g #02 로지레드 비건",
+    "extracted_output": {
+      "brand": "라운드랩",
+      "productType": "lip",
+      "functionalClaims": [],
+      "valueClaims": ["비건"],
+      "keyIngredients": [],
+      "volume": "3.5g",
+      "shade": "#02 로지레드",
+      "texture": "벨벳",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "라운드랩",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-003",
+    "raw_input": "★베스트★ 코스알엑스 밸런싱 컴포트 세라마이드 립 슬리핑팩 20g",
+    "extracted_output": {
+      "brand": "코스알엑스",
+      "productType": "lip",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["세라마이드"],
+      "volume": "20g",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "코스알엑스",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-004",
+    "raw_input": "달바 컬러 글로우 립밤 3.5g #03 코랄핑크 비건",
+    "extracted_output": {
+      "brand": "달바",
+      "productType": "lip",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["히알루론산"],
+      "volume": "3.5g",
+      "shade": "#03 코랄핑크",
+      "texture": "글로시",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "달바",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-005",
+    "raw_input": "이니스프리 데위 트리트먼트 립밤 3.2g #05 피그베이지",
+    "extracted_output": {
+      "brand": "이니스프리",
+      "productType": "lip",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": [],
+      "keyIngredients": ["녹차"],
+      "volume": "3.2g",
+      "shade": "#05 피그베이지",
+      "texture": "글로시",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "이니스프리",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-006",
+    "raw_input": "닥터지 카밍 히알루론 립 에센스 4.5ml 무향 저자극",
+    "extracted_output": {
+      "brand": "닥터지",
+      "productType": "lip",
+      "functionalClaims": ["수분공급", "진정"],
+      "valueClaims": ["무향", "저자극"],
+      "keyIngredients": ["히알루론산"],
+      "volume": "4.5ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "닥터지",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-007",
+    "raw_input": "[1+1] 아누아 프로폴리스 너리싱 립 마스크 17g 동물실험프리",
+    "extracted_output": {
+      "brand": "아누아",
+      "productType": "lip",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": ["동물실험프리"],
+      "keyIngredients": ["프로폴리스"],
+      "volume": "17g",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "아누아",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-LIP-008",
+    "raw_input": "스킨푸드 로얄 허니 프로폴리스 엔리치 립밤 3.5g 클린뷰티",
+    "extracted_output": {
+      "brand": "스킨푸드",
+      "productType": "lip",
+      "functionalClaims": ["수분공급"],
+      "valueClaims": ["클린뷰티"],
+      "keyIngredients": ["프로폴리스"],
+      "volume": "3.5g",
+      "additionalAttrs": {}
+    },
+    "product_type": "lip",
+    "brand": "스킨푸드",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-SER-010",
+    "raw_input": "라운드랩 독도 세럼 나이아신아마이드 30ml 브라이트닝 비건",
+    "extracted_output": {
+      "brand": "라운드랩",
+      "productType": "serum",
+      "functionalClaims": ["브라이트닝"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["나이아신아마이드"],
+      "volume": "30ml",
+      "additionalAttrs": {}
+    },
+    "product_type": "serum",
+    "brand": "라운드랩",
+    "quality_score": 1.00
+  },
+  {
+    "gold_id": "GOLD-CRM-009",
+    "raw_input": "아누아 어성초 진정 수분 크림 100ml 프로바이오틱스 비건",
+    "extracted_output": {
+      "brand": "아누아",
+      "productType": "cream",
+      "functionalClaims": ["진정", "수분공급"],
+      "valueClaims": ["비건"],
+      "keyIngredients": ["어성초"],
+      "volume": "100ml",
+      "additionalAttrs": {"trend": "프로바이오틱스"}
+    },
+    "product_type": "cream",
+    "brand": "아누아",
+    "quality_score": 1.00
+  }
+]
