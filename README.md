@@ -236,3 +236,4 @@ pytest tests/unit/ -v    # 단위 테스트 30건
 | 008 | Python 3.12 고정 | sentence-transformers/torch 호환성 |
 | 009 | 도구-서버 매핑 주입 | 하드코딩 대신 오케스트레이터가 매핑 자동 생성 후 주입 |
 | 010 | Pydantic 도구 스키마 자동 생성 | 수동 300줄 JSON 대신 BaseModel→model_json_schema() 자동 생성 |
+| 011 | 원본 키워드 보존 원칙 | 추출 시 동의어 변환 금지, 집계 단계에서 매핑 — 정보 손실 방지 |

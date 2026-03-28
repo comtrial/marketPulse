@@ -108,7 +108,7 @@ class TraceLogger:
                          input_tokens, output_tokens, cost_usd, mcp_server)
                     VALUES
                         (:trace_id, :step, :query, :tool,
-                         :input, :reason, :output::jsonb,
+                         :input, :reason, CAST(:output AS jsonb),
                          :latency, :success, :error,
                          :in_tok, :out_tok, :cost, :mcp)
                 """),
