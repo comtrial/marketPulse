@@ -7,10 +7,14 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import type { OrchestratorResult, OrchestratorStep, ExtractResult } from "@/lib/api";
+import { Markdown } from "@/components/ui/markdown";
+import {
+  determineVisualizations,
+  VisualizationRenderer,
+} from "@/components/visualizations";
+import type { OrchestratorResult, ExtractResult } from "@/lib/api";
 import { Loader2 } from "lucide-react";
 
 // ── Types ──
@@ -72,38 +76,56 @@ function LoadingSkeleton() {
   );
 }
 
-// ── Tool-specific renderers ──
+// ── Intelligence Result — Visualization-based ──
 
-function ToolResultCard({
-  step,
-}: {
-  step: OrchestratorStep;
-}) {
-  const toolName = step.tool ?? "unknown";
-  const summary = step.tool_output_summary ?? "결과 없음";
+function IntelligenceResult({ result }: { result: OrchestratorResult }) {
+  const visuals = determineVisualizations(result.steps);
 
   return (
-    <Card size="sm" className="border-gray-200">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-gray-500">
-            Step {step.step}
-          </span>
-          <McpBadge server={step.mcp_server} tool={toolName} />
-        </div>
-        <CardTitle className="text-sm">{toolName}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-gray-600 leading-relaxed">{summary}</p>
-        {step.latency_ms != null && (
-          <p className="mt-2 text-xs text-gray-400 font-mono">
-            {step.latency_ms.toFixed(0)}ms
-          </p>
-        )}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4 p-4">
+      {/* Data visualizations from tool outputs */}
+      {visuals.map((visual, idx) => (
+        <VisualizationRenderer key={idx} visual={visual} />
+      ))}
+
+      {/* Fallback: if no visualizations rendered, show tool summaries */}
+      {visuals.length === 0 && result.steps
+        .filter((s) => s.type === "tool_call")
+        .map((step) => (
+          <Card key={step.step} size="sm" className="border-gray-200">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-gray-500">
+                  Step {step.step}
+                </span>
+                <McpBadge server={step.mcp_server} tool={step.tool ?? "unknown"} />
+              </div>
+              <CardTitle className="text-sm">{step.tool}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {step.tool_output_summary}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+
+      {/* LLM insight / final answer — Markdown rendered */}
+      <Card className="border-gray-900/10 bg-gray-50">
+        <CardHeader>
+          <CardTitle className="text-sm text-gray-900">
+            LLM 분석 결과
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Markdown content={result.answer} />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
+
+// ── MCP Badge ──
 
 function McpBadge({
   server,
@@ -136,35 +158,6 @@ function inferServer(tool: string): string {
   return "llm";
 }
 
-// ── Intelligence Result ──
-
-function IntelligenceResult({ result }: { result: OrchestratorResult }) {
-  const toolSteps = result.steps.filter((s) => s.type === "tool_call");
-
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      {/* Tool call results */}
-      {toolSteps.map((step) => (
-        <ToolResultCard key={step.step} step={step} />
-      ))}
-
-      {/* LLM insight / final answer */}
-      <Card className="border-gray-900/10 bg-gray-50">
-        <CardHeader>
-          <CardTitle className="text-sm text-gray-900">
-            LLM 분석 결과
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-            {result.answer}
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
 // ── Extract Result ──
 
 function ExtractResultView({ result }: { result: ExtractResult }) {
@@ -188,7 +181,7 @@ function ExtractResultView({ result }: { result: ExtractResult }) {
                   {key}
                 </span>
                 <span className="text-sm text-gray-800 font-mono">
-                  {String(value)}
+                  {Array.isArray(value) ? value.join(", ") : String(value)}
                 </span>
               </div>
             ))}

@@ -205,12 +205,15 @@ class LLMOrchestrator:
                 )
 
                 # 시각화용 step 기록
+                # tool_output: 프론트엔드 차트 렌더링용 전체 데이터
+                # tool_output_summary: Zone C 트레이스 패널용 한 줄 요약
                 all_steps.append({
                     "step": step,
                     "type": "tool_call",
                     "reasoning": current_reasoning,
                     "tool": tool_name,
                     "tool_input": tool_input,
+                    "tool_output": tool_output,
                     "tool_output_summary": self._summarize_output(tool_name, tool_output),
                     "mcp_server": self._tool_to_server.get(tool_name, "unknown"),
                     "latency_ms": round(latency_ms),
@@ -246,7 +249,7 @@ class LLMOrchestrator:
             total_cost_usd=round(total_cost, 6),
         )
 
-        return OrchestratorResult(
+        result = OrchestratorResult(
             answer=final_text,
             trace_id=trace_id,
             steps=all_steps,
@@ -255,6 +258,23 @@ class LLMOrchestrator:
             total_output_tokens=total_output,
             total_cost_usd=round(total_cost, 6),
         )
+
+        # 전체 결과를 orchestrator_results에 저장 — 재조회 시 동일 결과 제공
+        try:
+            self.trace_logger.save_result(
+                trace_id=trace_id,
+                user_query=user_query,
+                answer=final_text,
+                steps=all_steps,
+                total_steps=step,
+                total_input_tokens=total_input,
+                total_output_tokens=total_output,
+                total_cost_usd=round(total_cost, 6),
+            )
+        except Exception as e:
+            logger.error("save_result_failed", trace_id=trace_id, error=str(e))
+
+        return result
 
     @staticmethod
     def _summarize_output(tool_name: str, output: dict | list) -> str:

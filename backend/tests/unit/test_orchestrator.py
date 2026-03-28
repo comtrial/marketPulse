@@ -228,3 +228,33 @@ class TestReActLoop:
         assert result.total_cost_usd > 0
         assert result.total_input_tokens == 500
         assert result.total_output_tokens == 100
+
+    @pytest.mark.asyncio
+    async def test_save_result_called(self):
+        """ask() 완료 후 trace_logger.save_result()가 호출되는지."""
+        orch, _, _, trace = make_mock_orchestrator([
+            make_tool_response(),
+            make_final_response(text="최종 답변"),
+        ])
+
+        result = await orch.ask("결과 저장 테스트")
+
+        trace.save_result.assert_called_once()
+        kwargs = trace.save_result.call_args.kwargs
+        assert kwargs["trace_id"] == result.trace_id
+        assert kwargs["answer"] == "최종 답변"
+        assert kwargs["total_steps"] == 2
+        assert len(kwargs["steps"]) == 2
+
+    @pytest.mark.asyncio
+    async def test_tool_output_in_steps(self):
+        """steps에 tool_output(전체 데이터)이 포함되는지."""
+        orch, _, _, _ = make_mock_orchestrator([
+            make_tool_response(),
+            make_final_response(),
+        ])
+
+        result = await orch.ask("테스트")
+
+        assert "tool_output" in result.steps[0]
+        assert result.steps[0]["tool_output"] == {"trend": {"JP": [{"percentage": 58.0}]}}

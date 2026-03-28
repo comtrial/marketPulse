@@ -172,6 +172,29 @@ class ToolCallTrace(Base):
     )
 
 
+# ── Orchestrator Results (재조회용 전체 결과 저장) ───────────────────
+
+
+class OrchestratorResultModel(Base):
+    __tablename__ = "orchestrator_results"
+
+    trace_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_query: Mapped[str] = mapped_column(Text, nullable=False)
+    answer: Mapped[str] = mapped_column(Text, nullable=False)
+    steps: Mapped[list] = mapped_column(JSONB, nullable=False)
+    total_steps: Mapped[int] = mapped_column(Integer, nullable=False)
+    total_input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    total_output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    total_cost_usd: Mapped[float] = mapped_column(Numeric(10, 6), nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    __table_args__ = (
+        Index("idx_orch_result_created", "created_at"),
+    )
+
+
 # ── Emerging Attributes (Phase 2) ───────────────────────────────────
 
 

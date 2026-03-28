@@ -17,6 +17,7 @@ export interface OrchestratorStep {
   reasoning: string;
   tool?: string;
   tool_input?: Record<string, unknown>;
+  tool_output?: unknown;
   tool_output_summary?: string;
   mcp_server?: string;
   latency_ms?: number;
@@ -29,6 +30,8 @@ export interface OrchestratorResult {
   trace_id: string;
   steps: OrchestratorStep[];
   total_steps: number;
+  total_input_tokens: number;
+  total_output_tokens: number;
   total_cost_usd: number;
 }
 
@@ -67,6 +70,14 @@ export interface TrendData {
   trend: Record<string, { month: string; total: number; withAttr: number; percentage: number }[]>;
 }
 
+export interface ResultSummary {
+  trace_id: string;
+  user_query: string;
+  total_steps: number;
+  total_cost_usd: number;
+  created_at: string;
+}
+
 // ── API Calls ──
 
 export const api = {
@@ -92,6 +103,12 @@ export const api = {
 
   causalChain: (country: string) =>
     fetchApi<Record<string, unknown>[]>(`/kg/causal-chain/${country}`),
+
+  getResult: (traceId: string) =>
+    fetchApi<OrchestratorResult>(`/orchestrator/result/${traceId}`),
+
+  getResults: (limit?: number) =>
+    fetchApi<ResultSummary[]>(`/orchestrator/results?limit=${limit ?? 20}`),
 
   health: () => fetchApi<{ status: string; checks: Record<string, boolean> }>("/health"),
 };

@@ -131,6 +131,102 @@ class TraceLogger:
             )
             conn.commit()
 
+    # ── 전체 결과 저장/조회 (orchestrator_results) ──
+
+    def save_result(
+        self,
+        trace_id: str,
+        user_query: str,
+        answer: str,
+        steps: list[dict],
+        total_steps: int,
+        total_input_tokens: int,
+        total_output_tokens: int,
+        total_cost_usd: float,
+    ) -> None:
+        """오케스트레이터 전체 결과를 orchestrator_results에 저장.
+
+        tool_call_traces와 달리 tool_output 크기 제한 없음 — Zone B 차트 렌더링용.
+        """
+        steps_json = json.dumps(steps, ensure_ascii=False, default=str)
+
+        with self.engine.connect() as conn:
+            conn.execute(
+                text("""
+                    INSERT INTO orchestrator_results
+                        (trace_id, user_query, answer, steps, total_steps,
+                         total_input_tokens, total_output_tokens, total_cost_usd)
+                    VALUES
+                        (:trace_id, :query, :answer, CAST(:steps AS jsonb),
+                         :total_steps, :in_tok, :out_tok, :cost)
+                    ON CONFLICT (trace_id) DO NOTHING
+                """),
+                {
+                    "trace_id": trace_id,
+                    "query": user_query,
+                    "answer": answer,
+                    "steps": steps_json,
+                    "total_steps": total_steps,
+                    "in_tok": total_input_tokens,
+                    "out_tok": total_output_tokens,
+                    "cost": total_cost_usd,
+                },
+            )
+            conn.commit()
+
+    def get_result(self, trace_id: str) -> dict | None:
+        """저장된 결과를 AskResponse 형태로 반환. 없으면 None."""
+        with self.engine.connect() as conn:
+            result = conn.execute(
+                text("""
+                    SELECT trace_id, user_query, answer, steps, total_steps,
+                           total_input_tokens, total_output_tokens, total_cost_usd,
+                           created_at
+                    FROM orchestrator_results
+                    WHERE trace_id = :tid
+                """),
+                {"tid": trace_id},
+            )
+            row = result.fetchone()
+            if row is None:
+                return None
+            m = row._mapping
+            return {
+                "answer": m["answer"],
+                "trace_id": m["trace_id"],
+                "steps": m["steps"],
+                "total_steps": m["total_steps"],
+                "total_input_tokens": m["total_input_tokens"],
+                "total_output_tokens": m["total_output_tokens"],
+                "total_cost_usd": float(m["total_cost_usd"]),
+            }
+
+    def get_recent_results(self, limit: int = 20) -> list[dict]:
+        """최근 결과 목록 (이력 UI용)."""
+        with self.engine.connect() as conn:
+            result = conn.execute(
+                text("""
+                    SELECT trace_id, user_query, total_steps,
+                           total_cost_usd, created_at
+                    FROM orchestrator_results
+                    ORDER BY created_at DESC
+                    LIMIT :lim
+                """),
+                {"lim": limit},
+            )
+            return [
+                {
+                    "trace_id": row._mapping["trace_id"],
+                    "user_query": row._mapping["user_query"],
+                    "total_steps": row._mapping["total_steps"],
+                    "total_cost_usd": float(row._mapping["total_cost_usd"]),
+                    "created_at": str(row._mapping["created_at"]),
+                }
+                for row in result
+            ]
+
+    # ── step별 trace 조회 (tool_call_traces) ──
+
     def get_trace(self, trace_id: str) -> list[dict]:
         """특정 trace_id의 전체 step을 조회. 프론트엔드 시각화용."""
         with self.engine.connect() as conn:

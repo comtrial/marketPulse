@@ -1,11 +1,13 @@
 """오케스트레이터 API — 자연어 질문 → LLM 도구 선택 → 인사이트.
 
 POST /ask: LLM이 도구를 자동 선택·호출하여 답변 생성
-GET /traces: 최근 분석 이력
-GET /trace/{trace_id}: 특정 분석의 판단 흐름 상세 (시각화용)
+GET /result/{trace_id}: 저장된 결과 재조회 (POST /ask와 동일 형식)
+GET /results: 최근 분석 이력 목록
+GET /traces: 최근 trace 목록 (디버깅용)
+GET /trace/{trace_id}: 특정 trace step별 상세 (디버깅용)
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from orchestrator.llm_orchestrator import LLMOrchestrator
@@ -44,6 +46,8 @@ class AskResponse(BaseModel):
     trace_id: str
     steps: list[dict]
     total_steps: int
+    total_input_tokens: int
+    total_output_tokens: int
     total_cost_usd: float
 
 
@@ -64,8 +68,34 @@ async def ask(
         trace_id=result.trace_id,
         steps=result.steps,
         total_steps=result.total_steps,
+        total_input_tokens=result.total_input_tokens,
+        total_output_tokens=result.total_output_tokens,
         total_cost_usd=result.total_cost_usd,
     )
+
+
+@router.get("/result/{trace_id}", response_model=AskResponse)
+def get_result(
+    trace_id: str,
+    trace_logger: TraceLogger = Depends(get_trace_logger),
+):
+    """저장된 분석 결과를 POST /ask와 동일한 형식으로 반환.
+
+    Zone B 시각화 + Zone C 트레이스 완전 복원 가능.
+    """
+    result = trace_logger.get_result(trace_id=trace_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Result not found")
+    return AskResponse(**result)
+
+
+@router.get("/results")
+def list_results(
+    limit: int = 20,
+    trace_logger: TraceLogger = Depends(get_trace_logger),
+):
+    """최근 분석 결과 이력."""
+    return trace_logger.get_recent_results(limit=limit)
 
 
 @router.get("/traces")
@@ -73,7 +103,7 @@ def list_traces(
     limit: int = 20,
     trace_logger: TraceLogger = Depends(get_trace_logger),
 ):
-    """최근 분석 이력 목록."""
+    """최근 trace 목록 (디버깅용)."""
     return trace_logger.get_recent_traces(limit=limit)
 
 
@@ -82,5 +112,5 @@ def get_trace(
     trace_id: str,
     trace_logger: TraceLogger = Depends(get_trace_logger),
 ):
-    """특정 trace의 판단 흐름 상세. 프론트엔드 흐름도 시각화용."""
+    """특정 trace의 step별 상세 (디버깅용)."""
     return trace_logger.get_trace(trace_id=trace_id)
