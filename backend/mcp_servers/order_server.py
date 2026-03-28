@@ -85,14 +85,14 @@ class OrderDataServer:
 
         with self.engine.connect() as conn:
             result = conn.execute(
-                text(f"""
+                text("""
                     WITH monthly AS (
                         SELECT
                             o.destination_country AS country,
-                            DATE_TRUNC('month', o.order_date)::date AS month,
+                            CAST(DATE_TRUNC('month', o.order_date) AS date) AS month,
                             COUNT(*) AS total,
                             COUNT(*) FILTER (
-                                WHERE e.attributes->'{json_field}' @> :attr_json::jsonb
+                                WHERE e.attributes->:json_field @> CAST(:attr_json AS jsonb)
                             ) AS with_attr
                         FROM orders_unified o
                         JOIN extractions e ON o.order_id = e.order_id
@@ -100,11 +100,11 @@ class OrderDataServer:
                         GROUP BY o.destination_country, DATE_TRUNC('month', o.order_date)
                     )
                     SELECT country, month, total, with_attr,
-                           ROUND(with_attr::numeric / NULLIF(total, 0) * 100, 1) AS percentage
+                           ROUND(CAST(with_attr AS numeric) / NULLIF(total, 0) * 100, 1) AS percentage
                     FROM monthly
                     ORDER BY country, month
                 """),
-                {"attr_json": attr_json, "countries": params.countries},
+                {"json_field": json_field, "attr_json": attr_json, "countries": params.countries},
             )
 
             by_country: dict[str, list[dict]] = {}
@@ -139,8 +139,8 @@ class OrderDataServer:
                         FROM orders_unified o
                         JOIN extractions e ON o.order_id = e.order_id
                         WHERE e.attributes->>'productType' = :ptype
-                          AND o.order_date >= :start_date::date
-                          AND o.order_date < (:end_date::date + INTERVAL '1 month')
+                          AND o.order_date >= CAST(:start_date AS date)
+                          AND o.order_date < (CAST(:end_date AS date) + INTERVAL '1 month')
                     ),
                     country_totals AS (
                         SELECT country, COUNT(*) AS total FROM base GROUP BY country
@@ -160,7 +160,7 @@ class OrderDataServer:
                     )
                     SELECT a.country, a.attribute,
                            SUM(a.cnt) AS cnt,
-                           ROUND(SUM(a.cnt)::numeric / ct.total * 100, 1) AS percentage
+                           ROUND(CAST(SUM(a.cnt) AS numeric) / ct.total * 100, 1) AS percentage
                     FROM all_counts a
                     JOIN country_totals ct ON a.country = ct.country
                     GROUP BY a.country, a.attribute, ct.total
