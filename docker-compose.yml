@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: marketpulse
+      POSTGRES_USER: mp_user
+      POSTGRES_PASSWORD: mp_password
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mp_user -d marketpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5.26-community
+    environment:
+      NEO4J_AUTH: neo4j/mp_neo4j_password
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_server_memory_pagecache_size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+    ports: ["7474:7474", "7687:7687"]
+    volumes: [neo4jdata:/data]
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p mp_neo4j_password 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://mp_user:mp_password@postgres:5432/marketpulse
+      DATABASE_URL_SYNC: postgresql+psycopg://mp_user:mp_password@postgres:5432/marketpulse
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      CHROMA_PERSIST_DIR: /app/chroma_data
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: mp_neo4j_password
+    ports: ["8000:8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    volumes: [chromadata:/app/chroma_data]
+
+volumes:
+  pgdata:
+  neo4jdata:
+  chromadata:

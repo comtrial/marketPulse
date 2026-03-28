@@ -1,0 +1,38 @@
+# Environment
+.env
+.env.local
+.env.prd
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# ChromaDB local
+chroma_data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Node (frontend)
+node_modules/
+.next/
+out/
+
+# Docker volumes (local)
+pgdata/
+neo4jdata/
