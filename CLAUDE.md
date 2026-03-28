@@ -66,6 +66,17 @@ src/
 └── api/               # 사용자 API 엔드포인트
 ```
 
+## 가정사항
+
+- `orders_unified`에 `product_type`이 이미 존재한다고 가정 (채널 등록 시 카테고리 지정)
+- Neo4j 시드 브랜드(4개)와 주문 데이터 브랜드가 일치해야 MADE_BY 100% 매칭
+
 ## Learnings
 
-<!-- 작업 중 발견한 버그 패턴, 아키텍처 결정, 라이브러리 주의사항 등을 여기에 추가 -->
+- **Python 3.12 필수**: sentence-transformers, torch, onnxruntime이 3.14 미지원. venv는 반드시 `/usr/local/bin/python3.12 -m venv`로 생성. (ADR-008)
+- **numpy < 2 필수**: torch 2.2.2는 numpy 2.x와 비호환. requirements.txt에 `numpy<2` 명시.
+- **sentence-transformers < 4.0**: 4.x+ 는 torch 2.4+ 요구, macOS x86_64에서 torch 2.2.2가 최대.
+- **chromadb PersistentClient**: `chromadb-client`(HTTP-only)가 아닌 `chromadb`(full) 패키지 사용. Python 3.12에서 정상 동작.
+- **Optional 파라미터 명시**: `order=None`처럼 의도적 None은 반드시 명시. 디폴트 의존 금지.
+- **프롬프트 파일 분리**: 코드에 인라인하지 않고 `prompts/extractor/v{N}.txt`로 버전 관리.
+- **SOLD_IN에 주문량 넣지 않기**: Neo4j=인과, PostgreSQL=집계. 이중 저장 금지. (ADR-007)

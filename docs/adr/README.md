@@ -39,3 +39,7 @@
 | 002 | Golden Example few-shot 속성 추출 | accepted | 2026-03-27 |
 | 003 | 자동 속성 승격 루프 | accepted | 2026-03-27 |
 | 004 | MCP Server로 데이터 소스 노출 | accepted | 2026-03-27 |
+| 005 | Tool Use + Few-Shot 2레이어 전략 | accepted | 2026-03-27 |
+| 006 | Confidence 모듈 제거 | accepted | 2026-03-28 |
+| 007 | SOLD_IN 관계에서 주문량 제거 | accepted | 2026-03-28 |
+| 008 | Python 3.12 고정 (3.14 호환성) | accepted | 2026-03-28 |
