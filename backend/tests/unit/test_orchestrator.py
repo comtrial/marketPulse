@@ -181,7 +181,7 @@ class TestReActLoop:
     @pytest.mark.asyncio
     async def test_max_steps_exceeded(self):
         """MAX_STEPS 초과 시 강제 종료."""
-        # 5번 모두 도구 호출 → 최종 답변 없이 종료
+        # 3번 모두 도구 호출 → 최종 답변 없이 종료
         orch, _, _, _ = make_mock_orchestrator([
             make_tool_response() for _ in range(6)
         ])
@@ -190,7 +190,8 @@ class TestReActLoop:
         result = await orch.ask("무한 루프 테스트")
 
         assert "초과" in result.answer
-        assert result.total_steps == 3
+        # 3 tool calls + 1 forced final = 4 step_seq
+        assert result.total_steps == 4
 
     @pytest.mark.asyncio
     async def test_tool_output_summary_in_steps(self):

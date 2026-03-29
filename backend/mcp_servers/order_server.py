@@ -28,9 +28,9 @@ logger = structlog.get_logger()
 
 
 class GetAttributeTrendInput(BaseModel):
-    attribute_name: str = Field(description="속성명 (예: 비건, 톤업, 워터프루프)")
-    attribute_type: Literal["functional", "value", "ingredient"] = Field(
-        description="속성 분류"
+    attribute_name: str = Field(description="속성명 (예: 비건, 톤업, 워터프루프, 무기자차)")
+    attribute_type: Literal["functional", "value", "ingredient", "additional"] = Field(
+        description="속성 분류. functional=functionalClaims, value=valueClaims, ingredient=keyIngredients, additional=additionalAttrs 값 검색"
     )
     countries: list[str] = Field(description="국가 코드 배열 (예: ['JP', 'SG'])")
     months: int = Field(default=6, description="조회 기간 (개월)")
@@ -75,6 +75,11 @@ class OrderDataServer:
     @tool(GetAttributeTrendInput)
     def get_attribute_trend(self, params: GetAttributeTrendInput) -> dict:
         """특정 속성의 국가별 월별 비율 추이를 반환. '비건이 일본에서 몇 %인지 6개월 추이' 같은 질문에 사용."""
+
+        # additional 타입: additionalAttrs의 값(dict values)에서 검색
+        if params.attribute_type == "additional":
+            return self._get_additional_attr_trend(params)
+
         field_map = {
             "functional": "functionalClaims",
             "value": "valueClaims",
@@ -122,6 +127,63 @@ class OrderDataServer:
         logger.info("attribute_trend_queried", attribute=params.attribute_name, countries=params.countries)
         return {"attribute": params.attribute_name, "type": params.attribute_type, "trend": by_country}
 
+    def _get_additional_attr_trend(self, params: GetAttributeTrendInput) -> dict:
+        """additionalAttrs dict의 값에서 속성을 검색하는 트렌드 조회.
+
+        additionalAttrs는 {"자차타입": "무기자차", ...} 형태의 dict이므로
+        jsonb_each_text로 값을 풀어서 검색한다.
+        """
+        with self.engine.connect() as conn:
+            result = conn.execute(
+                text("""
+                    WITH monthly AS (
+                        SELECT
+                            o.destination_country AS country,
+                            CAST(DATE_TRUNC('month', o.order_date) AS date) AS month,
+                            COUNT(*) AS total,
+                            COUNT(*) FILTER (
+                                WHERE EXISTS (
+                                    SELECT 1
+                                    FROM jsonb_each_text(e.attributes->'additionalAttrs') AS kv(k, v)
+                                    WHERE kv.v = :attr_name
+                                )
+                            ) AS with_attr
+                        FROM orders_unified o
+                        JOIN extractions e ON o.order_id = e.order_id
+                        WHERE o.destination_country = ANY(:countries)
+                        GROUP BY o.destination_country, DATE_TRUNC('month', o.order_date)
+                    )
+                    SELECT country, month, total, with_attr,
+                           ROUND(CAST(with_attr AS numeric) / NULLIF(total, 0) * 100, 1) AS percentage
+                    FROM monthly
+                    ORDER BY country, month
+                """),
+                {"attr_name": params.attribute_name, "countries": params.countries},
+            )
+
+            by_country: dict[str, list[dict]] = {}
+            for row in result.mappings():
+                c = row["country"]
+                if c not in by_country:
+                    by_country[c] = []
+                by_country[c].append({
+                    "month": row["month"].strftime("%Y-%m"),
+                    "total": row["total"],
+                    "withAttr": row["with_attr"],
+                    "percentage": float(row["percentage"] or 0),
+                })
+
+        logger.info(
+            "additional_attr_trend_queried",
+            attribute=params.attribute_name,
+            countries=params.countries,
+        )
+        return {
+            "attribute": params.attribute_name,
+            "type": params.attribute_type,
+            "trend": by_country,
+        }
+
     @tool(GetHeatmapInput)
     def get_country_attribute_heatmap(self, params: GetHeatmapInput) -> dict:
         """국가별 × 속성별 비율 매트릭스를 반환. 히트맵 시각화의 데이터 소스."""
@@ -155,8 +217,15 @@ class OrderDataServer:
                         FROM base b, jsonb_array_elements_text(b.attributes->'valueClaims') AS claim
                         GROUP BY b.country, claim
                     ),
+                    additional_counts AS (
+                        SELECT b.country, kv.v AS attribute, COUNT(*) AS cnt
+                        FROM base b, jsonb_each_text(b.attributes->'additionalAttrs') AS kv(k, v)
+                        GROUP BY b.country, kv.v
+                    ),
                     all_counts AS (
-                        SELECT * FROM functional_counts UNION ALL SELECT * FROM value_counts
+                        SELECT * FROM functional_counts
+                        UNION ALL SELECT * FROM value_counts
+                        UNION ALL SELECT * FROM additional_counts
                     )
                     SELECT a.country, a.attribute,
                            SUM(a.cnt) AS cnt,

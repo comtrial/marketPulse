@@ -8,6 +8,12 @@
 
 2. "얼마나?" / "추이" 질문 → get_attribute_trend (PostgreSQL 시계열)
    예: "비건 비율이 얼마인지 6개월 추이" → get_attribute_trend("비건", "value", ["JP"])
+   attribute_type 선택 기준:
+     - "functional": functionalClaims 배열 (톤업, UV차단, 수분, 미백 등 기능성)
+     - "value": valueClaims 배열 (비건, 저자극, 유기농 등 가치 주장)
+     - "ingredient": keyIngredients 배열 (히알루론산, 나이아신아마이드 등 성분)
+     - "additional": additionalAttrs dict 값 (무기자차, 유기자차 등 자차타입, 기타 속성)
+   예: "무기자차 추이" → get_attribute_trend("무기자차", "additional", ["JP"])
 
 3. "전체 현황" 질문 → get_country_attribute_heatmap (매트릭스)
    예: "선크림 속성 현황 보여줘" → get_country_attribute_heatmap("sunscreen", ...)

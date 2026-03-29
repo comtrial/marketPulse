@@ -133,6 +133,7 @@ class LLMOrchestrator:
         total_input = 0
         total_output = 0
         step = 0
+        step_seq = 0  # 도구 호출별 고유 순번 (한 step에서 여러 도구 호출 시 중복 방지)
         final_text = ""
 
         while step < self.max_steps:
@@ -157,9 +158,10 @@ class LLMOrchestrator:
 
             # 도구 호출 없음 → 최종 답변
             if not tool_blocks:
+                step_seq += 1
                 final_text = current_reasoning
                 all_steps.append({
-                    "step": step,
+                    "step": step_seq,
                     "type": "final_answer",
                     "reasoning": current_reasoning,
                     "answer": final_text,
@@ -189,9 +191,10 @@ class LLMOrchestrator:
                 latency_ms = (time.time() - start_ms) * 1000
 
                 # trace 로깅 — reasoning(사고) + decision(도구 선택)
+                step_seq += 1
                 self.trace_logger.log(
                     trace_id=trace_id,
-                    step=step,
+                    step=step_seq,
                     user_query=user_query,
                     selected_tool=tool_name,
                     tool_input=tool_input,
@@ -208,7 +211,7 @@ class LLMOrchestrator:
                 # tool_output: 프론트엔드 차트 렌더링용 전체 데이터
                 # tool_output_summary: Zone C 트레이스 패널용 한 줄 요약
                 all_steps.append({
-                    "step": step,
+                    "step": step_seq,
                     "type": "tool_call",
                     "reasoning": current_reasoning,
                     "tool": tool_name,
@@ -230,9 +233,10 @@ class LLMOrchestrator:
             messages.append({"role": "user", "content": tool_results})
 
         else:
+            step_seq += 1
             final_text = "최대 분석 단계를 초과했습니다. 질문을 더 구체적으로 해주세요."
             all_steps.append({
-                "step": step,
+                "step": step_seq,
                 "type": "final_answer",
                 "reasoning": "MAX_STEPS 초과로 강제 종료",
                 "answer": final_text,
@@ -244,7 +248,7 @@ class LLMOrchestrator:
             "orchestrator_complete",
             trace_id=trace_id,
             query=user_query[:50],
-            total_steps=step,
+            total_steps=step_seq,
             tools_used=[s["tool"] for s in all_steps if s["type"] == "tool_call"],
             total_cost_usd=round(total_cost, 6),
         )
@@ -253,7 +257,7 @@ class LLMOrchestrator:
             answer=final_text,
             trace_id=trace_id,
             steps=all_steps,
-            total_steps=step,
+            total_steps=step_seq,
             total_input_tokens=total_input,
             total_output_tokens=total_output,
             total_cost_usd=round(total_cost, 6),
