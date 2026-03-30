@@ -324,39 +324,88 @@ def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:
 
 
 def eval_system_efficiency(engine: Engine) -> dict:
-    """세션 진행에 따른 비용 변화."""
+    """비용-품질 트레이드오프 추적.
+
+    세션별로 agent_type(analyst/pattern_scout)별 비용을 분리 집계하고,
+    DISCOVERED_LINK 활용 여부와 연결하여
+    "답변 품질 개선에 추가 비용이 얼마나 드는가"를 정량화한다.
+    """
+    # 1. 세션별 agent_type별 비용 분리
     with engine.connect() as conn:
-        rows = conn.execute(
+        cost_rows = conn.execute(
             text("""
-                SELECT trace_id, total_cost_usd, created_at
+                SELECT
+                    t.trace_id,
+                    COALESCE(SUM(t.cost_usd) FILTER (WHERE t.agent_type = 'analyst'), 0) AS analyst_cost,
+                    COALESCE(SUM(t.cost_usd) FILTER (WHERE t.agent_type = 'pattern_scout'), 0) AS scout_cost,
+                    COALESCE(SUM(t.cost_usd), 0) AS total_cost
+                FROM tool_call_traces t
+                WHERE t.trace_id IN (SELECT trace_id FROM orchestrator_results)
+                GROUP BY t.trace_id
+            """)
+        ).mappings().all()
+        cost_map = {r["trace_id"]: dict(r) for r in cost_rows}
+
+        # 2. orchestrator_results에서 질문 + steps (discovered 판별용)
+        result_rows = conn.execute(
+            text("""
+                SELECT trace_id, user_query, steps, total_cost_usd, created_at
                 FROM orchestrator_results
                 ORDER BY created_at
             """)
         ).mappings().all()
 
-    sessions = [
-        {
-            "trace_id": r["trace_id"],
-            "cost": float(r["total_cost_usd"]),
+    sessions = []
+    for r in result_rows:
+        tid = r["trace_id"]
+        costs = cost_map.get(tid, {})
+        steps = r["steps"] if isinstance(r["steps"], list) else json.loads(r["steps"])
+        used_disc = _has_discovered_links(steps)
+
+        sessions.append({
+            "trace_id": tid,
+            "user_query": r["user_query"],
             "created_at": str(r["created_at"]),
-        }
-        for r in rows
-    ]
+            "analyst_cost": round(float(costs.get("analyst_cost", 0)), 6),
+            "scout_cost": round(float(costs.get("scout_cost", 0)), 6),
+            "total_cost": round(float(costs.get("total_cost", 0) or r["total_cost_usd"]), 6),
+            "used_discovered": used_disc,
+        })
 
-    if len(sessions) < 2:
-        return {"status": "insufficient_data", "sessions": sessions}
+    if len(sessions) < 1:
+        return {"status": "insufficient_data", "sessions": []}
 
-    half = len(sessions) // 2
-    avg_first = sum(s["cost"] for s in sessions[:half]) / half
-    avg_second = sum(s["cost"] for s in sessions[half:]) / (len(sessions) - half)
+    # 3. 요약 통계
+    total_sessions = len(sessions)
+    avg_analyst = sum(s["analyst_cost"] for s in sessions) / total_sessions
+    avg_scout = sum(s["scout_cost"] for s in sessions) / total_sessions
+    avg_total = sum(s["total_cost"] for s in sessions) / total_sessions
+
+    with_disc = [s for s in sessions if s["used_discovered"]]
+    without_disc = [s for s in sessions if not s["used_discovered"]]
+
+    avg_with = sum(s["total_cost"] for s in with_disc) / len(with_disc) if with_disc else 0
+    avg_without = sum(s["total_cost"] for s in without_disc) / len(without_disc) if without_disc else 0
 
     return {
         "status": "ok",
-        "avg_cost_first_half": round(avg_first, 6),
-        "avg_cost_second_half": round(avg_second, 6),
-        "cost_reduction": round(1 - avg_second / max(avg_first, 0.000001), 2),
-        "total_sessions": len(sessions),
         "sessions": sessions,
+        "summary": {
+            "total_sessions": total_sessions,
+            "avg_analyst_cost": round(avg_analyst, 6),
+            "avg_scout_cost": round(avg_scout, 6),
+            "avg_total_cost": round(avg_total, 6),
+            "scout_cost_ratio": round(avg_scout / max(avg_total, 0.000001), 2),
+            "with_discovered": {
+                "count": len(with_disc),
+                "avg_total_cost": round(avg_with, 6),
+            },
+            "without_discovered": {
+                "count": len(without_disc),
+                "avg_total_cost": round(avg_without, 6),
+            },
+            "quality_premium": round(avg_with - avg_without, 6) if with_disc and without_disc else None,
+        },
     }
 
 
