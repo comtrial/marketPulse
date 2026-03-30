@@ -5,7 +5,10 @@ import { QueryPanel } from "@/components/query-panel";
 import { ResultPanel } from "@/components/result-panel";
 import { TracePanel } from "@/components/trace-panel";
 import { BottomBar } from "@/components/bottom-bar";
-import { KnowledgeGrowthBar } from "@/components/knowledge-growth";
+import {
+  KnowledgeGrowthTrigger,
+  KnowledgeGrowthDetail,
+} from "@/components/knowledge-growth";
 import { HistoryPanel } from "@/components/history-panel";
 import { api } from "@/lib/api";
 import type { OrchestratorResult, ExtractResult } from "@/lib/api";
@@ -21,12 +24,14 @@ export default function DashboardPage() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showEval, setShowEval] = useState(false);
 
   const handleSubmit = useCallback(
     async (q: string) => {
       setQuery(q);
       setIsCollapsed(true);
       setIsLoading(true);
+      setShowEval(false);
 
       try {
         if (mode === "intelligence") {
@@ -53,6 +58,7 @@ export default function DashboardPage() {
     setExtractResult(null);
     setIsCollapsed(false);
     setIsLoading(false);
+    setShowEval(false);
   }, []);
 
   const handleModeChange = useCallback((newMode: Mode) => {
@@ -61,12 +67,14 @@ export default function DashboardPage() {
     setExtractResult(null);
     setQuery("");
     setIsCollapsed(false);
+    setShowEval(false);
   }, []);
 
   const handleHistorySelect = useCallback(async (traceId: string) => {
     setIsLoading(true);
     setIsCollapsed(true);
     setMode("intelligence");
+    setShowEval(false);
 
     try {
       const res = await api.getResult(traceId);
@@ -120,43 +128,52 @@ export default function DashboardPage() {
 
       {/* Main content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Column */}
+        {/* Left Column — Zone A + Zone B or Eval Detail */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Zone A — Query Panel */}
-          <QueryPanel
-            mode={mode}
-            onModeChange={handleModeChange}
-            onSubmit={handleSubmit}
-            currentQuery={query}
-            isCollapsed={isCollapsed}
-            onToggleCollapse={() => setIsCollapsed((c) => !c)}
-            onReset={handleReset}
-          />
+          {showEval ? (
+            <KnowledgeGrowthDetail onClose={() => setShowEval(false)} />
+          ) : (
+            <>
+              {/* Zone A — Query Panel */}
+              <QueryPanel
+                mode={mode}
+                onModeChange={handleModeChange}
+                onSubmit={handleSubmit}
+                currentQuery={query}
+                isCollapsed={isCollapsed}
+                onToggleCollapse={() => setIsCollapsed((c) => !c)}
+                onReset={handleReset}
+              />
 
-          {/* Zone B — Result Panel */}
+              {/* Zone B — Result Panel */}
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <ResultPanel
+                  mode={mode}
+                  result={result}
+                  extractResult={extractResult}
+                  isLoading={isLoading}
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Right Column — Zone C + Knowledge Growth Trigger */}
+        <div className="flex w-[400px] flex-none flex-col overflow-hidden">
           <div className="flex flex-1 flex-col overflow-hidden">
-            <ResultPanel
+            <TracePanel
               mode={mode}
               result={result}
               extractResult={extractResult}
               isLoading={isLoading}
             />
           </div>
-        </div>
-
-        {/* Zone C — Trace Panel */}
-        <div className="w-[400px] flex-none overflow-hidden">
-          <TracePanel
-            mode={mode}
-            result={result}
-            extractResult={extractResult}
-            isLoading={isLoading}
+          <KnowledgeGrowthTrigger
+            isExpanded={showEval}
+            onToggle={() => setShowEval((e) => !e)}
           />
         </div>
       </div>
-
-      {/* Knowledge Growth */}
-      <KnowledgeGrowthBar />
 
       {/* BottomBar */}
       <BottomBar />

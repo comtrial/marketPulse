@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   LineChart,
@@ -18,11 +17,22 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Markdown } from "@/components/ui/markdown";
 import { api } from "@/lib/api";
 import type { EvalFullResult } from "@/lib/api";
-import { ChevronDown } from "lucide-react";
+import { ChevronUp, X } from "lucide-react";
+
+// ── Shared hook ──
+
+export function useEvalData() {
+  return useQuery<EvalFullResult>({
+    queryKey: ["eval-full"],
+    queryFn: () => api.evalFull(),
+    refetchInterval: 30_000,
+  });
+}
 
 // ── Axis Badge ──
 
@@ -38,13 +48,125 @@ function AxisBadge({
   sub?: string;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm">{icon}</span>
-      <div>
-        <p className="text-[10px] text-gray-400">{label}</p>
-        <p className="text-xs font-medium text-gray-700 font-mono">{value}</p>
+    <div className="flex flex-col items-center gap-0.5 px-2">
+      <span className="text-xs">{icon}</span>
+      <p className="text-[9px] text-gray-400 whitespace-nowrap">{label}</p>
+      <p className="text-[10px] font-medium text-gray-700 font-mono whitespace-nowrap">{value}</p>
+      {sub && <span className="text-[9px] text-gray-300">{sub}</span>}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// KnowledgeGrowthTrigger — Zone C 하단에 배치되는 요약 바
+// ══════════════════════════════════════════════════════════
+
+export function KnowledgeGrowthTrigger({
+  isExpanded,
+  onToggle,
+}: {
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
+  const { data } = useEvalData();
+
+  if (!data) return null;
+
+  const pd = data.pattern_discovery;
+  const aq = data.answer_quality;
+  const rc = data.reasoning_coverage;
+  const se = data.system_efficiency;
+
+  return (
+    <div className="flex-none border-t border-gray-200 bg-white">
+      <button
+        onClick={onToggle}
+        className="flex w-full flex-col items-center gap-1.5 px-3 py-2.5 hover:bg-gray-50 transition-colors"
+      >
+        <div className="flex items-center gap-1.5">
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400">
+            Knowledge Growth
+          </span>
+          <ChevronUp
+            className={`size-3 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+          />
+        </div>
+
+        <div className="flex items-center gap-0.5">
+          <AxisBadge
+            icon="🔍"
+            label="패턴"
+            value={`${pd.approved}/${pd.total_proposed}`}
+          />
+          <Separator orientation="vertical" className="h-6" />
+          <AxisBadge
+            icon="📈"
+            label="품질"
+            value={aq.total_analyses > 0 ? `${(aq.discovered_usage_rate * 100).toFixed(0)}%` : "—"}
+          />
+          <Separator orientation="vertical" className="h-6" />
+          <AxisBadge
+            icon="🧠"
+            label="커버"
+            value={`${(rc.full_coverage_rate * 100).toFixed(0)}%`}
+          />
+          <Separator orientation="vertical" className="h-6" />
+          <AxisBadge
+            icon="⚡"
+            label="효율"
+            value={se.status === "insufficient_data" ? "—" : `${(se.cost_reduction * 100).toFixed(1)}%`}
+          />
+        </div>
+      </button>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// KnowledgeGrowthDetail — Zone A + Zone B 자리를 채우는 상세 패널
+// ══════════════════════════════════════════════════════════
+
+export function KnowledgeGrowthDetail({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
+  const { data } = useEvalData();
+
+  if (!data) return null;
+
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Header */}
+      <div className="flex-none flex items-center justify-between border-b border-gray-200 px-4 py-2.5">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-900">Knowledge Growth</h2>
+          <p className="text-[10px] text-gray-400">시스템 학습 상태 — 4축 평가</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+        >
+          <X className="size-4" />
+        </button>
       </div>
-      {sub && <span className="text-[10px] text-gray-400">{sub}</span>}
+
+      {/* Scrollable content */}
+      <ScrollArea className="flex-1">
+        <div className="p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <AnswerQualityChart data={data} />
+            <CoverageMatrix data={data} />
+            <ProposalTable />
+            <BeforeAfterComparison data={data} />
+          </div>
+          {data.system_efficiency.status !== "insufficient_data" && (
+            <div className="mt-4">
+              <SystemEfficiencyChart data={data} />
+            </div>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
@@ -53,6 +175,7 @@ function AxisBadge({
 
 function AnswerQualityChart({ data }: { data: EvalFullResult }) {
   const sessions = data.answer_quality.session_history;
+
   if (sessions.length === 0) {
     return (
       <Card>
@@ -85,7 +208,7 @@ function AnswerQualityChart({ data }: { data: EvalFullResult }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={160}>
+        <ResponsiveContainer width="100%" height={180}>
           <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: -8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="session" tick={{ fontSize: 10, fill: "#9ca3af" }} />
@@ -140,11 +263,7 @@ function CoverageMatrix({ data }: { data: EvalFullResult }) {
     none: "bg-gray-50 text-gray-300",
   };
 
-  const statusLabel = {
-    full: "●●",
-    partial: "●○",
-    none: "○○",
-  };
+  const statusLabel = { full: "●●", partial: "●○", none: "○○" };
 
   return (
     <Card>
@@ -179,7 +298,6 @@ function CoverageMatrix({ data }: { data: EvalFullResult }) {
                       <td key={pt.key} className="px-1 py-1 text-center">
                         <span
                           className={`inline-block rounded px-2 py-0.5 font-mono text-[11px] ${statusStyle[status]}`}
-                          title={`${country}/${pt.label}: ${status}`}
                         >
                           {statusLabel[status]}
                         </span>
@@ -219,9 +337,7 @@ function ProposalTable() {
       <CardContent>
         {!proposals || proposals.length === 0 ? (
           <div className="text-center py-6">
-            <p className="text-xs text-gray-400">
-              아직 제안된 관계가 없습니다
-            </p>
+            <p className="text-xs text-gray-400">아직 제안된 관계가 없습니다</p>
             <p className="mt-1 text-[10px] text-gray-300">
               Phase 2에서 PatternScout가 활성화되면 여기에 표시됩니다
             </p>
@@ -277,9 +393,7 @@ function BeforeAfterComparison({ data }: { data: EvalFullResult }) {
       <CardContent>
         {!pairs || pairs.length === 0 ? (
           <div className="text-center py-6">
-            <p className="text-xs text-gray-400">
-              아직 비교할 데이터가 없습니다
-            </p>
+            <p className="text-xs text-gray-400">아직 비교할 데이터가 없습니다</p>
             <p className="mt-1 text-[10px] text-gray-300">
               동일 질문의 승인 전/후 답변이 축적되면 여기에 비교가 표시됩니다
             </p>
@@ -312,110 +426,49 @@ function BeforeAfterComparison({ data }: { data: EvalFullResult }) {
   );
 }
 
-// ── System Efficiency ──
+// ── System Efficiency Chart ──
 
-function SystemEfficiency({ data }: { data: EvalFullResult }) {
+function SystemEfficiencyChart({ data }: { data: EvalFullResult }) {
   const eff = data.system_efficiency;
-
-  if (eff.status === "insufficient_data" || eff.total_sessions < 2) {
-    return null;
-  }
-
   const reduction = eff.cost_reduction;
   const isImproved = reduction > 0;
 
-  return (
-    <div className="flex items-center gap-2 text-xs">
-      <span className="text-gray-400">비용 변화</span>
-      <span className={`font-mono font-medium ${isImproved ? "text-emerald-600" : "text-red-500"}`}>
-        {isImproved ? "-" : "+"}{(Math.abs(reduction) * 100).toFixed(1)}%
-      </span>
-      <span className="text-[10px] text-gray-300">
-        (${eff.avg_cost_first_half.toFixed(3)} → ${eff.avg_cost_second_half.toFixed(3)})
-      </span>
-    </div>
-  );
-}
-
-// ── Main Knowledge Growth Bar + Detail ──
-
-export function KnowledgeGrowthBar() {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const { data } = useQuery<EvalFullResult>({
-    queryKey: ["eval-full"],
-    queryFn: () => api.evalFull(),
-    refetchInterval: 30_000,
-  });
-
-  if (!data) return null;
-
-  const pd = data.pattern_discovery;
-  const aq = data.answer_quality;
-  const rc = data.reasoning_coverage;
-  const se = data.system_efficiency;
+  const chartData = eff.sessions.map((s, i) => ({
+    session: `S${i + 1}`,
+    cost: s.cost,
+  }));
 
   return (
-    <div className="flex-none border-t border-gray-200 bg-white">
-      {/* Summary Bar */}
-      <button
-        onClick={() => setIsExpanded((e) => !e)}
-        className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-50 transition-colors"
-      >
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
-          Knowledge Growth
-        </span>
-        <Separator orientation="vertical" className="h-4" />
-
-        <AxisBadge
-          icon="🔍"
-          label="패턴 탐지"
-          value={`${pd.approved}/${pd.total_proposed}건`}
-        />
-        <Separator orientation="vertical" className="h-4" />
-
-        <AxisBadge
-          icon="📈"
-          label="답변 품질"
-          value={aq.total_analyses > 0 ? `${(aq.discovered_usage_rate * 100).toFixed(0)}% 활용` : "데이터 부족"}
-        />
-        <Separator orientation="vertical" className="h-4" />
-
-        <AxisBadge
-          icon="🧠"
-          label="추론 커버"
-          value={`${(rc.full_coverage_rate * 100).toFixed(0)}%`}
-          sub={`(${rc.full_coverage_cells}/${rc.total_cells})`}
-        />
-        <Separator orientation="vertical" className="h-4" />
-
-        <AxisBadge
-          icon="⚡"
-          label="효율"
-          value={se.status === "insufficient_data" ? "데이터 부족" : `${(se.cost_reduction * 100).toFixed(1)}%`}
-        />
-
-        <div className="ml-auto">
-          <ChevronDown className={`size-3.5 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-        </div>
-      </button>
-
-      {/* Detail Panel */}
-      {isExpanded && (
-        <div className="border-t border-gray-100 bg-gray-50/50 px-4 py-4">
-          <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto">
-            <AnswerQualityChart data={data} />
-            <CoverageMatrix data={data} />
-            <ProposalTable />
-            <BeforeAfterComparison data={data} />
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-sm">시스템 효율</CardTitle>
+            <CardDescription>세션별 비용 추이</CardDescription>
           </div>
-          {se.status !== "insufficient_data" && (
-            <div className="mt-3 flex justify-end">
-              <SystemEfficiency data={data} />
-            </div>
-          )}
+          <span className={`font-mono text-sm font-medium ${isImproved ? "text-emerald-600" : "text-red-500"}`}>
+            {isImproved ? "↓" : "↑"}{(Math.abs(reduction) * 100).toFixed(1)}%
+          </span>
         </div>
-      )}
-    </div>
+      </CardHeader>
+      <CardContent>
+        {chartData.length < 2 ? (
+          <p className="text-xs text-gray-400 text-center py-4">세션 2건 이상 필요</p>
+        ) : (
+          <ResponsiveContainer width="100%" height={120}>
+            <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: -8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="session" tick={{ fontSize: 10, fill: "#9ca3af" }} />
+              <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} tickFormatter={(v: number) => `$${v.toFixed(3)}`} />
+              <Tooltip
+                contentStyle={{ fontSize: 11, borderRadius: 8, border: "1px solid #e5e7eb" }}
+                formatter={(value) => [`$${Number(value).toFixed(4)}`, "비용"]}
+              />
+              <Line type="monotone" dataKey="cost" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: "#10b981" }} />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }
