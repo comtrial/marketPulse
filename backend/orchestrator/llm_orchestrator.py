@@ -310,7 +310,7 @@ class LLMOrchestrator:
             return f"ERROR: {output['error'][:100]}"
 
         if tool_name == "query_causal_chain":
-            # dict 반환 (Phase 2): {"seed_chains": [...], "discovered_links": [...]}
+            # dict 반환: seed_chains + discovered_links
             if isinstance(output, dict) and "seed_chains" in output:
                 seeds = output.get("seed_chains", [])
                 discovered = output.get("discovered_links", [])
@@ -325,7 +325,7 @@ class LLMOrchestrator:
                 if discovered:
                     parts.append(f"+발견된 관계 {len(discovered)}건")
                 return " | ".join(parts) if parts else "인과 체인 없음"
-            # list 반환 (Phase 1 하위 호환)
+            # list 반환 (하위 호환)
             if isinstance(output, list):
                 if not output:
                     return "인과 체인 없음"
@@ -362,6 +362,6 @@ class LLMOrchestrator:
             return output.get("name", "상품 정보 없음")[:50]
 
         if isinstance(output, dict) and output.get("status") == "phase2":
-            return "Phase 2 예정"
+            return ""
 
         return json.dumps(output, ensure_ascii=False, default=str)[:100]

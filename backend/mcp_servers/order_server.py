@@ -65,8 +65,8 @@ class OrderDataServer:
     도구 목록:
       1. get_attribute_trend — 속성별 월별 비율 시계열 (핵심)
       2. get_country_attribute_heatmap — 국가×속성 비율 매트릭스
-      3. get_blue_ocean_combinations — Phase 2 스텁
-      4. compare_seller_vs_market — Phase 2 스텁
+      3. get_blue_ocean_combinations — 미구현
+      4. compare_seller_vs_market — 미구현
     """
 
     def __init__(self, engine: Engine):
@@ -261,9 +261,9 @@ class OrderDataServer:
     @tool(GetBlueOceanInput)
     def get_blue_ocean_combinations(self, params: GetBlueOceanInput) -> dict:
         """[Phase 2] 속성 조합별 수요 vs 공급 비교. 블루오션 조합 탐색."""
-        return {"status": "phase2", "message": "Phase 2에서 구현 예정"}
+        return {"status": "phase2", "message": "Not implemented"}
 
     @tool(CompareSellerInput)
     def compare_seller_vs_market(self, params: CompareSellerInput) -> dict:
         """[Phase 2] 셀러 상품 속성과 시장 인기 속성 비교. 갭 분석."""
-        return {"status": "phase2", "message": "Phase 2에서 구현 예정"}
+        return {"status": "phase2", "message": "Not implemented"}

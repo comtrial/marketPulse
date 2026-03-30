@@ -44,7 +44,6 @@ export default function DashboardPage() {
           setResult(null);
         }
       } catch (err) {
-        console.error("API call failed:", err);
       } finally {
         setIsLoading(false);
       }
@@ -80,9 +79,8 @@ export default function DashboardPage() {
       const res = await api.getResult(traceId);
       setResult(res);
       setExtractResult(null);
-      setQuery(res.user_query ?? `[이력] ${traceId.slice(0, 8)}...`);
+      setQuery(res.user_query ?? `[History] ${traceId.slice(0, 8)}...`);
     } catch (err) {
-      console.error("Failed to load result:", err);
     } finally {
       setIsLoading(false);
     }

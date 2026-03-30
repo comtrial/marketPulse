@@ -237,7 +237,7 @@ class MarketInsight(Base):
     )
 
 
-# ── Emerging Attributes (Phase 2) ───────────────────────────────────
+# ── Emerging Attributes ──
 
 
 class EmergingAttribute(Base):

@@ -11,9 +11,9 @@
     - [:SOLD_IN]→Country        ← 주문 데이터 (order.destination_country)
     - [:SOLD_ON]→Platform       ← 주문 데이터 (order.platform)
 
-Phase 1 제약:
+현재 제약:
   - 시드된 Ingredient 노드에 매칭되는 경우만 CONTAINS 관계 생성
-  - 매칭 실패(미지의 성분) → 로그만 남기고 skip (Phase 2에서 처리)
+  - 미매칭 성분은 로그만 남기고 skip
   - 잘못된 온톨로지 > 불완전한 온톨로지
 
 SOLD_IN 설계:
@@ -127,7 +127,7 @@ class GraphSynchronizer:
                 if r.single():
                     created_any = True
                 else:
-                    # Phase 1: 매칭 실패 → 로그만. Phase 2에서 emerging_attributes로 처리
+                    # 매칭 실패 → 로그만 남기고 skip
                     logger.info(
                         "ingredient_not_in_ontology",
                         ingredient=ingr_ko,

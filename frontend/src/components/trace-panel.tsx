@@ -307,7 +307,7 @@ function FinalAnswerStep({ step, index }: { step: OrchestratorStep; index: numbe
             </span>
           </div>
           <p className="text-xs text-gray-500 italic">
-            Zone B에서 전체 답변 확인
+            See full answer in result panel
           </p>
         </div>
       </div>

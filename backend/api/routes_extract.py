@@ -1,6 +1,6 @@
 """속성 추출 API 엔드포인트.
 
-POST /api/v1/extract       — 단건 추출 (데모 UI용, graph_sync 없음)
+POST /api/v1/extract       — 단건 추출 (graph_sync 없음)
 POST /api/v1/extract/batch — 배치 추출 (주문 일괄 처리, graph_sync 포함)
 GET  /api/v1/extract/stats — 추출 통계
 
@@ -66,7 +66,7 @@ async def extract_single(
     """단건 추출 — 상품명 하나를 받아서 속성 추출 결과 반환.
 
     order=None 명시: 주문 컨텍스트 없이 호출하므로 graph_sync는 수행되지 않음.
-    데모 UI에서 실시간으로 추출 결과를 확인할 때 사용.
+    단건 추출 시 사용.
     """
     result = await extractor.extract(
         product_text=req.product_name,
