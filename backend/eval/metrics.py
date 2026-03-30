@@ -176,8 +176,8 @@ def eval_answer_quality(engine: Engine) -> dict:
 # ── 축 3: 추론 커버리지 ──────────────────────────────────────────
 
 
-MIN_DATA_THRESHOLD = 30  # 통계적으로 의미 있는 최소 건수
-MIN_ATTR_DIVERSITY = 2   # 트렌드 비교가 가능한 최소 속성 종류
+MIN_DATA_THRESHOLD = 110  # 통계적으로 의미 있는 최소 건수
+MIN_ATTR_DIVERSITY = 3    # 트렌드 비교가 가능한 최소 속성 종류
 
 
 def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:

@@ -173,7 +173,7 @@ class TestReasoningCoverage:
         orch_count = MagicMock()
         orch_count.mappings.return_value.one.return_value = {"c": 0}
         data_count = MagicMock()
-        data_count.mappings.return_value.one.return_value = {"cnt": 50}
+        data_count.mappings.return_value.one.return_value = {"cnt": 150}
         diversity_count = MagicMock()
         diversity_count.mappings.return_value.one.return_value = {"cnt": 5}
         # 2 orch queries + 4 cells × 2 queries each = 10
@@ -209,7 +209,7 @@ class TestReasoningCoverage:
         assert cell["causal"] is True
         assert cell["data"] is True
         assert cell["full"] is True
-        assert cell["data_count"] == 50
+        assert cell["data_count"] == 150
         assert "gaps" in cell
 
         # JP_toner: causal=False (JP has UV차단, toner needs 수분 — no overlap)

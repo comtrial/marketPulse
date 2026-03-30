@@ -57,8 +57,9 @@ STEP_03_CONCERNS = [
 STEP_04_TRIGGERS = [
     """MATCH (cz:ClimateZone {type:"온대_고UV여름"}),(sc:SkinConcern {id:"concern_uv"})
        CREATE (cz)-[:TRIGGERS {strength:0.88, season:"여름", mechanism:"높은 UV 지수로 피부 광손상"}]->(sc)""",
-    """MATCH (cz:ClimateZone {type:"온대_고UV여름"}),(sc:SkinConcern {id:"concern_dehydration"})
-       CREATE (cz)-[:TRIGGERS {strength:0.65, season:"겨울", mechanism:"건조한 겨울 공기로 경피 수분 손실"}]->(sc)""",
+    # JP(온대_고UV여름)→dehydration 제거 — 커버리지 매트릭스에서 JP_lip 인과 공백 의도
+    # """MATCH (cz:ClimateZone {type:"온대_고UV여름"}),(sc:SkinConcern {id:"concern_dehydration"})
+    #    CREATE (cz)-[:TRIGGERS {strength:0.65, season:"겨울", mechanism:"건조한 겨울 공기로 경피 수분 손실"}]->(sc)""",
     """MATCH (cz:ClimateZone {type:"열대_다습"}),(sc:SkinConcern {id:"concern_oil"})
        CREATE (cz)-[:TRIGGERS {strength:0.90, season:"연중", mechanism:"고온 다습으로 피지 과다 분비"}]->(sc)""",
     """MATCH (cz:ClimateZone {type:"열대_다습"}),(sc:SkinConcern {id:"concern_dehydration"})
