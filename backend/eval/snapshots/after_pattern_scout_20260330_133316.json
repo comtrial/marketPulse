@@ -1,0 +1,172 @@
+{
+  "pattern_discovery": {
+    "total_proposed": 1,
+    "approved": 1,
+    "rejected": 0,
+    "pending": 0,
+    "approval_rate": 1.0,
+    "seed_relations": 9615,
+    "discovered_relations": 1,
+    "relation_growth": 1.0,
+    "by_type": {
+      "SYNERGY": 1
+    }
+  },
+  "answer_quality": {
+    "total_analyses": 5,
+    "used_discovered_link": 1,
+    "discovered_usage_rate": 0.2,
+    "session_history": [
+      {
+        "trace_id": "2af2bfde-cbb2-4e13-8064-f6ab8cd93cec",
+        "used_discovered": false
+      },
+      {
+        "trace_id": "64cfd44d-1161-4d6c-9d4b-24bc38f29038",
+        "used_discovered": false
+      },
+      {
+        "trace_id": "56fcdbd8-8de2-45d8-a778-1f2b025f2aea",
+        "used_discovered": false
+      },
+      {
+        "trace_id": "76a18871-c8cc-4c49-947f-6b7fe9859225",
+        "used_discovered": false
+      },
+      {
+        "trace_id": "e4062df9-0ba4-4c9d-9fee-34c52babf843",
+        "used_discovered": true
+      }
+    ]
+  },
+  "reasoning_coverage": {
+    "causal_evidence_rate": 1.0,
+    "full_coverage_cells": 15,
+    "total_cells": 15,
+    "full_coverage_rate": 1.0,
+    "matrix": {
+      "JP_cream": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "JP_lip": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "JP_serum": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "JP_sunscreen": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "JP_toner": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "KR_cream": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "KR_lip": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "KR_serum": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "KR_sunscreen": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "KR_toner": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "SG_cream": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "SG_lip": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "SG_serum": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "SG_sunscreen": {
+        "causal": true,
+        "data": true,
+        "full": true
+      },
+      "SG_toner": {
+        "causal": true,
+        "data": true,
+        "full": true
+      }
+    }
+  },
+  "system_efficiency": {
+    "status": "ok",
+    "avg_cost_first_half": 0.069583,
+    "avg_cost_second_half": 0.059807,
+    "cost_reduction": 0.14,
+    "total_sessions": 5,
+    "sessions": [
+      {
+        "trace_id": "2af2bfde-cbb2-4e13-8064-f6ab8cd93cec",
+        "cost": 0.051507,
+        "created_at": "2026-03-30 03:19:49.847892+00:00"
+      },
+      {
+        "trace_id": "64cfd44d-1161-4d6c-9d4b-24bc38f29038",
+        "cost": 0.08766,
+        "created_at": "2026-03-30 03:20:14.328462+00:00"
+      },
+      {
+        "trace_id": "56fcdbd8-8de2-45d8-a778-1f2b025f2aea",
+        "cost": 0.054957,
+        "created_at": "2026-03-30 03:20:35.317502+00:00"
+      },
+      {
+        "trace_id": "76a18871-c8cc-4c49-947f-6b7fe9859225",
+        "cost": 0.052311,
+        "created_at": "2026-03-30 04:27:20.377516+00:00"
+      },
+      {
+        "trace_id": "e4062df9-0ba4-4c9d-9fee-34c52babf843",
+        "cost": 0.072153,
+        "created_at": "2026-03-30 04:28:49.909157+00:00"
+      }
+    ]
+  },
+  "before_after_pairs": [
+    {
+      "query": "일본 선크림에서 비건과 무기자차를 함께 가진 상품이 많은 이유는?",
+      "before_trace_id": "64cfd44d-1161-4d6c-9d4b-24bc38f29038",
+      "before_answer": "## 분석 결과\n\n일본 선크림에서 **비건×무기자차** 조합이 증가하는 주요 이유는 다음과 같습니다:\n\n### 1. 강력한 UV차단 수요 (체인 강도 0.81)\n- 일본의 온대 고UV 여름 기후로 인한 자외선 손상 우려가 매우 높음\n- UV차단 기능에 대한 수요 강도가 0.92로 최고 수준\n\n### 2. 비건 트렌드의 급속한 성장\n- 2025년 10월 7.5% → 2026년 3월 24.3%로 **3배 이상 증가**\n- 6개월간 지속적인 상승세로 소비자 관심도가 매우 높음\n\n### 3. 무기자차의 안정적인 점유율 (15-16%)\n- 무기자차는 약 15.7% 수준에서 안정적으로 유지\n- 민감성 피부나 자연 친화적 제품을 선호하는 소비자층의 꾸준한 수요\n\n### 4. 조합의 시너지 효과\n**비건 + 무기자차 = 완벽한 클린뷰티**\n- **비건**: 동물성 원료 무사용으로 윤리적 소비 욕구 충족\n- **무기자차**: 화학 자외선 차단제 대비 피부 자극 최소화\n- 두 속성 모두 **자연 친화적, 저자극**이라는 공통 가치를 가짐\n\n### 셀러를 위한 인사이트\n1. **급성장 시장**: 비건 선크림 시장이 3배 성장하는 골든타임\n2. **차별화 포인트**: 무기자차 + 비건 조합은 클린뷰티 트렌드의 핵심\n3. **일본 특화 전략**: 강력한 UV 차단력과 저자극성을 동시에 어필하는 마케팅 필요",
+      "before_at": "2026-03-30 03:20:14.328462+00:00",
+      "after_trace_id": "e4062df9-0ba4-4c9d-9fee-34c52babf843",
+      "after_answer": "## 분석 결과\n\n일본 선크림에서 **비건과 무기자차의 조합이 많은 이유**는 다음과 같습니다:\n\n### 1. **실증된 시너지 효과**\n- 데이터에 따르면 비건과 무기자차는 **1.55배의 리프트 스코어**를 보이며 실제 시너지가 있음\n- 단독 출현율: 비건 38.3%, 무기자차 47.3%\n- **동시 출현율: 28.0%** (예상 18.1%보다 훨씬 높음)\n\n### 2. **비건 트렌드의 급성장**\n- 비건 제품 비율이 **6개월간 7.5% → 24.3%로 3배 이상 증가**\n- 이는 일본 소비자들의 클린뷰티, 윤리적 소비 관심 증가를 반영\n\n### 3. **무기자차의 안정적 수요**\n- 무기자차는 **15-16% 수준에서 안정적으로 유지**\n- 일본의 온대 고UV 환경에서 피부 자극을 최소화하면서도 효과적인 자외선 차단 필요\n\n### 4. **소비자 니즈의 일치**\n- **비건**: 동물성 원료 배제, 친환경성\n- **무기자차**: 화학적 자극 최소화, 민감피부 적합성\n- 두 속성 모두 \"**안전하고 순한 제품**\"이라는 공통 가치를 추구\n\n### 💡 **셀러 인사이트**\n일본 선크림 시장에서는 \"클린뷰티 + 순함\"의 조합이 강력한 차별화 포인트입니다. 비건 인증과 무기자차를 함께 어필하는 것이 단독으로 포지셔닝하는 것보다 **55% 더 효과적**이라는 데이터 근거가 있으므로, 이 두 속성을 함께 강조하는 마케팅 전략을 권장합니다.",
+      "after_at": "2026-03-30 04:28:49.909157+00:00"
+    }
+  ],
+  "snapshot_name": "after_pattern_scout",
+  "saved_at": "2026-03-30T13:33:16.703516"
+}
