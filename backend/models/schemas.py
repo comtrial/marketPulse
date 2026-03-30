@@ -10,6 +10,13 @@ class ExtractRequest(BaseModel):
     product_name: str
 
 
+class ExtractTraceResponse(BaseModel):
+    vector_search: list[dict] = []
+    few_shot_prompt: str = ""
+    llm_response: dict = {}
+    validation_details: dict = {}
+
+
 class ExtractResponse(BaseModel):
     attributes: dict
     validation_passed: bool
@@ -20,6 +27,7 @@ class ExtractResponse(BaseModel):
     cost_usd: float
     latency_ms: float
     graph_synced: bool
+    trace: ExtractTraceResponse | None = None
 
 
 class BatchExtractRequest(BaseModel):

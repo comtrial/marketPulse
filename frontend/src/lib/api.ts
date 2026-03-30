@@ -36,6 +36,27 @@ export interface OrchestratorResult {
   total_cost_usd: number;
 }
 
+export interface ExtractTraceDetail {
+  vector_search: {
+    gold_id: string;
+    raw_input: string;
+    similarity: number;
+    combined_score: number;
+    extracted_output: Record<string, unknown>;
+  }[];
+  few_shot_prompt: string;
+  llm_response: {
+    model: string;
+    input_tokens: number;
+    output_tokens: number;
+  };
+  validation_details: {
+    passed: boolean;
+    errors: string[];
+    warnings: string[];
+  };
+}
+
 export interface ExtractResult {
   attributes: Record<string, unknown>;
   validation_passed: boolean;
@@ -46,6 +67,7 @@ export interface ExtractResult {
   cost_usd: number;
   latency_ms: number;
   graph_synced: boolean;
+  trace?: ExtractTraceDetail;
 }
 
 export interface ExtractStats {

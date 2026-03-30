@@ -32,7 +32,7 @@ import structlog
 from core.config import settings
 from extraction.cost_tracker import CostTracker
 from extraction.graph_sync import GraphSynchronizer, OrderContext
-from extraction.schemas import ExtractionResult
+from extraction.schemas import ExtractionResult, ExtractionTrace
 from extraction.tool_schema import EXTRACTION_TOOL
 from extraction.validator import ExtractionValidator
 from extraction.vector_store import VectorStore
@@ -185,6 +185,31 @@ class CosmeticExtractor:
             latency_ms=cost.latency_ms,
         )
 
+        # ⑧ 트레이스 데이터 — 프론트엔드 Zone C에서 각 단계 상세를 펼쳐볼 수 있도록
+        trace = ExtractionTrace(
+            vector_search=[
+                {
+                    "gold_id": e["gold_id"],
+                    "raw_input": e["raw_input"],
+                    "similarity": round(e["similarity"], 4),
+                    "combined_score": round(e.get("combined_score", e["similarity"]), 4),
+                    "extracted_output": e["extracted_output"],
+                }
+                for e in examples
+            ],
+            few_shot_prompt=self._build_example_block(examples),
+            llm_response={
+                "model": self.model,
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+            },
+            validation_details={
+                "passed": validation.passed,
+                "errors": validation.errors,
+                "warnings": validation.warnings,
+            },
+        )
+
         return ExtractionResult(
             attributes=raw_attrs,
             validation=validation,
@@ -192,20 +217,21 @@ class CosmeticExtractor:
             avg_similarity=round(avg_similarity, 3),
             cost=cost,
             graph_synced=graph_synced,
+            trace=trace,
         )
 
-    def _build_system_prompt(self, examples: list[dict]) -> str:
-        """프롬프트 템플릿에 벡터 검색 결과 gold example을 주입.
-
-        prompts/extractor/v{N}.txt의 {examples} 플레이스홀더를
-        실제 검색된 gold example로 치환한다.
-        """
-        example_block = ""
+    @staticmethod
+    def _build_example_block(examples: list[dict]) -> str:
+        """검색된 gold example을 few-shot 블록 문자열로 포맷."""
+        block = ""
         for i, ex in enumerate(examples, 1):
-            example_block += (
+            block += (
                 f"\n예시 {i} (유사도: {ex['similarity']:.2f}):\n"
                 f"  상품명: {ex['raw_input']}\n"
                 f"  추출 결과: {json.dumps(ex['extracted_output'], ensure_ascii=False)}\n"
             )
+        return block
 
-        return self.prompt_template.replace("{examples}", example_block)
+    def _build_system_prompt(self, examples: list[dict]) -> str:
+        """프롬프트 템플릿에 벡터 검색 결과 gold example을 주입."""
+        return self.prompt_template.replace("{examples}", self._build_example_block(examples))

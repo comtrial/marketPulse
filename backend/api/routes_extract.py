@@ -31,6 +31,7 @@ from models.schemas import (
     ExtractRequest,
     ExtractResponse,
     ExtractStatsResponse,
+    ExtractTraceResponse,
 )
 
 logger = structlog.get_logger()
@@ -82,6 +83,12 @@ async def extract_single(
         cost_usd=result.cost.cost_usd,
         latency_ms=result.cost.latency_ms,
         graph_synced=result.graph_synced,
+        trace=ExtractTraceResponse(
+            vector_search=result.trace.vector_search,
+            few_shot_prompt=result.trace.few_shot_prompt,
+            llm_response=result.trace.llm_response,
+            validation_details=result.trace.validation_details,
+        ),
     )
 
 

@@ -508,49 +508,8 @@ function IntelligenceTrace({ result }: { result: OrchestratorResult }) {
 
 // ── Extract Trace ──
 
-interface ExtractStepDef {
-  label: string;
-  server: string;
-  description: (r: ExtractResult) => string;
-}
-
-const EXTRACT_STEPS: ExtractStepDef[] = [
-  {
-    label: "Vector Search",
-    server: "vector",
-    description: (r) =>
-      `${r.examples_used.length}건의 유사 제품 검색 (avg similarity: ${(r.avg_similarity * 100).toFixed(1)}%)`,
-  },
-  {
-    label: "LLM Extraction",
-    server: "llm",
-    description: (r) =>
-      `${Object.keys(r.attributes).length}개 속성 추출 ($${r.cost_usd.toFixed(4)})`,
-  },
-  {
-    label: "Validation",
-    server: "validation",
-    description: (r) =>
-      r.validation_passed
-        ? `검증 통과 (경고 ${r.warnings.length}건)`
-        : `검증 실패: ${r.errors.join(", ")}`,
-  },
-  {
-    label: "Graph Sync",
-    server: "kg",
-    description: (r) =>
-      r.graph_synced ? "Neo4j 동기화 완료" : "Neo4j 미동기화",
-  },
-];
-
 function ExtractTrace({ result }: { result: ExtractResult }) {
-  const validationStyle = {
-    border: "border-l-gray-400",
-    bg: "bg-gray-50",
-    text: "text-gray-600",
-    dot: "bg-gray-400",
-    label: "Rules",
-  };
+  const trace = result.trace;
 
   return (
     <div className="flex flex-col gap-2 p-3">
@@ -562,52 +521,159 @@ function ExtractTrace({ result }: { result: ExtractResult }) {
           <span className="rounded bg-violet-50 px-1.5 py-0.5 text-[10px] font-medium text-violet-500">
             Few-Shot + Tool Use
           </span>
+          {trace?.llm_response?.model && (
+            <span className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-[9px] text-gray-400">
+              {trace.llm_response.model.split("-").slice(0, 2).join(" ")}
+            </span>
+          )}
         </div>
       </div>
 
       <Separator />
 
-      <div className="flex flex-col">
-        {EXTRACT_STEPS.map((stepDef, idx) => {
-          const isValidation = stepDef.server === "validation";
-          const style = isValidation
-            ? validationStyle
-            : SERVER_STYLES[stepDef.server] ?? SERVER_STYLES.llm;
-          const isLast = idx === EXTRACT_STEPS.length - 1;
-
-          return (
-            <div
-              key={stepDef.label}
-              className="relative pl-6 animate-step-reveal"
-              style={{ animationDelay: `${idx * 150}ms` }}
-            >
-              {/* Timeline line */}
-              {!isLast && (
-                <div className="absolute left-[9px] top-6 bottom-0 w-px bg-gray-200" />
-              )}
-              {/* Timeline dot */}
-              <div className={`absolute left-1 top-1.5 size-[10px] rounded-full ring-2 ring-white ${style.dot}`} />
-
-              <div className="pb-4">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="font-mono text-[10px] font-bold text-gray-400">
-                    {idx + 1}
-                  </span>
-                  <span className="text-xs font-semibold text-gray-900">
-                    {stepDef.label}
-                  </span>
-                  <span
-                    className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${style.bg} ${style.text}`}
-                  >
-                    <span className={`inline-block size-1.5 rounded-full ${style.dot}`} />
-                    {style.label}
-                  </span>
+      {/* ── Step 1: Vector Search ── */}
+      <div className="relative pl-6 animate-step-reveal" style={{ animationDelay: "0ms" }}>
+        <div className="absolute left-[9px] top-6 bottom-0 w-px bg-gray-200" />
+        <div className="absolute left-1 top-1.5 size-[10px] rounded-full ring-2 ring-white bg-violet-500" />
+        <div className="pb-4">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] font-bold text-gray-400">1</span>
+            <span className="text-xs font-semibold text-gray-900">Vector Search</span>
+            <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-violet-50 text-violet-600">
+              <span className="inline-block size-1.5 rounded-full bg-violet-500" />
+              ChromaDB
+            </span>
+          </div>
+          <HighlightedSummary
+            text={`${result.examples_used.length}건의 유사 제품 검색 (avg similarity: ${(result.avg_similarity * 100).toFixed(1)}%)`}
+          />
+          {/* 각 예시별 상세 */}
+          {trace?.vector_search && trace.vector_search.length > 0 && (
+            <div className="mt-2 flex flex-col gap-1.5">
+              {trace.vector_search.map((ex) => (
+                <div key={ex.gold_id} className="rounded-md border border-violet-100 bg-violet-50/30 px-2.5 py-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-[10px] font-semibold text-violet-600">{ex.gold_id}</span>
+                    <span className="font-mono text-[10px] text-gray-400">
+                      sim: {(ex.similarity * 100).toFixed(1)}%
+                    </span>
+                    <span className="font-mono text-[10px] text-gray-400">
+                      score: {(ex.combined_score * 100).toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-600 truncate">{ex.raw_input}</p>
+                  <div className="mt-1">
+                    <JsonBlock
+                      data={ex.extracted_output as Record<string, unknown>}
+                      label="Extracted Output"
+                    />
+                  </div>
                 </div>
-                <HighlightedSummary text={stepDef.description(result)} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Step 2: LLM Extraction ── */}
+      <div className="relative pl-6 animate-step-reveal" style={{ animationDelay: "150ms" }}>
+        <div className="absolute left-[9px] top-6 bottom-0 w-px bg-gray-200" />
+        <div className="absolute left-1 top-1.5 size-[10px] rounded-full ring-2 ring-white bg-orange-500" />
+        <div className="pb-4">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] font-bold text-gray-400">2</span>
+            <span className="text-xs font-semibold text-gray-900">LLM Extraction</span>
+            <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-orange-50 text-orange-600">
+              <span className="inline-block size-1.5 rounded-full bg-orange-500" />
+              Claude
+            </span>
+          </div>
+          <HighlightedSummary
+            text={`${Object.keys(result.attributes).length}개 속성 추출 ($${result.cost_usd.toFixed(4)})`}
+          />
+          {/* Token usage */}
+          {trace?.llm_response && (
+            <div className="mt-2 grid grid-cols-2 gap-1.5 text-[10px]">
+              <div className="rounded bg-white p-1.5 text-center border border-gray-100">
+                <div className="text-gray-400">Input</div>
+                <div className="font-mono font-medium text-gray-700">
+                  {trace.llm_response.input_tokens?.toLocaleString()}
+                </div>
+              </div>
+              <div className="rounded bg-white p-1.5 text-center border border-gray-100">
+                <div className="text-gray-400">Output</div>
+                <div className="font-mono font-medium text-gray-700">
+                  {trace.llm_response.output_tokens?.toLocaleString()}
+                </div>
               </div>
             </div>
-          );
-        })}
+          )}
+          {/* Few-shot prompt */}
+          {trace?.few_shot_prompt && (
+            <div className="mt-2">
+              <JsonBlock
+                data={{ few_shot_examples: trace.few_shot_prompt } as Record<string, unknown>}
+                label="Few-Shot Prompt (injected)"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Step 3: Validation ── */}
+      <div className="relative pl-6 animate-step-reveal" style={{ animationDelay: "300ms" }}>
+        <div className="absolute left-[9px] top-6 bottom-0 w-px bg-gray-200" />
+        <div className="absolute left-1 top-1.5 size-[10px] rounded-full ring-2 ring-white bg-gray-400" />
+        <div className="pb-4">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] font-bold text-gray-400">3</span>
+            <span className="text-xs font-semibold text-gray-900">Validation</span>
+            <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-gray-50 text-gray-600">
+              <span className="inline-block size-1.5 rounded-full bg-gray-400" />
+              Rules
+            </span>
+            <span className={`text-[10px] font-medium ${result.validation_passed ? "text-emerald-600" : "text-red-500"}`}>
+              {result.validation_passed ? "PASS" : "FAIL"}
+            </span>
+          </div>
+          <HighlightedSummary
+            text={result.validation_passed
+              ? `검증 통과 (경고 ${result.warnings.length}건)`
+              : `검증 실패: ${result.errors.join(", ")}`}
+          />
+          {/* Errors & Warnings detail */}
+          {(result.errors.length > 0 || result.warnings.length > 0) && (
+            <div className="mt-2 flex flex-col gap-1">
+              {result.errors.map((e, i) => (
+                <p key={`e${i}`} className="text-[10px] text-red-500">error: {e}</p>
+              ))}
+              {result.warnings.map((w, i) => (
+                <p key={`w${i}`} className="text-[10px] text-orange-500">warn: {w}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Step 4: Graph Sync ── */}
+      <div className="relative pl-6 animate-step-reveal" style={{ animationDelay: "450ms" }}>
+        <div className="absolute left-1 top-1.5 size-[10px] rounded-full ring-2 ring-white bg-emerald-500" />
+        <div className="pb-2">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] font-bold text-gray-400">4</span>
+            <span className="text-xs font-semibold text-gray-900">Graph Sync</span>
+            <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-emerald-50 text-emerald-600">
+              <span className="inline-block size-1.5 rounded-full bg-emerald-500" />
+              Neo4j
+            </span>
+            <span className={`text-[10px] font-medium ${result.graph_synced ? "text-emerald-600" : "text-gray-400"}`}>
+              {result.graph_synced ? "SYNCED" : "SKIP"}
+            </span>
+          </div>
+          <HighlightedSummary
+            text={result.graph_synced ? "Neo4j 동기화 완료" : "Neo4j 미동기화 (단건 추출 모드)"}
+          />
+        </div>
       </div>
 
       <Separator />
@@ -615,7 +681,7 @@ function ExtractTrace({ result }: { result: ExtractResult }) {
       {/* Summary */}
       <div
         className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 animate-step-reveal"
-        style={{ animationDelay: `${EXTRACT_STEPS.length * 150 + 100}ms` }}
+        style={{ animationDelay: "700ms" }}
       >
         <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400 mb-2">
           Pipeline Summary
@@ -633,6 +699,14 @@ function ExtractTrace({ result }: { result: ExtractResult }) {
             <span className="text-gray-400">Attrs</span>
             <span className="font-mono font-medium text-gray-700">{Object.keys(result.attributes).length}</span>
           </div>
+          {trace?.llm_response && (
+            <div className="flex items-center gap-1">
+              <span className="text-gray-400">Tokens</span>
+              <span className="font-mono font-medium text-gray-700">
+                {((trace.llm_response.input_tokens ?? 0) + (trace.llm_response.output_tokens ?? 0)).toLocaleString()}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

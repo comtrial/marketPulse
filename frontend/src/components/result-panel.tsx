@@ -31,34 +31,89 @@ interface ResultPanelProps {
 // ── Architecture Overview (initial state) ──
 
 function ArchitectureOverview() {
+  const dataSources = [
+    { name: "Neo4j", role: "왜?", desc: "인과 체인 · 성분 시너지", color: "border-emerald-300 bg-emerald-50", dot: "bg-emerald-500", tools: ["query_causal_chain", "find_trending_ingredients", "find_ingredient_synergies", "get_product_graph"] },
+    { name: "PostgreSQL", role: "얼마나?", desc: "월별 트렌드 · 속성 히트맵", color: "border-blue-300 bg-blue-50", dot: "bg-blue-500", tools: ["get_attribute_trend", "get_country_attribute_heatmap"] },
+    { name: "ChromaDB", role: "비슷한?", desc: "Few-Shot 유사 사례 검색", color: "border-violet-300 bg-violet-50", dot: "bg-violet-500", tools: ["vector_search (내부)"] },
+  ];
+
   return (
-    <div className="flex flex-1 items-center justify-center p-8">
-      <Card className="w-full max-w-lg">
-        <CardHeader>
-          <CardTitle className="text-base">MarketPulse Architecture</CardTitle>
-          <CardDescription>
-            LLM Orchestrator + 8 MCP Tools
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <pre className="whitespace-pre font-mono text-xs leading-relaxed text-gray-600">
-{`┌─────────┐  ┌──────────┐  ┌─────────┐
-│ Neo4j   │  │PostgreSQL│  │ChromaDB │
-│ "왜?"   │  │"얼마나?" │  │"비슷한?"│
-└────┬────┘  └────┬─────┘  └────┬────┘
-     └──────┬─────┘             │
-            ▼                   │
-   LLM Orchestrator ◄──────────┘
-   (ReAct + 8 Tools)`}
-          </pre>
-          <Separator className="my-4" />
-          <p className="text-sm text-gray-500 leading-relaxed">
-            왼쪽에서 질문을 선택하면
-            <br />
-            LLM이 도구를 자동 선택하여 분석합니다.
+    <div className="flex flex-1 items-center justify-center p-6">
+      <div className="w-full max-w-xl">
+        {/* Title */}
+        <div className="mb-6 text-center">
+          <h2 className="text-lg font-bold text-gray-900 tracking-tight">
+            MarketPulse
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            K-Beauty Cross-Border Intelligence Engine
           </p>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Data Sources */}
+        <div className="grid grid-cols-3 gap-3 mb-5">
+          {dataSources.map((ds) => (
+            <div key={ds.name} className={`rounded-lg border p-3 ${ds.color}`}>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <span className={`inline-block size-2 rounded-full ${ds.dot}`} />
+                <span className="text-xs font-bold text-gray-900">{ds.name}</span>
+              </div>
+              <p className="text-[10px] font-medium text-gray-600 mb-1">&ldquo;{ds.role}&rdquo;</p>
+              <p className="text-[10px] text-gray-500 leading-relaxed">{ds.desc}</p>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {ds.tools.map((t) => (
+                  <span key={t} className="rounded bg-white/60 px-1 py-0.5 font-mono text-[8px] text-gray-500">
+                    {t.length > 20 ? t.slice(0, 18) + "…" : t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Arrows down */}
+        <div className="flex justify-center mb-3">
+          <div className="flex items-center gap-4 text-gray-300">
+            <span className="text-sm">↓</span>
+            <span className="text-sm">↓</span>
+            <span className="text-sm">↓</span>
+          </div>
+        </div>
+
+        {/* Orchestrator */}
+        <div className="rounded-xl border-2 border-gray-200 bg-white p-4 text-center shadow-sm">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="inline-block size-2.5 rounded-full bg-orange-500" />
+            <span className="text-sm font-bold text-gray-900">LLM Orchestrator</span>
+            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-medium text-orange-600">
+              ReAct Loop
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mb-3">
+            질문에 따라 도구를 자율 선택 · 실행 · 종합
+          </p>
+          <div className="flex justify-center gap-2">
+            <div className="rounded-md border border-amber-100 bg-amber-50 px-2 py-1 text-[10px] font-medium text-amber-700">
+              Think
+            </div>
+            <span className="self-center text-xs text-gray-300">→</span>
+            <div className="rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] font-medium text-gray-600">
+              Act
+            </div>
+            <span className="self-center text-xs text-gray-300">→</span>
+            <div className="rounded-md border border-sky-100 bg-sky-50 px-2 py-1 text-[10px] font-medium text-sky-700">
+              Observe
+            </div>
+            <span className="self-center text-xs text-gray-300">→</span>
+            <span className="self-center text-[10px] text-gray-400 italic">repeat</span>
+          </div>
+        </div>
+
+        {/* Bottom instruction */}
+        <p className="mt-5 text-center text-xs text-gray-400">
+          왼쪽에서 질문을 선택하면 LLM이 도구를 자동 선택하여 분석합니다
+        </p>
+      </div>
     </div>
   );
 }
