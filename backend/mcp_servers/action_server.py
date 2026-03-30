@@ -94,11 +94,14 @@ class ActionServer:
             conn.commit()
 
         # Neo4j PROPOSED_LINK
+        # "비건", "무기자차" 등은 기존 노드(Ingredient, Brand 등)가 아니라
+        # 속성값(valueClaims, additionalAttrs)이므로 Neo4j에 노드가 없을 수 있다.
+        # → Attribute 노드를 MERGE로 동적 생성하여 관계를 연결한다.
         with self.neo4j_driver.session() as session:
             session.run(
                 """
-                MATCH (s) WHERE s.name = $source OR s.commonNameKo = $source
-                MATCH (t) WHERE t.name = $target OR t.commonNameKo = $target
+                MERGE (s:Attribute {name: $source})
+                MERGE (t:Attribute {name: $target})
                 MERGE (s)-[r:PROPOSED_LINK {proposalId: $pid}]->(t)
                 SET r.type = $rtype,
                     r.evidence = $evidence,

@@ -137,19 +137,29 @@ def approve_proposal(
         )
         conn.commit()
 
-    # Neo4j: PROPOSED_LINK → DISCOVERED_LINK
+    # Neo4j: PROPOSED_LINK → DISCOVERED_LINK 승격
+    # 1. 기존 PROPOSED_LINK 삭제 (제안 상태 관계 제거)
+    # 2. Attribute 노드를 MERGE로 보장 + DISCOVERED_LINK 생성 (승인 상태 관계 생성)
+    #
+    # "비건", "무기자차" 등은 기존 Neo4j 노드(Ingredient, Brand)가 아니라
+    # 속성값이므로, Attribute 노드를 동적 생성하여 관계를 연결한다.
     evidence = row["evidence"] if isinstance(row["evidence"], str) else json.dumps(row["evidence"], ensure_ascii=False)
     with neo4j_driver.session() as session:
         session.run(
+            "MATCH ()-[r:PROPOSED_LINK {proposalId: $pid}]->() DELETE r",
+            pid=proposal_id,
+        )
+        session.run(
             """
-            MATCH (s)-[r:PROPOSED_LINK {proposalId: $pid}]->(t)
-            DELETE r
-            CREATE (s)-[new:DISCOVERED_LINK {
-                type: $rtype,
-                evidence: $evidence,
-                source: 'pattern_scout'
-            }]->(t)
+            MERGE (s:Attribute {name: $source})
+            MERGE (t:Attribute {name: $target})
+            MERGE (s)-[new:DISCOVERED_LINK {proposalId: $pid}]->(t)
+            SET new.type = $rtype,
+                new.evidence = $evidence,
+                new.source = 'pattern_scout'
             """,
+            source=row["source_concept"],
+            target=row["target_concept"],
             pid=proposal_id,
             rtype=row["relationship_type"],
             evidence=evidence,
