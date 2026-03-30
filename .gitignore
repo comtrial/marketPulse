@@ -36,3 +36,15 @@ out/
 # Docker volumes (local)
 pgdata/
 neo4jdata/
+
+# Internal docs (agent prompts, work plans, test scenarios)
+CLAUDE.md
+frontend/CLAUDE.md
+frontend/AGENTS.md
+docs/execute/
+docs/generate_data/
+docs/prompt-*.md
+docs/scenario/
+
+# Eval snapshots (local data)
+backend/eval/snapshots/

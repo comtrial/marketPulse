@@ -1,316 +1,273 @@
 order_id,order_date,destination_country,brand,product_name,product_type,quantity,unit_price_usd
-SHPE-000001,2025-10-01,SG,Roundlab,라운드랩 독도 토너 300ml 센텔라 진정,toner,1,22.50
-SHPE-000002,2025-10-01,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,20.31
-SHPE-000003,2025-10-02,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml,sunscreen,2,12.99
-SHPE-000004,2025-10-05,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,23.26
-SHPE-000005,2025-10-05,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,27.89
-SHPE-000006,2025-10-05,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 히알루론산,serum,1,28.86
-SHPE-000007,2025-10-05,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #08 피그핑크 매트,lip,1,8.89
-SHPE-000008,2025-10-06,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드,toner,2,21.86
-SHPE-000009,2025-10-06,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 나이아신아마이드 항산화,serum,2,18.73
-SHPE-000010,2025-10-07,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,2,22.81
-SHPE-000011,2025-10-07,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #01 체리레드 벨벳,lip,3,17.88
-SHPE-000012,2025-10-08,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,12.05
-SHPE-000013,2025-10-08,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,26.26
-SHPE-000014,2025-10-08,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 히알루론산 항산화,toner,1,11.14
-SHPE-000015,2025-10-10,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,18.65
-SHPE-000016,2025-10-12,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml,sunscreen,1,20.76
-SHPE-000017,2025-10-12,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,30.54
-SHPE-000018,2025-10-14,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,27.05
-SHPE-000019,2025-10-15,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,1,22.27
-SHPE-000020,2025-10-15,SG,Torriden,토리든 다이브인 저분자 히알루론산 세럼 50ml 나이아신아마이드,serum,2,34.06
-SHPE-000021,2025-10-15,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 노세범,serum,1,28.17
-SHPE-000022,2025-10-17,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 수분,sunscreen,2,21.69
-SHPE-000023,2025-10-17,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,1,14.26
-SHPE-000024,2025-10-18,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,3,19.13
-SHPE-000025,2025-10-18,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드,toner,1,20.26
-SHPE-000026,2025-10-19,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,14.14
-SHPE-000027,2025-10-19,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,20.91
-SHPE-000028,2025-10-20,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드 센텔라 피부장벽,toner,1,22.52
-SHPE-000029,2025-10-20,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,1,30.92
-SHPE-000030,2025-10-20,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,2,15.04
-SHPE-000031,2025-10-21,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,5,26.95
-SHPE-000032,2025-10-21,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 히알루론산 피부장벽,serum,3,23.99
-SHPE-000033,2025-10-21,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,2,21.62
-SHPE-000034,2025-10-21,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,4,23.26
-SHPE-000035,2025-10-22,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,24.91
-SHPE-000036,2025-10-24,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,23.47
-SHPE-000037,2025-10-24,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프 수분,sunscreen,1,22.92
-SHPE-000038,2025-10-24,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,2,17.03
-SHPE-000039,2025-10-25,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml,sunscreen,4,16.83
-SHPE-000040,2025-10-25,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #02 로지브라운 글로시,lip,1,8.01
-SHPE-000041,2025-10-26,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 항산화,toner,1,24.39
-SHPE-000042,2025-10-26,SG,Innisfree,이니스프리 한란 보습 크림 50ml 진정,cream,1,22.23
-SHPE-000043,2025-10-26,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,16.63
-SHPE-000044,2025-10-27,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 나이아신아마이드 히알루론산 진정,serum,1,30.05
-SHPE-000045,2025-10-28,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,2,28.64
-SHPE-000046,2025-11-01,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,20.13
-SHPE-000047,2025-11-03,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 항산화,toner,3,21.61
-SHPE-000048,2025-11-04,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,29.06
-SHPE-000049,2025-11-05,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 수분,sunscreen,2,23.58
-SHPE-000050,2025-11-05,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml,serum,3,18.08
-SHPE-000051,2025-11-05,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,2,16.29
-SHPE-000052,2025-11-06,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드 히알루론산,toner,1,10.39
-SHPE-000053,2025-11-07,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml,sunscreen,1,22.78
-SHPE-000054,2025-11-07,SG,Innisfree,이니스프리 비자 시카 세럼 50ml 보습,serum,2,26.89
-SHPE-000055,2025-11-07,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,3,19.48
-SHPE-000056,2025-11-08,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml,sunscreen,1,22.49
-SHPE-000057,2025-11-08,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,1,24.09
-SHPE-000058,2025-11-09,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,3,18.95
-SHPE-000059,2025-11-09,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,1,14.05
-SHPE-000060,2025-11-10,SG,Roundlab,라운드랩 독도 세럼 50ml 보습,serum,2,33.27
-SHPE-000061,2025-11-10,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,3,13.35
-SHPE-000062,2025-11-11,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,1,29.27
-SHPE-000063,2025-11-12,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,20.28
-SHPE-000064,2025-11-12,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 히알루론산,toner,3,16.41
-SHPE-000065,2025-11-12,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml 보습,cream,1,30.12
-SHPE-000066,2025-11-13,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,26.23
-SHPE-000067,2025-11-13,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,2,15.63
-SHPE-000068,2025-11-14,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 노세범,toner,2,23.61
-SHPE-000069,2025-11-14,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 저자극,cream,1,19.59
-SHPE-000070,2025-11-14,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,2,24.74
-SHPE-000071,2025-11-15,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,21.04
-SHPE-000072,2025-11-15,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 노세범,sunscreen,2,12.79
-SHPE-000073,2025-11-15,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml,toner,1,21.52
-SHPE-000074,2025-11-16,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,4,28.53
-SHPE-000075,2025-11-16,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #03 누드피치 벨벳,lip,1,8.78
-SHPE-000076,2025-11-17,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #05 플럼 글로시,lip,1,8.72
-SHPE-000077,2025-11-18,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,15.17
-SHPE-000078,2025-11-18,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 히알루론산,toner,1,15.81
-SHPE-000079,2025-11-18,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,21.44
-SHPE-000080,2025-11-19,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,19.37
-SHPE-000081,2025-11-19,SG,Torriden,토리든 다이브인 저분자 히알루론산 토너 300ml 센텔라,toner,3,16.21
-SHPE-000082,2025-11-19,SG,Innisfree,이니스프리 비비드 코튼 잉크 틴트 4g #12 오렌지레드 시어,lip,2,17.75
-SHPE-000083,2025-11-20,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,12.60
-SHPE-000084,2025-11-20,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,5,21.86
-SHPE-000085,2025-11-20,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,5,23.01
-SHPE-000086,2025-11-20,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 센텔라 히알루론산,toner,1,12.90
-SHPE-000087,2025-11-20,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 나이아신아마이드,serum,1,29.85
-SHPE-000088,2025-11-20,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #10 로즈우드 시어,lip,3,10.37
-SHPE-000089,2025-11-21,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 히알루론산,serum,1,26.90
-SHPE-000090,2025-11-23,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 항산화,toner,2,11.28
-SHPE-000091,2025-11-24,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,4,13.76
-SHPE-000092,2025-11-25,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 히알루론산,serum,1,26.55
-SHPE-000093,2025-11-26,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 센텔라 노세범,toner,2,10.82
-SHPE-000094,2025-11-27,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,1,26.49
-SHPE-000095,2025-11-28,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,15.55
-SHPE-000096,2025-12-01,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,2,27.06
-SHPE-000097,2025-12-02,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,14.86
-SHPE-000098,2025-12-02,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml,serum,1,23.46
-SHPE-000099,2025-12-02,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,2,20.27
-SHPE-000100,2025-12-02,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,22.86
-SHPE-000101,2025-12-02,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,1,15.11
-SHPE-000102,2025-12-03,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,12.85
-SHPE-000103,2025-12-03,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml,sunscreen,1,18.21
-SHPE-000104,2025-12-03,SG,Innisfree,이니스프리 마이 립 밤 3.5g,lip,2,13.76
-SHPE-000105,2025-12-04,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml,sunscreen,1,26.32
-SHPE-000106,2025-12-04,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,3,18.71
-SHPE-000107,2025-12-05,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml,sunscreen,1,19.07
-SHPE-000108,2025-12-05,SG,Torriden,토리든 다이브인 저분자 히알루론산 토너 300ml 센텔라,toner,1,19.36
-SHPE-000109,2025-12-06,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,1,17.69
-SHPE-000110,2025-12-07,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,3,26.57
-SHPE-000111,2025-12-07,SG,Roundlab,라운드랩 독도 토너 300ml,toner,1,24.38
-SHPE-000112,2025-12-08,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 히알루론산,toner,1,13.19
-SHPE-000113,2025-12-08,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 히알루론산 진정,toner,2,16.93
-SHPE-000114,2025-12-08,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,20.62
-SHPE-000115,2025-12-09,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 보습,serum,2,33.34
-SHPE-000116,2025-12-10,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,13.11
-SHPE-000117,2025-12-10,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,1,17.51
-SHPE-000118,2025-12-10,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,1,22.20
-SHPE-000119,2025-12-11,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,26.12
-SHPE-000120,2025-12-11,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml,sunscreen,5,27.22
-SHPE-000121,2025-12-12,SG,Innisfree,이니스프리 비자 시카 세럼 50ml,serum,1,34.66
-SHPE-000122,2025-12-13,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml,sunscreen,2,23.11
-SHPE-000123,2025-12-13,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,2,18.96
-SHPE-000124,2025-12-14,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 토너 170ml 나이아신아마이드,toner,1,10.79
-SHPE-000125,2025-12-14,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,2,22.84
-SHPE-000126,2025-12-15,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,16.51
-SHPE-000127,2025-12-15,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,2,29.66
-SHPE-000128,2025-12-16,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 센텔라 히알루론산,serum,2,33.49
-SHPE-000129,2025-12-16,SG,Torriden,토리든 다이브인 수분크림 100ml 수분,cream,1,31.88
-SHPE-000130,2025-12-16,SG,Torriden,토리든 다이브인 수분크림 100ml 수분,cream,2,22.29
-SHPE-000131,2025-12-17,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드,toner,2,16.63
-SHPE-000132,2025-12-19,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드 센텔라 보습,toner,1,24.84
-SHPE-000133,2025-12-20,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,13.32
-SHPE-000134,2025-12-20,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #03 누드피치 벨벳,lip,2,13.80
-SHPE-000135,2025-12-21,SG,Torriden,토리든 다이브인 저분자 히알루론산 세럼 50ml 나이아신아마이드 항산화,serum,1,16.29
-SHPE-000136,2025-12-21,SG,Innisfree,이니스프리 마이 립 밤 3.5g,lip,1,9.64
-SHPE-000137,2025-12-22,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드,toner,1,12.42
-SHPE-000138,2025-12-22,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 피부장벽,serum,2,28.25
-SHPE-000139,2025-12-22,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,3,28.90
-SHPE-000140,2025-12-23,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,4,13.57
-SHPE-000141,2025-12-23,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,2,31.13
-SHPE-000142,2025-12-24,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 수분,cream,1,16.00
-SHPE-000143,2025-12-25,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,22.48
-SHPE-000144,2025-12-25,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 히알루론산,serum,4,22.96
-SHPE-000145,2025-12-25,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,2,10.91
-SHPE-000146,2025-12-26,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml,sunscreen,1,13.30
-SHPE-000147,2025-12-26,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드 노세범,toner,5,20.00
-SHPE-000148,2025-12-26,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml,toner,1,19.86
-SHPE-000149,2025-12-26,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,1,15.48
-SHPE-000150,2025-12-28,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,25.67
-SHPE-000151,2025-12-28,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,4,22.68
-SHPE-000152,2025-12-28,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,4,12.27
-SHPE-000153,2026-01-02,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,15.93
-SHPE-000154,2026-01-03,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드 피부장벽,toner,2,23.07
-SHPE-000155,2026-01-03,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml,toner,3,10.15
-SHPE-000156,2026-01-04,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,1,19.39
-SHPE-000157,2026-01-04,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 나이아신아마이드 센텔라,serum,1,20.46
-SHPE-000158,2026-01-04,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 세럼 80ml,serum,2,29.27
-SHPE-000159,2026-01-05,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,1,18.44
-SHPE-000160,2026-01-05,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,2,9.16
-SHPE-000161,2026-01-06,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,17.04
-SHPE-000162,2026-01-09,SG,Innisfree,이니스프리 시카 리페어 토너 200ml 나이아신아마이드 항산화,toner,1,21.14
-SHPE-000163,2026-01-09,SG,Torriden,토리든 다이브인 저분자 히알루론산 토너 300ml 피부장벽,toner,3,17.85
-SHPE-000164,2026-01-09,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,4,29.96
-SHPE-000165,2026-01-10,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,5,23.71
-SHPE-000166,2026-01-11,SG,Roundlab,라운드랩 독도 토너 300ml 센텔라 히알루론산,toner,1,23.83
-SHPE-000167,2026-01-12,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,2,17.81
-SHPE-000168,2026-01-13,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 수분,sunscreen,1,23.28
-SHPE-000169,2026-01-13,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,1,23.79
-SHPE-000170,2026-01-13,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,20.23
-SHPE-000171,2026-01-14,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,3,22.09
-SHPE-000172,2026-01-14,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml,sunscreen,5,12.72
-SHPE-000173,2026-01-14,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,14.95
-SHPE-000174,2026-01-14,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 노세범,serum,1,32.54
-SHPE-000175,2026-01-14,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,2,15.12
-SHPE-000176,2026-01-15,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,19.89
-SHPE-000177,2026-01-15,SG,Roundlab,라운드랩 독도 세럼 50ml 나이아신아마이드,serum,3,32.26
-SHPE-000178,2026-01-16,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,2,21.85
-SHPE-000179,2026-01-16,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,3,19.89
-SHPE-000180,2026-01-16,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 항산화,serum,2,18.56
-SHPE-000181,2026-01-16,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,1,24.79
-SHPE-000182,2026-01-17,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,13.90
-SHPE-000183,2026-01-19,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 보습,serum,1,27.75
-SHPE-000184,2026-01-19,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,2,20.24
-SHPE-000185,2026-01-21,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드,toner,2,18.18
-SHPE-000186,2026-01-21,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml,toner,2,14.53
-SHPE-000187,2026-01-21,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,17.82
-SHPE-000188,2026-01-22,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml,toner,1,19.21
-SHPE-000189,2026-01-22,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 진정,cream,1,16.87
-SHPE-000190,2026-01-23,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #03 누드피치 매트,lip,1,17.34
-SHPE-000191,2026-01-24,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml,toner,2,12.91
-SHPE-000192,2026-01-24,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,1,10.82
-SHPE-000193,2026-01-24,SG,Innisfree,이니스프리 마이 립 밤 3.5g,lip,1,14.36
-SHPE-000194,2026-01-25,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,26.71
-SHPE-000195,2026-01-26,SG,Innisfree,이니스프리 시카 리페어 토너 200ml 나이아신아마이드,toner,1,12.96
-SHPE-000196,2026-01-26,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 피부장벽,toner,1,14.37
-SHPE-000197,2026-01-26,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 히알루론산,serum,5,29.09
-SHPE-000198,2026-01-26,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,2,27.74
-SHPE-000199,2026-01-27,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,2,17.25
-SHPE-000200,2026-01-27,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,2,14.15
-SHPE-000201,2026-01-28,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,1,17.10
-SHPE-000202,2026-01-28,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 히알루론산,toner,2,14.99
-SHPE-000203,2026-01-28,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,3,20.46
-SHPE-000204,2026-02-02,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 히알루론산 피부장벽,toner,1,11.67
-SHPE-000205,2026-02-02,SG,Torriden,토리든 다이브인 수분크림 100ml 보습,cream,1,19.25
-SHPE-000206,2026-02-03,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 보습,toner,2,20.48
-SHPE-000207,2026-02-06,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드 보습,serum,1,17.91
-SHPE-000208,2026-02-06,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 보습,serum,3,33.07
-SHPE-000209,2026-02-06,SG,Roundlab,라운드랩 소나무 진정 크림 80ml 보습,cream,2,29.20
-SHPE-000210,2026-02-08,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,12.50
-SHPE-000211,2026-02-08,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,5,18.08
-SHPE-000212,2026-02-08,SG,Torriden,토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽,serum,2,20.38
-SHPE-000213,2026-02-08,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 진정,cream,1,18.24
-SHPE-000214,2026-02-09,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 항산화,serum,1,20.99
-SHPE-000215,2026-02-09,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 히알루론산 진정,serum,1,22.68
-SHPE-000216,2026-02-09,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 나이아신아마이드,serum,2,22.43
-SHPE-000217,2026-02-10,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,20.70
-SHPE-000218,2026-02-11,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,15.98
-SHPE-000219,2026-02-11,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 센텔라,serum,1,33.19
-SHPE-000220,2026-02-11,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 히알루론산,serum,1,25.25
-SHPE-000221,2026-02-11,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml 진정,cream,1,27.97
-SHPE-000222,2026-02-12,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 피부장벽,serum,1,34.84
-SHPE-000223,2026-02-14,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,14.11
-SHPE-000224,2026-02-15,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,12.70
-SHPE-000225,2026-02-15,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml,serum,3,26.71
-SHPE-000226,2026-02-15,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,1,16.16
-SHPE-000227,2026-02-15,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,1,14.80
-SHPE-000228,2026-02-16,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,23.95
-SHPE-000229,2026-02-16,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,12.64
-SHPE-000230,2026-02-16,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,1,23.07
-SHPE-000231,2026-02-17,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml,toner,1,11.79
-SHPE-000232,2026-02-18,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,18.21
-SHPE-000233,2026-02-18,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 센텔라,serum,3,24.59
-SHPE-000234,2026-02-18,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,3,9.64
-SHPE-000235,2026-02-19,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 히알루론산 피부장벽,toner,2,22.57
-SHPE-000236,2026-02-19,SG,Torriden,토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽,serum,2,16.54
-SHPE-000237,2026-02-19,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,4,15.52
-SHPE-000238,2026-02-19,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,3,15.21
-SHPE-000239,2026-02-20,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #11 핑크베이지 벨벳,lip,4,10.10
-SHPE-000240,2026-02-20,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,3,17.94
-SHPE-000241,2026-02-21,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,1,19.11
-SHPE-000242,2026-02-21,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 히알루론산,serum,2,19.31
-SHPE-000243,2026-02-21,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 저자극,cream,4,25.93
-SHPE-000244,2026-02-22,SG,Torriden,토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽,serum,2,25.68
-SHPE-000245,2026-02-23,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,18.31
-SHPE-000246,2026-02-24,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,21.39
-SHPE-000247,2026-02-24,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml,sunscreen,1,21.62
-SHPE-000248,2026-02-24,SG,Innisfree,이니스프리 비비드 코튼 잉크 틴트 4g #05 플럼 시어,lip,1,12.98
-SHPE-000249,2026-02-25,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,23.45
-SHPE-000250,2026-02-25,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml,serum,2,28.33
-SHPE-000251,2026-02-26,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,25.80
-SHPE-000252,2026-02-26,SG,Roundlab,라운드랩 독도 토너 300ml 항산화,toner,1,19.24
-SHPE-000253,2026-02-26,SG,Roundlab,라운드랩 독도 토너 300ml 항산화,toner,3,24.76
-SHPE-000254,2026-02-27,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml,sunscreen,2,18.88
-SHPE-000255,2026-02-27,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,27.50
-SHPE-000256,2026-02-27,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드 히알루론산,serum,2,24.21
-SHPE-000257,2026-02-27,SG,Roundlab,라운드랩 독도 모이스처 립밤 12g,lip,1,12.83
-SHPE-000258,2026-02-28,SG,Innisfree,이니스프리 시카 리페어 토너 200ml 나이아신아마이드 노세범,toner,4,16.82
-SHPE-000259,2026-02-28,SG,Roundlab,라운드랩 독도 토너 300ml,toner,1,21.84
-SHPE-000260,2026-03-01,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,5,24.05
-SHPE-000261,2026-03-01,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,4,14.72
-SHPE-000262,2026-03-01,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,1,28.83
-SHPE-000263,2026-03-02,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드,toner,3,15.13
-SHPE-000264,2026-03-02,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,4,15.98
-SHPE-000265,2026-03-03,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 토너 170ml 보습,toner,1,23.66
-SHPE-000266,2026-03-03,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,5,19.53
-SHPE-000267,2026-03-03,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 히알루론산,serum,1,33.35
-SHPE-000268,2026-03-03,SG,Roundlab,라운드랩 소나무 진정 크림 80ml 보습,cream,1,23.96
-SHPE-000269,2026-03-04,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,15.43
-SHPE-000270,2026-03-05,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 보습,serum,3,15.30
-SHPE-000271,2026-03-05,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml 진정,cream,1,15.19
-SHPE-000272,2026-03-05,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,1,11.11
-SHPE-000273,2026-03-07,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드 히알루론산,toner,1,23.57
-SHPE-000274,2026-03-07,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,1,20.53
-SHPE-000275,2026-03-08,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,18.33
-SHPE-000276,2026-03-09,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,2,20.52
-SHPE-000277,2026-03-09,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #11 핑크베이지 글로시,lip,1,16.92
-SHPE-000278,2026-03-10,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml,sunscreen,3,16.45
-SHPE-000279,2026-03-10,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,3,33.87
-SHPE-000280,2026-03-10,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,3,19.04
-SHPE-000281,2026-03-11,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml,toner,2,21.05
-SHPE-000282,2026-03-11,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 히알루론산,serum,1,26.08
-SHPE-000283,2026-03-11,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,30.42
-SHPE-000284,2026-03-12,SG,Innisfree,이니스프리 시카 리페어 토너 200ml 나이아신아마이드,toner,2,15.94
-SHPE-000285,2026-03-12,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml,toner,3,23.96
-SHPE-000286,2026-03-13,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,2,26.16
-SHPE-000287,2026-03-13,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,23.85
-SHPE-000288,2026-03-14,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,21.97
-SHPE-000289,2026-03-15,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 세럼 80ml 나이아신아마이드,serum,1,30.66
-SHPE-000290,2026-03-15,SG,Torriden,토리든 솔리드인 세라마이드 립 에센스 11ml,lip,2,14.64
-SHPE-000291,2026-03-16,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 진정,toner,3,18.33
-SHPE-000292,2026-03-17,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml,sunscreen,2,26.71
-SHPE-000293,2026-03-17,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,1,17.20
-SHPE-000294,2026-03-18,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,3,22.80
-SHPE-000295,2026-03-18,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드 항산화,serum,3,26.77
-SHPE-000296,2026-03-19,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,2,19.67
-SHPE-000297,2026-03-20,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,3,17.47
-SHPE-000298,2026-03-21,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,2,13.73
-SHPE-000299,2026-03-21,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,1,22.30
-SHPE-000300,2026-03-21,SG,Torriden,토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽,serum,2,20.11
-SHPE-000301,2026-03-21,SG,Skinfood,스킨푸드 시어버터 립 케어 밤 9.5g,lip,1,10.57
-SHPE-000302,2026-03-22,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,12.19
-SHPE-000303,2026-03-22,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,3,17.35
-SHPE-000304,2026-03-23,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,2,27.79
-SHPE-000305,2026-03-23,SG,Roundlab,라운드랩 독도 토너 300ml 히알루론산 항산화,toner,1,19.79
-SHPE-000306,2026-03-23,SG,Torriden,토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽,serum,2,34.21
-SHPE-000307,2026-03-23,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,26.67
-SHPE-000308,2026-03-24,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,12.51
-SHPE-000309,2026-03-24,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,20.82
-SHPE-000310,2026-03-25,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,1,21.08
-SHPE-000311,2026-03-25,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 센텔라,serum,2,27.82
-SHPE-000312,2026-03-26,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 센텔라 히알루론산,toner,2,23.00
-SHPE-000313,2026-03-26,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드 진정,toner,3,22.68
-SHPE-000314,2026-03-27,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml 보습,cream,2,15.74
-SHPE-000315,2026-03-28,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드,toner,1,21.29
+SHPE-000001,2025-10-02,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 수분,sunscreen,1,26.26
+SHPE-000002,2025-10-03,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,30.85
+SHPE-000003,2025-10-05,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 수분,sunscreen,3,19.13
+SHPE-000004,2025-10-05,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드 히알루론산,toner,1,20.26
+SHPE-000005,2025-10-05,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 보습,cream,2,21.53
+SHPE-000006,2025-10-06,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 센텔라,serum,1,30.92
+SHPE-000007,2025-10-08,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,18.65
+SHPE-000008,2025-10-08,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml,toner,2,15.71
+SHPE-000009,2025-10-08,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,3,22.90
+SHPE-000010,2025-10-09,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,2,22.10
+SHPE-000011,2025-10-11,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 나이아신아마이드 히알루론산,serum,2,21.97
+SHPE-000012,2025-10-11,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드 히알루론산 진정,serum,1,18.55
+SHPE-000013,2025-10-11,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 저자극,cream,2,28.65
+SHPE-000014,2025-10-11,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,18.29
+SHPE-000015,2025-10-12,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,2,21.47
+SHPE-000016,2025-10-12,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,4,23.26
+SHPE-000017,2025-10-13,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,1,19.30
+SHPE-000018,2025-10-13,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 피부장벽,toner,5,24.36
+SHPE-000019,2025-10-13,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 나이아신아마이드,serum,1,31.47
+SHPE-000020,2025-10-13,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,16.63
+SHPE-000021,2025-10-14,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,12.99
+SHPE-000022,2025-10-14,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #01 체리레드 벨벳,lip,3,17.88
+SHPE-000023,2025-10-16,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,1,23.67
+SHPE-000024,2025-10-17,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 히알루론산 항산화,toner,3,23.65
+SHPE-000025,2025-10-17,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,1,28.59
+SHPE-000026,2025-10-18,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,2,21.53
+SHPE-000027,2025-10-19,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,5,19.64
+SHPE-000028,2025-10-22,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,2,21.69
+SHPE-000029,2025-10-22,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,24.83
+SHPE-000030,2025-10-22,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 히알루론산,toner,2,20.56
+SHPE-000031,2025-10-22,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,2,21.97
+SHPE-000032,2025-10-22,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,19.66
+SHPE-000033,2025-10-23,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드,toner,2,15.28
+SHPE-000034,2025-10-23,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,2,18.46
+SHPE-000035,2025-10-24,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml,sunscreen,1,25.67
+SHPE-000036,2025-10-24,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 수분,sunscreen,2,21.17
+SHPE-000037,2025-10-24,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,3,26.45
+SHPE-000038,2025-10-24,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml,serum,1,28.86
+SHPE-000039,2025-10-24,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,2,22.81
+SHPE-000040,2025-10-25,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,17.51
+SHPE-000041,2025-10-25,SG,Innisfree,이니스프리 시카 리페어 토너 200ml,toner,1,19.27
+SHPE-000042,2025-10-26,SG,Innisfree,이니스프리 비자 시카 세럼 50ml 나이아신아마이드 진정,serum,2,25.38
+SHPE-000043,2025-10-26,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,2,22.91
+SHPE-000044,2025-10-28,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 센텔라 항산화,serum,4,30.64
+SHPE-000045,2025-10-28,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,20.31
+SHPE-000046,2025-11-01,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,12.93
+SHPE-000047,2025-11-01,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 센텔라,toner,3,16.41
+SHPE-000048,2025-11-01,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,22.15
+SHPE-000049,2025-11-02,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 진정,serum,1,32.19
+SHPE-000050,2025-11-02,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,3,20.47
+SHPE-000051,2025-11-03,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 히알루론산,toner,1,14.05
+SHPE-000052,2025-11-05,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,12.08
+SHPE-000053,2025-11-06,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml,sunscreen,2,20.93
+SHPE-000054,2025-11-06,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 히알루론산 피부장벽,toner,1,19.74
+SHPE-000055,2025-11-07,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,27.09
+SHPE-000056,2025-11-07,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,1,14.52
+SHPE-000057,2025-11-10,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,28.44
+SHPE-000058,2025-11-11,SG,Innisfree,이니스프리 시카 리페어 토너 200ml 나이아신아마이드 항산화,toner,3,21.61
+SHPE-000059,2025-11-12,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml,sunscreen,2,25.59
+SHPE-000060,2025-11-13,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,15.42
+SHPE-000061,2025-11-13,SG,Roundlab,라운드랩 독도 토너 300ml 히알루론산,toner,1,10.39
+SHPE-000062,2025-11-14,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,1,26.49
+SHPE-000063,2025-11-14,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,2,25.01
+SHPE-000064,2025-11-15,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 토너 170ml,toner,5,23.01
+SHPE-000065,2025-11-15,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,2,29.06
+SHPE-000066,2025-11-16,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 히알루론산,serum,1,26.55
+SHPE-000067,2025-11-16,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml 저자극,cream,1,22.62
+SHPE-000068,2025-11-17,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 피부장벽,toner,2,20.79
+SHPE-000069,2025-11-17,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml,serum,1,16.74
+SHPE-000070,2025-11-18,SG,Innisfree,이니스프리 한란 보습 크림 50ml 수분,cream,3,17.17
+SHPE-000071,2025-11-19,SG,Roundlab,라운드랩 독도 토너 300ml 히알루론산,toner,1,12.77
+SHPE-000072,2025-11-20,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 노세범,sunscreen,1,24.93
+SHPE-000073,2025-11-20,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,16.80
+SHPE-000074,2025-11-20,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 나이아신아마이드,serum,2,27.24
+SHPE-000075,2025-11-21,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,2,19.87
+SHPE-000076,2025-11-22,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,22.79
+SHPE-000077,2025-11-23,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,15.55
+SHPE-000078,2025-11-23,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 피부장벽,toner,3,16.45
+SHPE-000079,2025-11-23,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 노세범,toner,3,19.85
+SHPE-000080,2025-11-23,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml 히알루론산,serum,1,16.35
+SHPE-000081,2025-11-23,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,3,19.48
+SHPE-000082,2025-11-24,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,4,13.55
+SHPE-000083,2025-11-24,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,2,23.09
+SHPE-000084,2025-11-25,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,14.89
+SHPE-000085,2025-11-25,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 진정,toner,1,14.69
+SHPE-000086,2025-11-25,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,2,33.68
+SHPE-000087,2025-11-26,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,20.13
+SHPE-000088,2025-11-27,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 수분,cream,1,17.22
+SHPE-000089,2025-11-28,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,23.58
+SHPE-000090,2025-11-28,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,1,17.70
+SHPE-000091,2025-12-01,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,3,30.94
+SHPE-000092,2025-12-02,SG,Innisfree,이니스프리 한란 보습 크림 50ml 보습,cream,2,29.66
+SHPE-000093,2025-12-02,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,2,24.81
+SHPE-000094,2025-12-03,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 센텔라 항산화,serum,1,33.32
+SHPE-000095,2025-12-03,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 항산화,serum,1,27.19
+SHPE-000096,2025-12-04,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 진정,toner,2,16.93
+SHPE-000097,2025-12-04,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,2,18.88
+SHPE-000098,2025-12-05,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,16.19
+SHPE-000099,2025-12-06,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,3,33.64
+SHPE-000100,2025-12-06,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,2,21.06
+SHPE-000101,2025-12-07,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 센텔라,toner,2,16.87
+SHPE-000102,2025-12-07,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 나이아신아마이드 센텔라,serum,2,23.18
+SHPE-000103,2025-12-09,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,1,12.13
+SHPE-000104,2025-12-09,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 나이아신아마이드,serum,2,21.97
+SHPE-000105,2025-12-10,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,3,22.57
+SHPE-000106,2025-12-10,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,28.98
+SHPE-000107,2025-12-12,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,5,15.19
+SHPE-000108,2025-12-12,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,15.81
+SHPE-000109,2025-12-13,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,3,15.94
+SHPE-000110,2025-12-13,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 피부장벽,toner,1,22.40
+SHPE-000111,2025-12-13,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,1,23.42
+SHPE-000112,2025-12-13,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 보습,cream,2,17.56
+SHPE-000113,2025-12-14,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 센텔라 히알루론산,toner,1,19.86
+SHPE-000114,2025-12-14,SG,Roundlab,라운드랩 독도 세럼 50ml 나이아신아마이드 보습,serum,2,34.55
+SHPE-000115,2025-12-16,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,20.90
+SHPE-000116,2025-12-17,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프 수분,sunscreen,1,14.60
+SHPE-000117,2025-12-17,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,1,19.08
+SHPE-000118,2025-12-18,SG,Torriden,토리든 다이브인 저분자 히알루론산 토너 300ml 피부장벽,toner,1,10.86
+SHPE-000119,2025-12-19,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml,serum,1,18.28
+SHPE-000120,2025-12-19,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,31.69
+SHPE-000121,2025-12-20,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 저자극,sunscreen,2,17.99
+SHPE-000122,2025-12-22,SG,Innisfree,이니스프리 비자 시카 세럼 50ml,serum,2,19.45
+SHPE-000123,2025-12-22,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 수분,cream,1,23.36
+SHPE-000124,2025-12-23,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,22.86
+SHPE-000125,2025-12-24,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml,sunscreen,2,23.11
+SHPE-000126,2025-12-24,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 세럼 80ml 나이아신아마이드,serum,2,22.49
+SHPE-000127,2025-12-24,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,1,22.72
+SHPE-000128,2025-12-24,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,20.62
+SHPE-000129,2025-12-25,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,26.12
+SHPE-000130,2025-12-25,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 히알루론산,serum,2,15.40
+SHPE-000131,2025-12-26,SG,Innisfree,이니스프리 한란 보습 크림 50ml,cream,4,30.76
+SHPE-000132,2025-12-27,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 히알루론산 보습,toner,2,12.05
+SHPE-000133,2025-12-27,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,27.05
+SHPE-000134,2025-12-28,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,3,12.11
+SHPE-000135,2025-12-28,SG,Torriden,토리든 다이브인 수분크림 100ml 수분,cream,1,31.88
+SHPE-000136,2026-01-01,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml 수분,cream,1,20.44
+SHPE-000137,2026-01-02,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,2,17.47
+SHPE-000138,2026-01-02,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 센텔라 히알루론산 보습,toner,1,16.15
+SHPE-000139,2026-01-03,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,20.47
+SHPE-000140,2026-01-03,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,1,18.38
+SHPE-000141,2026-01-04,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,2,18.52
+SHPE-000142,2026-01-04,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드 히알루론산 항산화,serum,1,24.41
+SHPE-000143,2026-01-05,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 히알루론산,toner,1,15.36
+SHPE-000144,2026-01-05,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml 히알루론산,serum,3,27.10
+SHPE-000145,2026-01-06,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,18.10
+SHPE-000146,2026-01-06,SG,Roundlab,라운드랩 독도 세럼 50ml,serum,3,34.11
+SHPE-000147,2026-01-07,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml,serum,1,26.20
+SHPE-000148,2026-01-07,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,21.98
+SHPE-000149,2026-01-08,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml,sunscreen,2,19.06
+SHPE-000150,2026-01-09,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,3,16.69
+SHPE-000151,2026-01-09,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,1,12.98
+SHPE-000152,2026-01-09,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 진정,serum,5,16.83
+SHPE-000153,2026-01-09,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml 진정,cream,1,16.87
+SHPE-000154,2026-01-10,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,3,18.91
+SHPE-000155,2026-01-11,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 토너 170ml 나이아신아마이드,toner,2,23.78
+SHPE-000156,2026-01-11,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,3,14.14
+SHPE-000157,2026-01-13,SG,Torriden,토리든 다이브인 수분크림 100ml 저자극,cream,2,17.20
+SHPE-000158,2026-01-13,SG,Torriden,토리든 다이브인 수분크림 100ml 진정,cream,2,14.97
+SHPE-000159,2026-01-14,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 센텔라,toner,1,24.52
+SHPE-000160,2026-01-15,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml,sunscreen,4,18.06
+SHPE-000161,2026-01-15,SG,Innisfree,이니스프리 한란 보습 크림 50ml 진정,cream,1,22.39
+SHPE-000162,2026-01-15,SG,Skinfood,스킨푸드 프레쉬 과일 립앤치크 틴트 8g #03 누드피치 시어,lip,2,16.34
+SHPE-000163,2026-01-16,SG,Roundlab,라운드랩 독도 토너 300ml,toner,1,20.83
+SHPE-000164,2026-01-16,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 히알루론산 피부장벽,toner,3,21.77
+SHPE-000165,2026-01-16,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml,toner,3,22.93
+SHPE-000166,2026-01-16,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드 센텔라,serum,4,34.91
+SHPE-000167,2026-01-17,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 히알루론산 항산화,toner,1,13.96
+SHPE-000168,2026-01-18,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,1,13.93
+SHPE-000169,2026-01-18,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,21.68
+SHPE-000170,2026-01-18,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,1,19.33
+SHPE-000171,2026-01-19,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml,toner,1,22.07
+SHPE-000172,2026-01-19,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 히알루론산,serum,1,16.88
+SHPE-000173,2026-01-20,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,23.72
+SHPE-000174,2026-01-20,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,2,20.99
+SHPE-000175,2026-01-20,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 히알루론산,serum,1,25.45
+SHPE-000176,2026-01-22,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,2,19.20
+SHPE-000177,2026-01-23,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드,toner,1,22.02
+SHPE-000178,2026-01-24,SG,Innisfree,이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,4,27.88
+SHPE-000179,2026-01-24,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,21.91
+SHPE-000180,2026-01-25,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드,toner,2,17.90
+SHPE-000181,2026-01-25,SG,Innisfree,이니스프리 한란 보습 크림 50ml 수분,cream,1,15.56
+SHPE-000182,2026-01-25,SG,Roundlab,라운드랩 소나무 진정 크림 80ml 보습,cream,1,26.26
+SHPE-000183,2026-01-27,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,14.02
+SHPE-000184,2026-01-27,SG,Roundlab,라운드랩 독도 세럼 50ml,serum,1,21.96
+SHPE-000185,2026-01-27,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,1,28.30
+SHPE-000186,2026-01-28,SG,Roundlab,라운드랩 독도 세럼 50ml,serum,2,24.80
+SHPE-000187,2026-01-28,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드 센텔라,serum,2,21.92
+SHPE-000188,2026-02-01,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프,sunscreen,2,23.17
+SHPE-000189,2026-02-02,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 저자극,sunscreen,5,20.70
+SHPE-000190,2026-02-02,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,1,15.77
+SHPE-000191,2026-02-03,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 히알루론산,toner,1,12.10
+SHPE-000192,2026-02-04,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 항산화,toner,5,17.99
+SHPE-000193,2026-02-05,SG,Innisfree,이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,2,21.92
+SHPE-000194,2026-02-06,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,1,15.34
+SHPE-000195,2026-02-06,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드,toner,2,22.32
+SHPE-000196,2026-02-06,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 진정,cream,1,16.39
+SHPE-000197,2026-02-07,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 센텔라 노세범,toner,2,18.29
+SHPE-000198,2026-02-07,SG,Innisfree,이니스프리 비자 시카 세럼 50ml,serum,2,32.44
+SHPE-000199,2026-02-08,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml,sunscreen,5,24.68
+SHPE-000200,2026-02-08,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 히알루론산,toner,5,10.62
+SHPE-000201,2026-02-08,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 히알루론산,serum,2,19.31
+SHPE-000202,2026-02-08,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,1,24.05
+SHPE-000203,2026-02-11,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 크림 50ml,cream,1,29.29
+SHPE-000204,2026-02-13,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,20.03
+SHPE-000205,2026-02-13,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 토너 170ml,toner,1,14.16
+SHPE-000206,2026-02-13,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,1,20.74
+SHPE-000207,2026-02-14,SG,Roundlab,라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml,sunscreen,5,18.08
+SHPE-000208,2026-02-14,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드 항산화,toner,1,19.24
+SHPE-000209,2026-02-14,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,2,18.78
+SHPE-000210,2026-02-15,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml,sunscreen,2,27.81
+SHPE-000211,2026-02-15,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 피부장벽,toner,1,11.87
+SHPE-000212,2026-02-16,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,4,23.12
+SHPE-000213,2026-02-16,SG,Torriden,토리든 다이브인 수분크림 100ml,cream,3,22.83
+SHPE-000214,2026-02-18,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,18.31
+SHPE-000215,2026-02-20,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프 수분,sunscreen,1,27.74
+SHPE-000216,2026-02-20,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 히알루론산 진정,toner,3,13.82
+SHPE-000217,2026-02-21,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml,serum,2,31.75
+SHPE-000218,2026-02-21,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 보습,cream,4,22.88
+SHPE-000219,2026-02-21,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,15.66
+SHPE-000220,2026-02-22,SG,Torriden,토리든 다이브인 수분크림 100ml 보습,cream,1,19.25
+SHPE-000221,2026-02-22,SG,Innisfree,이니스프리 비비드 코튼 잉크 틴트 4g #05 플럼 시어,lip,1,12.98
+SHPE-000222,2026-02-23,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 나이아신아마이드,toner,1,17.32
+SHPE-000223,2026-02-23,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 세럼 50ml,serum,2,32.78
+SHPE-000224,2026-02-26,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,2,21.49
+SHPE-000225,2026-02-26,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프 수분,sunscreen,2,18.21
+SHPE-000226,2026-02-26,SG,Skinfood,스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프,sunscreen,1,20.70
+SHPE-000227,2026-02-27,SG,Roundlab,라운드랩 독도 세럼 50ml 나이아신아마이드 진정,serum,1,15.17
+SHPE-000228,2026-02-28,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,1,29.25
+SHPE-000229,2026-03-02,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,1,12.82
+SHPE-000230,2026-03-02,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml,serum,4,20.23
+SHPE-000231,2026-03-02,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml,cream,5,25.89
+SHPE-000232,2026-03-03,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,1,26.67
+SHPE-000233,2026-03-04,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,5,17.98
+SHPE-000234,2026-03-04,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml,toner,1,19.85
+SHPE-000235,2026-03-04,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,1,26.71
+SHPE-000236,2026-03-05,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프 수분,sunscreen,1,24.65
+SHPE-000237,2026-03-05,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,3,30.97
+SHPE-000238,2026-03-06,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 히알루론산,toner,1,21.84
+SHPE-000239,2026-03-09,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 워터프루프,sunscreen,3,18.02
+SHPE-000240,2026-03-09,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml,toner,1,18.91
+SHPE-000241,2026-03-11,SG,Torriden,토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 워터프루프,sunscreen,3,27.29
+SHPE-000242,2026-03-11,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드,serum,1,24.48
+SHPE-000243,2026-03-12,SG,Roundlab,라운드랩 자작나무 수분 토너 200ml 노세범,toner,2,15.85
+SHPE-000244,2026-03-12,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,2,24.39
+SHPE-000245,2026-03-14,SG,Roundlab,라운드랩 독도 세럼 50ml 나이아신아마이드,serum,2,24.01
+SHPE-000246,2026-03-15,SG,Roundlab,라운드랩 자작나무 수분 크림 80ml,cream,2,20.50
+SHPE-000247,2026-03-18,SG,Innisfree,이니스프리 그린티 씨드 세럼 80ml,serum,2,33.21
+SHPE-000248,2026-03-18,SG,Roundlab,라운드랩 소나무 진정 크림 80ml 수분,cream,1,24.11
+SHPE-000249,2026-03-18,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 진정,cream,3,21.72
+SHPE-000250,2026-03-19,SG,Roundlab,라운드랩 독도 토너 300ml 나이아신아마이드 피부장벽,toner,1,10.70
+SHPE-000251,2026-03-19,SG,Skinfood,스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 히알루론산,serum,2,34.67
+SHPE-000252,2026-03-20,SG,Torriden,토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프,sunscreen,2,22.57
+SHPE-000253,2026-03-21,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,1,24.99
+SHPE-000254,2026-03-21,SG,Roundlab,라운드랩 자작나무 수분 세럼 50ml,serum,2,23.51
+SHPE-000255,2026-03-22,SG,Torriden,토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽,toner,1,18.51
+SHPE-000256,2026-03-22,SG,Innisfree,이니스프리 그린티 씨드 히알루론산 세럼 80ml 보습,serum,1,17.34
+SHPE-000257,2026-03-23,SG,Roundlab,라운드랩 독도 토너 300ml 히알루론산 노세범,toner,1,22.98
+SHPE-000258,2026-03-23,SG,Innisfree,이니스프리 그린티 씨드 크림 50ml,cream,2,30.42
+SHPE-000259,2026-03-24,SG,Torriden,토리든 다이브인 클리어패드 토너 200ml 센텔라 노세범,toner,1,24.64
+SHPE-000260,2026-03-24,SG,Roundlab,라운드랩 독도 세럼 50ml 나이아신아마이드,serum,1,32.16
+SHPE-000261,2026-03-24,SG,Torriden,토리든 다이브인 수분크림 100ml 저자극,cream,1,24.58
+SHPE-000262,2026-03-25,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 수분,sunscreen,5,19.14
+SHPE-000263,2026-03-25,SG,Roundlab,라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 수분,sunscreen,2,18.78
+SHPE-000264,2026-03-25,SG,Skinfood,스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml,sunscreen,1,22.24
+SHPE-000265,2026-03-25,SG,Innisfree,이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 히알루론산 노세범,toner,1,16.07
+SHPE-000266,2026-03-25,SG,Torriden,토리든 셀마이드 세라마이드 세럼 50ml 나이아신아마이드,serum,2,25.00
+SHPE-000267,2026-03-25,SG,Roundlab,라운드랩 소나무 진정 크림 80ml,cream,2,30.14
+SHPE-000268,2026-03-26,SG,Torriden,토리든 셀마이드 세라마이드 크림 80ml,cream,1,23.97
+SHPE-000269,2026-03-27,SG,Innisfree,이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml,sunscreen,2,21.84
+SHPE-000270,2026-03-27,SG,Torriden,토리든 다이브인 저분자 히알루론산 세럼 50ml 노세범,serum,1,29.06
+SHPE-000271,2026-03-27,SG,Roundlab,라운드랩 소나무 진정 크림 80ml 보습,cream,1,23.96
+SHPE-000272,2026-03-28,SG,Skinfood,스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 보습,toner,2,21.74

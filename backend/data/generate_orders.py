@@ -46,11 +46,12 @@ PLATFORM_WEIGHTS: dict[str, list[tuple[str, float]]] = {
     "SG": [("cafe24", 0.2), ("qoo10", 0.3), ("shopee", 0.5)],
 }
 
-# Type ratios: lip ≥ 12% to guarantee ≥ 10/month per combo
+# Type ratios: lip ≥ 12% for KR/JP (min 10/month), SG lip intentionally sparse
 TYPE_RATIOS: dict[str, dict[str, float]] = {
     "KR": {"sunscreen": 0.20, "toner": 0.24, "serum": 0.24, "cream": 0.20, "lip": 0.12},
     "JP": {"sunscreen": 0.33, "toner": 0.20, "serum": 0.20, "cream": 0.16, "lip": 0.11},
-    "SG": {"sunscreen": 0.28, "toner": 0.23, "serum": 0.20, "cream": 0.17, "lip": 0.12},
+    "SG": {"sunscreen": 0.28, "toner": 0.23, "serum": 0.20, "cream": 0.28, "lip": 0.01},
+    # SG lip: intentional gap — ~8 orders total (조건 1)
 }
 
 BRANDS = ["Innisfree", "Torriden", "Roundlab", "Skinfood"]
@@ -415,9 +416,13 @@ def make_cream() -> tuple[str, str, int, float]:
     return brand, base, qty(), usd("cream")
 
 
-def make_lip() -> tuple[str, str, int, float]:
+def make_lip(*, bare: bool = False) -> tuple[str, str, int, float]:
+    """bare=True: 속성 없는 상품명만 생성 (조건 2: KR lip 속성 단조)."""
     brand = random.choice(BRANDS)
     base = random.choice(LIP_BASES[brand])
+    if bare:
+        # No color, no texture — just the base product name
+        return brand, base, qty(), usd("lip")
     if "틴트" in base or "잉크" in base:
         color = random.choice(LIP_COLORS)
         texture = random.choice(LIP_TEXTURES)
@@ -488,8 +493,10 @@ def generate_all() -> list[dict]:
                     )
                 elif ptype == "cream":
                     group = [make_cream() for _ in range(n)]
-                else:
-                    group = [make_lip() for _ in range(n)]
+                else:  # lip
+                    # 조건 2: KR lip은 bare(속성 없음) — 속성 단조 공백
+                    is_bare = (country == "KR")
+                    group = [make_lip(bare=is_bare) for _ in range(n)]
 
                 for brand, pname, quantity, unit_price in group:
                     all_orders.append({
@@ -548,17 +555,22 @@ def verify(orders: list[dict]) -> None:
         act = sum(1 for o in orders if o["year"] == y and o["month"] == m)
         print(f"  {y}-{m:02d}: {act}/{exp} {'✓' if act == exp else '✗'}")
 
-    # Min 10 per combo (제약 5)
-    print("\n── 제약 5: Min 10 per country×type×month ──")
+    # Min 10 per combo (제약 5) — SG lip is intentional gap (조건 1)
+    print("\n── 제약 5: Min 10 per country×type×month (SG lip 제외) ──")
     violations = 0
+    sg_lip_total = 0
     for y, m in MONTHS:
         for c in ("KR", "JP", "SG"):
             for t in ("sunscreen", "toner", "serum", "cream", "lip"):
                 cnt = sum(1 for o in orders if o["year"] == y and o["month"] == m and o["country"] == c and o["product_type"] == t)
+                if c == "SG" and t == "lip":
+                    sg_lip_total += cnt
+                    continue  # intentional gap
                 if cnt < 10:
                     print(f"  ✗ {y}-{m:02d} {c} {t}: {cnt} < 10")
                     violations += 1
-    print(f"  {'✓ All ≥ 10' if violations == 0 else f'✗ {violations} violations'}")
+    print(f"  {'✓ All ≥ 10 (SG lip 제외)' if violations == 0 else f'✗ {violations} violations'}")
+    print(f"  SG lip total: {sg_lip_total} (intentional gap, target ≤ 8)")
 
     # Pattern A
     print("\n── Pattern A: JP sunscreen '비건' rate ──")
@@ -661,6 +673,19 @@ def verify(orders: list[dict]) -> None:
         rate = hit / len(pool) * 100 if pool else 0
         exp = PAT_J[m] * 100
         print(f"  {y}-{m:02d}: {hit}/{len(pool)} = {rate:5.1f}% (target ~{exp:.0f}%) {'✓' if abs(rate - exp) <= 7 else '✗'}")
+
+    # Coverage gaps (조건 1, 2)
+    print("\n── Coverage Gaps (intentional) ──")
+    # 조건 1: SG lip ≤ 8
+    sg_lip = [o for o in orders if o["country"] == "SG" and o["product_type"] == "lip"]
+    print(f"  조건1 SG lip: {len(sg_lip)} orders (target ≤ 8) {'✓' if len(sg_lip) <= 8 else '✗'}")
+
+    # 조건 2: KR lip — functionalClaims/valueClaims 키워드 없어야 함
+    kr_lip = [o for o in orders if o["country"] == "KR" and o["product_type"] == "lip"]
+    attr_keywords = ["수분", "보습", "진정", "톤업", "노세범", "항산화", "피부장벽",
+                     "비건", "저자극", "무향", "약산성", "워터프루프", "대용량"]
+    kr_lip_with_attrs = sum(1 for o in kr_lip if any(kw in o["product_name"] for kw in attr_keywords))
+    print(f"  조건2 KR lip 속성 포함: {kr_lip_with_attrs}/{len(kr_lip)} (target 0) {'✓' if kr_lip_with_attrs == 0 else '✗'}")
 
     # Platform & brand consistency
     print("\n── Consistency ──")
