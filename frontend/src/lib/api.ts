@@ -112,8 +112,23 @@ export interface EvalCoverageCell {
 
 export interface EvalEfficiencySession {
   trace_id: string;
-  cost: number;
+  user_query: string;
   created_at: string;
+  analyst_cost: number;
+  scout_cost: number;
+  total_cost: number;
+  used_discovered: boolean;
+}
+
+export interface EvalEfficiencySummary {
+  total_sessions: number;
+  avg_analyst_cost: number;
+  avg_scout_cost: number;
+  avg_total_cost: number;
+  scout_cost_ratio: number;
+  with_discovered: { count: number; avg_total_cost: number };
+  without_discovered: { count: number; avg_total_cost: number };
+  quality_premium: number | null;
 }
 
 export interface EvalFullResult {
@@ -143,11 +158,8 @@ export interface EvalFullResult {
   };
   system_efficiency: {
     status: string;
-    avg_cost_first_half: number;
-    avg_cost_second_half: number;
-    cost_reduction: number;
-    total_sessions: number;
     sessions: EvalEfficiencySession[];
+    summary?: EvalEfficiencySummary;
   };
   before_after_pairs: BeforeAfterPair[];
 }

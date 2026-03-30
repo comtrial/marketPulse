@@ -5,10 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import {
   LineChart,
   Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   ResponsiveContainer,
 } from "recharts";
 import {
@@ -115,7 +118,9 @@ export function KnowledgeGrowthTrigger({
           <AxisBadge
             icon="⚡"
             label="효율"
-            value={se.status === "insufficient_data" ? "—" : `${(se.cost_reduction * 100).toFixed(1)}%`}
+            value={se.status === "insufficient_data" || !se.summary
+              ? "—"
+              : `$${se.summary.avg_total_cost.toFixed(3)}/건`}
           />
         </div>
       </button>
@@ -160,12 +165,10 @@ export function KnowledgeGrowthDetail({
             <CoverageMatrix data={data} />
             <ProposalTable />
             <BeforeAfterComparison data={data} />
+            {data.system_efficiency.status !== "insufficient_data" && (
+              <CostTradeoffChart data={data} />
+            )}
           </div>
-          {data.system_efficiency.status !== "insufficient_data" && (
-            <div className="mt-4">
-              <SystemEfficiencyChart data={data} />
-            </div>
-          )}
         </div>
       </ScrollArea>
     </div>
@@ -478,45 +481,92 @@ function BeforeAfterComparison({ data }: { data: EvalFullResult }) {
 
 // ── System Efficiency Chart ──
 
-function SystemEfficiencyChart({ data }: { data: EvalFullResult }) {
+function CostTradeoffChart({ data }: { data: EvalFullResult }) {
   const eff = data.system_efficiency;
-  const reduction = eff.cost_reduction;
-  const isImproved = reduction > 0;
+  const summary = eff.summary;
 
   const chartData = eff.sessions.map((s, i) => ({
     session: `S${i + 1}`,
-    cost: s.cost,
+    analyst: s.analyst_cost,
+    scout: s.scout_cost,
+    discovered: s.used_discovered,
   }));
 
   return (
-    <Card>
+    <Card className="col-span-2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-sm">시스템 효율</CardTitle>
-            <CardDescription>세션별 비용 추이</CardDescription>
+            <CardTitle className="text-sm">비용-품질 트레이드오프</CardTitle>
+            <CardDescription>세션별 Analyst / PatternScout 비용 구성</CardDescription>
           </div>
-          <span className={`font-mono text-sm font-medium ${isImproved ? "text-emerald-600" : "text-red-500"}`}>
-            {isImproved ? "↓" : "↑"}{(Math.abs(reduction) * 100).toFixed(1)}%
-          </span>
+          {summary?.quality_premium != null && (
+            <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-[10px] text-blue-600">
+              품질 개선 비용: +${summary.quality_premium.toFixed(4)}/건
+            </span>
+          )}
         </div>
       </CardHeader>
       <CardContent>
-        {chartData.length < 2 ? (
-          <p className="text-xs text-gray-400 text-center py-4">세션 2건 이상 필요</p>
+        {chartData.length < 1 ? (
+          <p className="text-xs text-gray-400 text-center py-6">아직 세션 데이터가 없습니다</p>
         ) : (
-          <ResponsiveContainer width="100%" height={120}>
-            <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: -8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="session" tick={{ fontSize: 10, fill: "#9ca3af" }} />
-              <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} tickFormatter={(v: number) => `$${v.toFixed(3)}`} />
-              <Tooltip
-                contentStyle={{ fontSize: 11, borderRadius: 8, border: "1px solid #e5e7eb" }}
-                formatter={(value) => [`$${Number(value).toFixed(4)}`, "비용"]}
-              />
-              <Line type="monotone" dataKey="cost" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: "#10b981" }} />
-            </LineChart>
-          </ResponsiveContainer>
+          <>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: -8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  dataKey="session"
+                  tick={{ fontSize: 10, fill: "#9ca3af" }}
+                />
+                <YAxis
+                  tick={{ fontSize: 10, fill: "#9ca3af" }}
+                  tickFormatter={(v: number) => `$${v.toFixed(2)}`}
+                />
+                <Tooltip
+                  contentStyle={{ fontSize: 11, borderRadius: 8, border: "1px solid #e5e7eb" }}
+                  formatter={(value) => [`$${Number(value).toFixed(4)}`]}
+                />
+                <Legend wrapperStyle={{ fontSize: 10 }} iconSize={8} />
+                <Bar dataKey="analyst" name="Analyst" stackId="cost" fill="#3b82f6" radius={[0, 0, 0, 0]} />
+                <Bar dataKey="scout" name="PatternScout" stackId="cost" fill="#f97316" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+
+            {/* Discovered markers */}
+            {chartData.some((d) => d.discovered) && (
+              <div className="mt-1 flex gap-1 text-[10px] text-gray-400">
+                {chartData.map((d, i) =>
+                  d.discovered ? (
+                    <span key={i} className="text-emerald-500">S{i + 1}★</span>
+                  ) : null
+                )}
+                <span className="ml-1">= DISCOVERED_LINK 활용 세션</span>
+              </div>
+            )}
+
+            {/* Summary */}
+            {summary && (
+              <div className="mt-3 grid grid-cols-4 gap-2 text-[10px]">
+                <div className="rounded bg-blue-50 p-1.5 text-center">
+                  <div className="text-gray-400">Analyst 평균</div>
+                  <div className="font-mono font-medium text-blue-700">${summary.avg_analyst_cost.toFixed(4)}</div>
+                </div>
+                <div className="rounded bg-orange-50 p-1.5 text-center">
+                  <div className="text-gray-400">Scout 평균</div>
+                  <div className="font-mono font-medium text-orange-700">${summary.avg_scout_cost.toFixed(4)}</div>
+                </div>
+                <div className="rounded bg-gray-50 p-1.5 text-center">
+                  <div className="text-gray-400">Scout 비중</div>
+                  <div className="font-mono font-medium text-gray-700">{(summary.scout_cost_ratio * 100).toFixed(0)}%</div>
+                </div>
+                <div className="rounded bg-gray-50 p-1.5 text-center">
+                  <div className="text-gray-400">총 세션</div>
+                  <div className="font-mono font-medium text-gray-700">{summary.total_sessions}</div>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
