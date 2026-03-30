@@ -46,3 +46,7 @@
 | 009 | 도구-서버 매핑 주입 (하드코딩 제거) | accepted | 2026-03-28 |
 | 010 | Pydantic 모델 기반 도구 스키마 자동 생성 | accepted | 2026-03-28 |
 | 011 | 추출 단계 원본 키워드 보존 원칙 | accepted | 2026-03-28 |
+| 012 | 오케스트레이터 결과 영속화 | accepted | 2026-03-29 |
+| 013 | Zone B 시각화 자동 매핑 패턴 | accepted | 2026-03-29 |
+| 014 | Zone C ReAct UI (Think/Act/Observe) | accepted | 2026-03-29 |
+| 015 | Eval 상수 하드코딩 제거 — Neo4j 동적 조회 | accepted | 2026-03-30 |

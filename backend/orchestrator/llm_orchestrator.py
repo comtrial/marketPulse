@@ -205,6 +205,7 @@ class LLMOrchestrator:
                     error_message=error_msg,
                     input_tokens=response.usage.input_tokens,
                     output_tokens=response.usage.output_tokens,
+                    agent_type="analyst",
                 )
 
                 # 시각화용 step 기록

@@ -88,11 +88,13 @@ def create_app() -> FastAPI:
     from api.routes_intelligence import router as intelligence_router
     from api.routes_orchestrator import router as orchestrator_router
     from api.routes_kg import router as kg_router
+    from api.routes_eval import router as eval_router
 
     app.include_router(health_router)
     app.include_router(extract_router)
     app.include_router(intelligence_router)
     app.include_router(orchestrator_router)
     app.include_router(kg_router)
+    app.include_router(eval_router)
 
     return app

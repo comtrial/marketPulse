@@ -165,10 +165,12 @@ class ToolCallTrace(Base):
     output_tokens: Mapped[int | None] = mapped_column(Integer)
     cost_usd: Mapped[float | None] = mapped_column(Numeric(8, 6))
     mcp_server: Mapped[str | None] = mapped_column(String(50))
+    agent_type: Mapped[str | None] = mapped_column(String(30))
 
     __table_args__ = (
         Index("idx_trace_ts", "timestamp"),
         Index("idx_trace_tool", "selected_tool"),
+        Index("idx_trace_agent", "agent_type"),
     )
 
 

@@ -1,0 +1,362 @@
+"""4축 Eval 메트릭 + Before/After 답변 비교.
+
+PatternScout가 없어도 동작한다 — 전부 0/빈값을 반환.
+PatternScout가 들어오면 코드 변경 없이 수치가 채워진다.
+
+축 1: 패턴 탐지 현황   — relationship_proposals 테이블 집계
+축 2: 답변 품질 개선률  — orchestrator_results에서 discovered_links 활용 여부
+축 3: 추론 커버리지     — 국가×유형 매트릭스 (Neo4j/PG에서 동적으로 조회)
+축 4: 시스템 효율       — 세션별 비용 변화
+
+상수 하드코딩 없음 — 국가/유형 목록을 Neo4j에서 가져와서 사용.
+시드 데이터가 바뀌어도 코드 수정 불필요.
+"""
+
+import json
+
+import structlog
+from neo4j import Driver
+from sqlalchemy import text
+from sqlalchemy.engine import Engine
+
+logger = structlog.get_logger()
+
+
+# ── 헬퍼 ──────────────────────────────────────────────────
+
+
+def _table_exists(engine: Engine, table_name: str) -> bool:
+    """PostgreSQL에 테이블이 존재하는지 확인."""
+    with engine.connect() as conn:
+        result = conn.execute(
+            text(
+                "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = :t)"
+            ),
+            {"t": table_name},
+        )
+        return result.scalar()
+
+
+def _get_countries(driver: Driver) -> list[str]:
+    """Neo4j Country 노드에서 국가 코드 목록을 가져온다."""
+    with driver.session() as session:
+        result = session.run("MATCH (c:Country) RETURN c.code AS code ORDER BY c.code")
+        return [r["code"] for r in result]
+
+
+def _get_product_types(driver: Driver) -> list[dict]:
+    """Neo4j ProductType 노드에서 유형 목록을 가져온다.
+
+    Returns:
+        [{"en": "sunscreen", "ko": "선크림"}, ...]
+    """
+    with driver.session() as session:
+        result = session.run(
+            "MATCH (t:ProductType) RETURN t.nameEn AS en, t.name AS ko ORDER BY t.nameEn"
+        )
+        return [{"en": r["en"], "ko": r["ko"]} for r in result]
+
+
+# ── 축 1: 패턴 탐지 현황 ──────────────────────────────────────────
+
+
+def eval_pattern_discovery(engine: Engine, driver: Driver) -> dict:
+    """PatternScout의 패턴 탐지 현황.
+
+    relationship_proposals 테이블이 없으면 전부 0.
+    Step 5에서 테이블을 만들면 자동으로 수치가 채워짐.
+    """
+    if not _table_exists(engine, "relationship_proposals"):
+        proposals = {"total": 0, "approved": 0, "rejected": 0, "pending": 0}
+        by_type = {}
+    else:
+        with engine.connect() as conn:
+            row = conn.execute(
+                text("""
+                    SELECT count(*) AS total,
+                           count(*) FILTER (WHERE status = 'approved') AS approved,
+                           count(*) FILTER (WHERE status = 'rejected') AS rejected,
+                           count(*) FILTER (WHERE status = 'proposed') AS pending
+                    FROM relationship_proposals
+                """)
+            ).mappings().one()
+            proposals = dict(row)
+
+            types = conn.execute(
+                text("""
+                    SELECT relationship_type, count(*) AS cnt
+                    FROM relationship_proposals WHERE status != 'rejected'
+                    GROUP BY 1
+                """)
+            ).mappings().all()
+            by_type = {t["relationship_type"]: t["cnt"] for t in types}
+
+    with driver.session() as session:
+        seed_result = session.run(
+            "MATCH ()-[r]->() "
+            "WHERE NOT type(r) IN ['PROPOSED_LINK', 'DISCOVERED_LINK'] "
+            "RETURN count(r) AS c"
+        )
+        seed_rels = seed_result.single()["c"]
+
+        disc_result = session.run(
+            "MATCH ()-[r:DISCOVERED_LINK]->() RETURN count(r) AS c"
+        )
+        discovered = disc_result.single()["c"]
+
+    total_rels = seed_rels + discovered
+    return {
+        "total_proposed": proposals["total"],
+        "approved": proposals["approved"],
+        "rejected": proposals["rejected"],
+        "pending": proposals["pending"],
+        "approval_rate": round(proposals["approved"] / max(proposals["total"], 1), 2),
+        "seed_relations": seed_rels,
+        "discovered_relations": discovered,
+        "relation_growth": round(total_rels / max(seed_rels, 1), 2),
+        "by_type": by_type,
+    }
+
+
+# ── 축 2: 답변 품질 개선률 ──────────────────────────────────────────
+
+
+def _has_discovered_links(steps: list[dict]) -> bool:
+    """steps에서 query_causal_chain의 tool_output에 비어있지 않은 discovered_links가 있는지."""
+    for step in steps:
+        if step.get("type") != "tool_call":
+            continue
+        if step.get("tool") != "query_causal_chain":
+            continue
+        output = step.get("tool_output")
+        if not isinstance(output, (dict, list)):
+            continue
+        if isinstance(output, list):
+            for item in output:
+                if isinstance(item, dict) and item.get("discovered_links"):
+                    return True
+        if isinstance(output, dict) and output.get("discovered_links"):
+            return True
+    return False
+
+
+def eval_answer_quality(engine: Engine) -> dict:
+    """승인된 관계(DISCOVERED_LINK)가 실제 답변에 사용되고 있는가.
+
+    orchestrator_results.steps JSONB에서 판별.
+    tool_call_traces는 10KB 잘림이 있으므로 사용하지 않음.
+    """
+    with engine.connect() as conn:
+        rows = conn.execute(
+            text("SELECT trace_id, steps FROM orchestrator_results ORDER BY created_at")
+        ).mappings().all()
+
+    total = len(rows)
+    used_discovered = 0
+    session_history = []
+
+    for row in rows:
+        steps = row["steps"] if isinstance(row["steps"], list) else json.loads(row["steps"])
+        has_disc = _has_discovered_links(steps)
+        if has_disc:
+            used_discovered += 1
+        session_history.append({
+            "trace_id": row["trace_id"],
+            "used_discovered": has_disc,
+        })
+
+    return {
+        "total_analyses": total,
+        "used_discovered_link": used_discovered,
+        "discovered_usage_rate": round(used_discovered / max(total, 1), 2),
+        "session_history": session_history,
+    }
+
+
+# ── 축 3: 추론 커버리지 ──────────────────────────────────────────
+
+
+def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:
+    """데이터 근거로 답할 수 있는 범위 — 국가×유형 매트릭스.
+
+    국가/유형 목록을 Neo4j에서 동적으로 가져와서 매트릭스를 구성.
+    시드 데이터가 변경되어도 코드 수정 불필요.
+    """
+    countries = _get_countries(driver)
+    product_types = _get_product_types(driver)
+    total_cells = len(countries) * len(product_types)
+
+    # orchestrator_results에서 causal_chain 호출 비율
+    with engine.connect() as conn:
+        total_result = conn.execute(
+            text("SELECT count(*) AS c FROM orchestrator_results")
+        ).mappings().one()
+        total_analyses = total_result["c"]
+
+        with_causal_result = conn.execute(
+            text("""
+                SELECT count(*) AS c FROM orchestrator_results
+                WHERE steps::text LIKE '%query_causal_chain%'
+            """)
+        ).mappings().one()
+        with_causal = with_causal_result["c"]
+
+    # 국가×유형 매트릭스
+    coverage = {}
+    for country in countries:
+        for pt in product_types:
+            with driver.session() as session:
+                causal_result = session.run(
+                    """
+                    MATCH (co:Country {code: $c})-[:HAS_CLIMATE]->()
+                          -[:TRIGGERS]->()-[:DRIVES_DEMAND]->()
+                    RETURN count(*) > 0 AS exists
+                    """,
+                    c=country,
+                )
+                has_causal = causal_result.single()["exists"]
+
+                disc_result = session.run(
+                    "MATCH ()-[r:DISCOVERED_LINK]->() RETURN count(r) > 0 AS exists"
+                )
+                has_discovered = disc_result.single()["exists"]
+
+            with engine.connect() as conn:
+                data_result = conn.execute(
+                    text("""
+                        SELECT count(*) > 0 AS exists
+                        FROM orders_unified o
+                        JOIN extractions e ON e.order_id = o.order_id
+                        WHERE o.destination_country = :c
+                          AND e.attributes->>'productType' = :pt
+                    """),
+                    {"c": country, "pt": pt["ko"]},
+                ).mappings().one()
+                has_data = data_result["exists"]
+
+            cell_key = f"{country}_{pt['en']}"
+            coverage[cell_key] = {
+                "causal": has_causal or has_discovered,
+                "data": has_data,
+                "full": (has_causal or has_discovered) and has_data,
+            }
+
+    full_count = sum(1 for v in coverage.values() if v["full"])
+
+    return {
+        "causal_evidence_rate": round(with_causal / max(total_analyses, 1), 2),
+        "full_coverage_cells": full_count,
+        "total_cells": total_cells,
+        "full_coverage_rate": round(full_count / max(total_cells, 1), 2),
+        "matrix": coverage,
+    }
+
+
+# ── 축 4: 시스템 효율 ──────────────────────────────────────────
+
+
+def eval_system_efficiency(engine: Engine) -> dict:
+    """세션 진행에 따른 비용 변화."""
+    with engine.connect() as conn:
+        rows = conn.execute(
+            text("""
+                SELECT trace_id, total_cost_usd, created_at
+                FROM orchestrator_results
+                ORDER BY created_at
+            """)
+        ).mappings().all()
+
+    sessions = [
+        {
+            "trace_id": r["trace_id"],
+            "cost": float(r["total_cost_usd"]),
+            "created_at": str(r["created_at"]),
+        }
+        for r in rows
+    ]
+
+    if len(sessions) < 2:
+        return {"status": "insufficient_data", "sessions": sessions}
+
+    half = len(sessions) // 2
+    avg_first = sum(s["cost"] for s in sessions[:half]) / half
+    avg_second = sum(s["cost"] for s in sessions[half:]) / (len(sessions) - half)
+
+    return {
+        "status": "ok",
+        "avg_cost_first_half": round(avg_first, 6),
+        "avg_cost_second_half": round(avg_second, 6),
+        "cost_reduction": round(1 - avg_second / max(avg_first, 0.000001), 2),
+        "total_sessions": len(sessions),
+        "sessions": sessions,
+    }
+
+
+# ── Before/After 답변 비교 ──────────────────────────────────────
+
+
+def find_before_after_pairs(engine: Engine) -> list[dict]:
+    """같은 질문이 승인 전/후로 실행된 쌍을 찾는다.
+
+    orchestrator_results에서 같은 user_query가 2회 이상 실행된 것을 찾고,
+    discovered_links 유무로 before(없음)/after(있음)를 구분.
+    """
+    with engine.connect() as conn:
+        rows = conn.execute(
+            text("""
+                SELECT trace_id, user_query, answer, steps, created_at
+                FROM orchestrator_results
+                WHERE user_query IN (
+                    SELECT user_query FROM orchestrator_results
+                    GROUP BY user_query HAVING count(*) >= 2
+                )
+                ORDER BY user_query, created_at
+            """)
+        ).mappings().all()
+
+    by_query: dict[str, list[dict]] = {}
+    for row in rows:
+        q = row["user_query"]
+        if q not in by_query:
+            by_query[q] = []
+        steps = row["steps"] if isinstance(row["steps"], list) else json.loads(row["steps"])
+        by_query[q].append({
+            "trace_id": row["trace_id"],
+            "answer": row["answer"],
+            "has_discovered": _has_discovered_links(steps),
+            "created_at": str(row["created_at"]),
+        })
+
+    pairs = []
+    for query, runs in by_query.items():
+        before_runs = [r for r in runs if not r["has_discovered"]]
+        after_runs = [r for r in runs if r["has_discovered"]]
+
+        if before_runs and after_runs:
+            before = before_runs[-1]
+            after = after_runs[-1]
+            pairs.append({
+                "query": query,
+                "before_trace_id": before["trace_id"],
+                "before_answer": before["answer"],
+                "before_at": before["created_at"],
+                "after_trace_id": after["trace_id"],
+                "after_answer": after["answer"],
+                "after_at": after["created_at"],
+            })
+
+    return pairs
+
+
+# ── 통합 Eval ──────────────────────────────────────────
+
+
+def run_full_eval(engine: Engine, driver: Driver) -> dict:
+    """4축 통합 + before_after_pairs."""
+    return {
+        "pattern_discovery": eval_pattern_discovery(engine, driver),
+        "answer_quality": eval_answer_quality(engine),
+        "reasoning_coverage": eval_reasoning_coverage(engine, driver),
+        "system_efficiency": eval_system_efficiency(engine),
+        "before_after_pairs": find_before_after_pairs(engine),
+    }

@@ -88,6 +88,7 @@ class TraceLogger:
         error_message: str | None = None,
         input_tokens: int = 0,
         output_tokens: int = 0,
+        agent_type: str = "analyst",
     ) -> None:
         """단일 도구 호출 step을 tool_call_traces에 기록."""
         mcp_server = self._resolve_server(selected_tool)
@@ -105,12 +106,14 @@ class TraceLogger:
                         (trace_id, step, user_query, selected_tool,
                          tool_input, selection_reason, tool_output,
                          tool_latency_ms, tool_success, error_message,
-                         input_tokens, output_tokens, cost_usd, mcp_server)
+                         input_tokens, output_tokens, cost_usd, mcp_server,
+                         agent_type)
                     VALUES
                         (:trace_id, :step, :query, :tool,
                          :input, :reason, CAST(:output AS jsonb),
                          :latency, :success, :error,
-                         :in_tok, :out_tok, :cost, :mcp)
+                         :in_tok, :out_tok, :cost, :mcp,
+                         :agent_type)
                 """),
                 {
                     "trace_id": trace_id,
@@ -127,6 +130,7 @@ class TraceLogger:
                     "out_tok": output_tokens,
                     "cost": round(cost_usd, 6),
                     "mcp": mcp_server,
+                    "agent_type": agent_type,
                 },
             )
             conn.commit()
