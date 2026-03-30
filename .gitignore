@@ -48,3 +48,5 @@ docs/scenario/
 
 # Eval snapshots (local data)
 backend/eval/snapshots/
+*.png
+!docs/images/*.png
