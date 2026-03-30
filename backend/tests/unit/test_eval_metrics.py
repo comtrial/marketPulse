@@ -157,39 +157,65 @@ class TestAnswerQuality:
 
 class TestReasoningCoverage:
 
-    @patch("eval.metrics._get_countries", return_value=["KR", "JP", "SG"])
+    @patch("eval.metrics._get_countries", return_value=["KR", "JP"])
     @patch("eval.metrics._get_product_types", return_value=[
         {"en": "sunscreen", "ko": "선크림"},
         {"en": "toner", "ko": "토너"},
     ])
     def test_matrix_structure(self, mock_types, mock_countries):
-        """매트릭스 키가 국가×유형 조합인지."""
+        """매트릭스 키가 국가×유형 조합이고 3축 평가가 포함되는지."""
         engine = MagicMock()
         conn = MagicMock()
         engine.connect.return_value.__enter__ = MagicMock(return_value=conn)
         engine.connect.return_value.__exit__ = MagicMock(return_value=False)
 
-        # PG 쿼리: 첫 2개는 count(*), 나머지는 exists
-        count_result = MagicMock()
-        count_result.mappings.return_value.one.return_value = {"c": 0}
-        exists_result = MagicMock()
-        exists_result.mappings.return_value.one.return_value = {"exists": True}
-        conn.execute.side_effect = [count_result, count_result] + [exists_result] * 6
+        # PG 쿼리: 첫 2개 = orchestrator count, 이후 셀당 2개 (cnt, diversity)
+        orch_count = MagicMock()
+        orch_count.mappings.return_value.one.return_value = {"c": 0}
+        data_count = MagicMock()
+        data_count.mappings.return_value.one.return_value = {"cnt": 50}
+        diversity_count = MagicMock()
+        diversity_count.mappings.return_value.one.return_value = {"cnt": 5}
+        # 2 orch queries + 4 cells × 2 queries each = 10
+        conn.execute.side_effect = [orch_count, orch_count] + [data_count, diversity_count] * 4
 
         driver = make_mock_driver()
         session = driver.session.return_value.__enter__.return_value
-        causal_r = MagicMock()
-        causal_r.single.return_value = {"exists": True}
+
+        # Neo4j: func_result (top), tf_result (top), then disc_result per cell (4)
+        func_r = MagicMock()
+        func_r.__iter__ = MagicMock(return_value=iter([
+            {"country": "KR", "functions": ["UV차단", "수분"]},
+            {"country": "JP", "functions": ["UV차단"]},
+        ]))
+        tf_r = MagicMock()
+        tf_r.__iter__ = MagicMock(return_value=iter([
+            {"type": "sunscreen", "functions": ["UV차단"]},
+            {"type": "toner", "functions": ["수분"]},
+        ]))
         disc_r = MagicMock()
         disc_r.single.return_value = {"exists": False}
-        session.run.side_effect = [causal_r, disc_r] * 6
+        session.run.side_effect = [func_r, tf_r] + [disc_r] * 4
 
         result = eval_reasoning_coverage(engine, driver)
 
         assert "matrix" in result
         assert "KR_sunscreen" in result["matrix"]
         assert "JP_toner" in result["matrix"]
-        assert result["total_cells"] == 6  # 3 × 2
+        assert result["total_cells"] == 4  # 2 × 2
+
+        # KR_sunscreen: causal=True (KR has UV차단, sunscreen needs UV차단), data=True, diversity=True
+        cell = result["matrix"]["KR_sunscreen"]
+        assert cell["causal"] is True
+        assert cell["data"] is True
+        assert cell["full"] is True
+        assert cell["data_count"] == 50
+        assert "gaps" in cell
+
+        # JP_toner: causal=False (JP has UV차단, toner needs 수분 — no overlap)
+        cell_jt = result["matrix"]["JP_toner"]
+        assert cell_jt["causal"] is False
+        assert len(cell_jt["gaps"]) > 0
 
 
 # ── 축 4: 시스템 효율 ──

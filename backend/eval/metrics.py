@@ -176,11 +176,20 @@ def eval_answer_quality(engine: Engine) -> dict:
 # ── 축 3: 추론 커버리지 ──────────────────────────────────────────
 
 
+MIN_DATA_THRESHOLD = 30  # 통계적으로 의미 있는 최소 건수
+MIN_ATTR_DIVERSITY = 2   # 트렌드 비교가 가능한 최소 속성 종류
+
+
 def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:
     """데이터 근거로 답할 수 있는 범위 — 국가×유형 매트릭스.
 
-    국가/유형 목록을 Neo4j에서 동적으로 가져와서 매트릭스를 구성.
-    시드 데이터가 변경되어도 코드 수정 불필요.
+    셀(국가×유형) 단위로 3가지를 평가:
+      1. causal: 이 국가+유형에 맞는 인과 체인이 Neo4j에 존재하는가
+      2. data: 주문+추출 데이터가 통계적으로 유의미한 양(30건+) 존재하는가
+      3. diversity: 추출된 속성이 2종 이상이어서 트렌드 비교가 가능한가
+
+    full = causal + data + diversity 모두 충족
+    각 셀에 부족한 것과 필요한 액션을 함께 반환.
     """
     countries = _get_countries(driver)
     product_types = _get_product_types(driver)
@@ -201,30 +210,49 @@ def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:
         ).mappings().one()
         with_causal = with_causal_result["c"]
 
+    # 국가별 인과 체인이 커버하는 Function 목록 미리 조회
+    country_functions: dict[str, set[str]] = {}
+    with driver.session() as session:
+        func_result = session.run("""
+            MATCH (co:Country)-[:HAS_CLIMATE]->()-[:TRIGGERS]->()
+                  -[:DRIVES_DEMAND]->(f:Function)
+            RETURN co.code AS country, collect(DISTINCT f.name) AS functions
+        """)
+        for r in func_result:
+            country_functions[r["country"]] = set(r["functions"])
+
+    # 유형별 주요 Function 매핑 (이 유형에서 의미 있는 기능)
+    type_relevant_functions: dict[str, set[str]] = {}
+    with driver.session() as session:
+        tf_result = session.run("""
+            MATCH (p:Product)-[:IS_TYPE]->(t:ProductType),
+                  (p)-[:CONTAINS]->(:Ingredient)-[:HAS_FUNCTION]->(f:Function)
+            RETURN t.nameEn AS type, collect(DISTINCT f.name) AS functions
+        """)
+        for r in tf_result:
+            type_relevant_functions[r["type"]] = set(r["functions"])
+
     # 국가×유형 매트릭스
     coverage = {}
     for country in countries:
         for pt in product_types:
-            with driver.session() as session:
-                causal_result = session.run(
-                    """
-                    MATCH (co:Country {code: $c})-[:HAS_CLIMATE]->()
-                          -[:TRIGGERS]->()-[:DRIVES_DEMAND]->()
-                    RETURN count(*) > 0 AS exists
-                    """,
-                    c=country,
-                )
-                has_causal = causal_result.single()["exists"]
+            # causal: 이 국가의 인과 체인이 이 유형에 관련된 Function을 커버하는가
+            c_funcs = country_functions.get(country, set())
+            t_funcs = type_relevant_functions.get(pt["en"], set())
+            has_causal = bool(c_funcs & t_funcs)  # 교집합 존재 여부
 
+            # DISCOVERED_LINK도 체크 (PatternScout 발견)
+            with driver.session() as session:
                 disc_result = session.run(
                     "MATCH ()-[r:DISCOVERED_LINK]->() RETURN count(r) > 0 AS exists"
                 )
                 has_discovered = disc_result.single()["exists"]
 
+            # data: 충분한 양의 주문 데이터 존재 여부
             with engine.connect() as conn:
                 data_result = conn.execute(
                     text("""
-                        SELECT count(*) > 0 AS exists
+                        SELECT count(*) AS cnt
                         FROM orders_unified o
                         JOIN extractions e ON e.order_id = o.order_id
                         WHERE o.destination_country = :c
@@ -232,13 +260,53 @@ def eval_reasoning_coverage(engine: Engine, driver: Driver) -> dict:
                     """),
                     {"c": country, "pt": pt["ko"]},
                 ).mappings().one()
-                has_data = data_result["exists"]
+                data_count = data_result["cnt"]
+                has_data = data_count >= MIN_DATA_THRESHOLD
+
+                # diversity: 속성 종류 수
+                div_result = conn.execute(
+                    text("""
+                        SELECT count(DISTINCT attr) AS cnt
+                        FROM (
+                            SELECT jsonb_array_elements_text(e.attributes->'functionalClaims') AS attr
+                            FROM extractions e
+                            JOIN orders_unified o ON e.order_id = o.order_id
+                            WHERE o.destination_country = :c
+                              AND e.attributes->>'productType' = :pt
+                            UNION ALL
+                            SELECT jsonb_array_elements_text(e.attributes->'valueClaims') AS attr
+                            FROM extractions e
+                            JOIN orders_unified o ON e.order_id = o.order_id
+                            WHERE o.destination_country = :c
+                              AND e.attributes->>'productType' = :pt
+                        ) sub
+                    """),
+                    {"c": country, "pt": pt["ko"]},
+                ).mappings().one()
+                attr_diversity = div_result["cnt"]
+                has_diversity = attr_diversity >= MIN_ATTR_DIVERSITY
+
+            causal_ok = has_causal or has_discovered
+            is_full = causal_ok and has_data and has_diversity
+
+            # 부족한 것 + 액션 가이드
+            gaps = []
+            if not causal_ok:
+                gaps.append("인과 체인 없음 → 이 국가+유형의 기후/피부고민/기능 관계를 시드하세요")
+            if not has_data:
+                gaps.append(f"데이터 부족({data_count}건) → {MIN_DATA_THRESHOLD}건 이상 주문 데이터 필요")
+            if not has_diversity:
+                gaps.append(f"속성 단조({attr_diversity}종) → {MIN_ATTR_DIVERSITY}종 이상 속성이 있어야 비교 가능")
 
             cell_key = f"{country}_{pt['en']}"
             coverage[cell_key] = {
-                "causal": has_causal or has_discovered,
+                "causal": causal_ok,
                 "data": has_data,
-                "full": (has_causal or has_discovered) and has_data,
+                "diversity": has_diversity,
+                "full": is_full,
+                "data_count": data_count,
+                "attr_diversity": attr_diversity,
+                "gaps": gaps,
             }
 
     full_count = sum(1 for v in coverage.values() if v["full"])

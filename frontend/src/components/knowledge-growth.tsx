@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   LineChart,
@@ -247,23 +248,24 @@ const PRODUCT_TYPES = [
 ];
 
 function CoverageMatrix({ data }: { data: EvalFullResult }) {
+  const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const matrix = data.reasoning_coverage.matrix;
 
   function getCellStatus(key: string): "full" | "partial" | "none" {
     const cell = matrix[key];
     if (!cell) return "none";
     if (cell.full) return "full";
-    if (cell.causal || cell.data) return "partial";
+    if (cell.causal || cell.data || cell.diversity) return "partial";
     return "none";
   }
 
   const statusStyle = {
-    full: "bg-emerald-100 text-emerald-700",
-    partial: "bg-amber-50 text-amber-600",
-    none: "bg-gray-50 text-gray-300",
+    full: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
+    partial: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+    none: "bg-gray-50 text-gray-300 hover:bg-gray-100",
   };
 
-  const statusLabel = { full: "●●", partial: "●○", none: "○○" };
+  const selected = selectedCell ? matrix[selectedCell] : null;
 
   return (
     <Card>
@@ -272,6 +274,7 @@ function CoverageMatrix({ data }: { data: EvalFullResult }) {
         <CardDescription>
           {data.reasoning_coverage.full_coverage_cells}/{data.reasoning_coverage.total_cells} 조합 완전 커버 (
           {(data.reasoning_coverage.full_coverage_rate * 100).toFixed(0)}%)
+          — 셀을 클릭하면 상세를 볼 수 있습니다
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -293,14 +296,22 @@ function CoverageMatrix({ data }: { data: EvalFullResult }) {
                   <td className="px-2 py-1.5 font-medium text-gray-700">{country}</td>
                   {PRODUCT_TYPES.map((pt) => {
                     const key = `${country}_${pt.key}`;
+                    const cell = matrix[key];
                     const status = getCellStatus(key);
+                    const isSelected = selectedCell === key;
                     return (
                       <td key={pt.key} className="px-1 py-1 text-center">
-                        <span
-                          className={`inline-block rounded px-2 py-0.5 font-mono text-[11px] ${statusStyle[status]}`}
+                        <button
+                          onClick={() => setSelectedCell(isSelected ? null : key)}
+                          className={`inline-flex flex-col items-center rounded px-2 py-1 font-mono text-[10px] transition-colors cursor-pointer ${statusStyle[status]} ${isSelected ? "ring-2 ring-gray-400" : ""}`}
                         >
-                          {statusLabel[status]}
-                        </span>
+                          <span className="text-[11px]">
+                            {cell?.full ? "●●●" : status === "partial" ? "●●○" : "○○○"}
+                          </span>
+                          <span className="text-[8px] text-gray-400">
+                            {cell?.data_count ?? 0}건
+                          </span>
+                        </button>
                       </td>
                     );
                   })}
@@ -309,11 +320,43 @@ function CoverageMatrix({ data }: { data: EvalFullResult }) {
             </tbody>
           </table>
         </div>
+
+        {/* Legend */}
         <div className="mt-2 flex gap-3 text-[10px] text-gray-400">
-          <span><span className="text-emerald-600">●●</span> causal + data</span>
-          <span><span className="text-amber-500">●○</span> partial</span>
-          <span><span className="text-gray-300">○○</span> none</span>
+          <span><span className="text-emerald-600">●●●</span> 인과+데이터+다양성</span>
+          <span><span className="text-amber-500">●●○</span> 일부 충족</span>
+          <span><span className="text-gray-300">○○○</span> 분석 불가</span>
         </div>
+
+        {/* Selected cell detail */}
+        {selected && selectedCell && (
+          <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 animate-step-reveal">
+            <p className="text-xs font-semibold text-gray-800 mb-2">
+              {selectedCell.replace("_", " / ")}
+            </p>
+            <div className="flex gap-4 mb-2 text-[10px]">
+              <span className={selected.causal ? "text-emerald-600" : "text-red-400"}>
+                {selected.causal ? "✓" : "✗"} 인과 체인
+              </span>
+              <span className={selected.data ? "text-emerald-600" : "text-red-400"}>
+                {selected.data ? "✓" : "✗"} 데이터 ({selected.data_count}건)
+              </span>
+              <span className={selected.diversity ? "text-emerald-600" : "text-red-400"}>
+                {selected.diversity ? "✓" : "✗"} 속성 다양성 ({selected.attr_diversity}종)
+              </span>
+            </div>
+            {selected.gaps.length > 0 ? (
+              <div className="flex flex-col gap-1">
+                <p className="text-[10px] font-medium text-amber-600">필요한 액션:</p>
+                {selected.gaps.map((gap, i) => (
+                  <p key={i} className="text-[10px] text-gray-600 pl-2">→ {gap}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[10px] text-emerald-600">✓ 이 조합에 대해 근거 있는 인사이트 제공 가능</p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

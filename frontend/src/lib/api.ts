@@ -103,7 +103,11 @@ export interface EvalSessionHistory {
 export interface EvalCoverageCell {
   causal: boolean;
   data: boolean;
+  diversity: boolean;
   full: boolean;
+  data_count: number;
+  attr_diversity: number;
+  gaps: string[];
 }
 
 export interface EvalEfficiencySession {
