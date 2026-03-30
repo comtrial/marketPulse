@@ -103,7 +103,7 @@ class PatternScout:
         Returns:
             PatternScoutResult with trace_id, steps, proposals count
         """
-        trace_id = f"scout-{uuid4()}"
+        trace_id = str(uuid4())  # VARCHAR(36) 호환. scout 여부는 agent_type="pattern_scout"로 구분
 
         # 직전 분석 맥락을 user message로 전달
         prompt = (
