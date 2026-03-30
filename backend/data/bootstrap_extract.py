@@ -101,6 +101,15 @@ def extract_attrs(product_name: str, product_type: str, brand_en: str) -> dict:
             ingredients.append(normalized)
             seen.add(normalized)
 
+    # sunscreen 기본 성분 매핑: 상품명에 성분이 없어도 카테고리 특성으로 추론
+    # 실제 LLM 추출에서는 gold example의 few-shot을 보고 이런 추론을 수행함.
+    # bootstrap은 규칙 기반이므로 명시적으로 보완.
+    if product_type == "sunscreen" and not ingredients:
+        # 무기자차 → 징크옥사이드 (주요 UV 차단 성분)
+        if "무기자차" in name:
+            ingredients.append("징크옥사이드")
+            seen.add("징크옥사이드")
+
     # 기능 클레임 추출
     func_claims = []
     for claim, keywords in FUNC_PATTERNS.items():

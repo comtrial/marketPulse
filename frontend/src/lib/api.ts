@@ -160,10 +160,11 @@ export interface BeforeAfterPair {
 
 export interface Proposal {
   id: number;
+  source_concept: string;
+  target_concept: string;
   relationship_type: string;
-  source: string;
-  target: string;
-  confidence: number;
+  evidence: Record<string, unknown>;
+  reasoning: string;
   status: string;
   created_at: string;
 }

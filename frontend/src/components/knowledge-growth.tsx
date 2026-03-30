@@ -349,16 +349,22 @@ function ProposalTable() {
                 <tr className="border-b border-gray-200">
                   <th className="px-2 py-1.5 text-left text-gray-500">타입</th>
                   <th className="px-2 py-1.5 text-left text-gray-500">소스 → 타겟</th>
-                  <th className="px-2 py-1.5 text-center text-gray-500">신뢰도</th>
+                  <th className="px-2 py-1.5 text-center text-gray-500">근거</th>
                   <th className="px-2 py-1.5 text-center text-gray-500">상태</th>
                 </tr>
               </thead>
               <tbody>
-                {proposals.map((p) => (
+                {proposals.map((p) => {
+                  const evidence = p.evidence || {};
+                  const lift = evidence.lift as number | undefined;
+                  const corr = evidence.correlation as number | undefined;
+                  const pVal = evidence.p_value as number | undefined;
+                  const metric = lift != null ? `lift=${lift}` : corr != null ? `r=${corr}` : pVal != null ? `p=${pVal}` : "-";
+                  return (
                   <tr key={p.id} className="border-t border-gray-50">
                     <td className="px-2 py-1.5 font-mono text-gray-600">{p.relationship_type}</td>
-                    <td className="px-2 py-1.5 text-gray-700">{p.source} → {p.target}</td>
-                    <td className="px-2 py-1.5 text-center font-mono">{(p.confidence * 100).toFixed(0)}%</td>
+                    <td className="px-2 py-1.5 text-gray-700">{p.source_concept} → {p.target_concept}</td>
+                    <td className="px-2 py-1.5 text-center font-mono">{metric}</td>
                     <td className="px-2 py-1.5 text-center">
                       <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
                         p.status === "approved" ? "bg-emerald-50 text-emerald-600" :
@@ -369,7 +375,8 @@ function ProposalTable() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
