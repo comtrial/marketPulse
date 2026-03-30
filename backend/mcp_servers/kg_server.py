@@ -63,10 +63,11 @@ class KnowledgeGraphServer:
         self.driver = driver
 
     @tool(QueryCausalChainInput)
-    def query_causal_chain(self, params: QueryCausalChainInput) -> list[dict]:
-        """특정 국가의 기후→피부고민→기능 수요 인과 체인을 반환. '이 나라에서 뭐가 왜 잘 팔리는지' 질문에 사용."""
+    def query_causal_chain(self, params: QueryCausalChainInput) -> dict:
+        """시드 인과 체인 + 승인된 DISCOVERED_LINK를 통합 반환. '이 나라에서 뭐가 왜 잘 팔리는지' 질문에 사용."""
         with self.driver.session() as session:
-            result = session.run(
+            # 시드 인과 체인 (기존)
+            seed_result = session.run(
                 """
                 MATCH (c:Country {code: $code})-[:HAS_CLIMATE]->(cz:ClimateZone)
                       -[t:TRIGGERS]->(sc:SkinConcern)
@@ -84,10 +85,29 @@ class KnowledgeGraphServer:
                 """,
                 code=params.country_code,
             )
-            chains = [record.data() for record in result]
+            seed_chains = [record.data() for record in seed_result]
 
-        logger.info("causal_chain_queried", country=params.country_code, chains_found=len(chains))
-        return chains
+            # 승인된 DISCOVERED_LINK (PatternScout가 제안 → 사람이 승인)
+            disc_result = session.run(
+                """
+                MATCH (a)-[r:DISCOVERED_LINK]->(b)
+                RETURN a.name AS fromConcept, a.commonNameKo AS fromConceptKo,
+                       b.name AS toConcept, b.commonNameKo AS toConceptKo,
+                       r.type AS relationType, r.evidence AS evidence
+                """
+            )
+            discovered_links = [record.data() for record in disc_result]
+
+        logger.info(
+            "causal_chain_queried",
+            country=params.country_code,
+            seed_chains=len(seed_chains),
+            discovered_links=len(discovered_links),
+        )
+        return {
+            "seed_chains": seed_chains,
+            "discovered_links": discovered_links,
+        }
 
     @tool(FindTrendingIngredientsInput)
     def find_trending_ingredients(self, params: FindTrendingIngredientsInput) -> list[dict]:

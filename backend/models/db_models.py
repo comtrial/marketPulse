@@ -197,6 +197,46 @@ class OrchestratorResultModel(Base):
     )
 
 
+# ── Relationship Proposals (PatternScout → 사람 승인) ────────────────
+
+
+class RelationshipProposal(Base):
+    __tablename__ = "relationship_proposals"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    source_concept: Mapped[str] = mapped_column(String(100), nullable=False)
+    target_concept: Mapped[str] = mapped_column(String(100), nullable=False)
+    relationship_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    evidence: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    reasoning: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="proposed")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    rejected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    rejection_reason: Mapped[str | None] = mapped_column(Text)
+
+
+# ── Market Insights (PatternScout 발견 인사이트) ─────────────────────
+
+
+class MarketInsight(Base):
+    __tablename__ = "market_insights"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    type: Mapped[str] = mapped_column(String(30), nullable=False)
+    country: Mapped[str] = mapped_column(String(5), nullable=False)
+    product_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    summary: Mapped[str] = mapped_column(Text, nullable=False)
+    evidence: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    related_insights: Mapped[list[int] | None] = mapped_column(ARRAY(Integer))
+    trace_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
 # ── Emerging Attributes (Phase 2) ───────────────────────────────────
 
 

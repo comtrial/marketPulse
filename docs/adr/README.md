@@ -50,3 +50,7 @@
 | 013 | Zone B 시각화 자동 매핑 패턴 | accepted | 2026-03-29 |
 | 014 | Zone C ReAct UI (Think/Act/Observe) | accepted | 2026-03-29 |
 | 015 | Eval 상수 하드코딩 제거 — Neo4j 동적 조회 | accepted | 2026-03-30 |
+| 016 | PatternScout를 AnalystAgent에서 분리 | accepted | 2026-03-30 |
+| 017 | 통계 검증은 LLM이 아닌 코드가 수행 | accepted | 2026-03-30 |
+| 018 | PatternScout 구조화된 탐색 절차 | accepted | 2026-03-30 |
+| 019 | query_causal_chain DISCOVERED_LINK 확장 | accepted | 2026-03-30 |
