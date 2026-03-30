@@ -5,6 +5,7 @@ import { QueryPanel } from "@/components/query-panel";
 import { ResultPanel } from "@/components/result-panel";
 import { TracePanel } from "@/components/trace-panel";
 import { BottomBar } from "@/components/bottom-bar";
+import { KnowledgeGrowthBar } from "@/components/knowledge-growth";
 import { HistoryPanel } from "@/components/history-panel";
 import { api } from "@/lib/api";
 import type { OrchestratorResult, ExtractResult } from "@/lib/api";
@@ -153,6 +154,9 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+
+      {/* Knowledge Growth */}
+      <KnowledgeGrowthBar />
 
       {/* BottomBar */}
       <BottomBar />

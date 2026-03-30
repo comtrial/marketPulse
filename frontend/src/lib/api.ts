@@ -93,6 +93,81 @@ export interface TrendData {
   trend: Record<string, { month: string; total: number; withAttr: number; percentage: number }[]>;
 }
 
+// ── Eval Types ──
+
+export interface EvalSessionHistory {
+  trace_id: string;
+  used_discovered: boolean;
+}
+
+export interface EvalCoverageCell {
+  causal: boolean;
+  data: boolean;
+  full: boolean;
+}
+
+export interface EvalEfficiencySession {
+  trace_id: string;
+  cost: number;
+  created_at: string;
+}
+
+export interface EvalFullResult {
+  pattern_discovery: {
+    total_proposed: number;
+    approved: number;
+    rejected: number;
+    pending: number;
+    approval_rate: number;
+    seed_relations: number;
+    discovered_relations: number;
+    relation_growth: number;
+    by_type: Record<string, number>;
+  };
+  answer_quality: {
+    total_analyses: number;
+    used_discovered_link: number;
+    discovered_usage_rate: number;
+    session_history: EvalSessionHistory[];
+  };
+  reasoning_coverage: {
+    causal_evidence_rate: number;
+    full_coverage_cells: number;
+    total_cells: number;
+    full_coverage_rate: number;
+    matrix: Record<string, EvalCoverageCell>;
+  };
+  system_efficiency: {
+    status: string;
+    avg_cost_first_half: number;
+    avg_cost_second_half: number;
+    cost_reduction: number;
+    total_sessions: number;
+    sessions: EvalEfficiencySession[];
+  };
+  before_after_pairs: BeforeAfterPair[];
+}
+
+export interface BeforeAfterPair {
+  query: string;
+  before_trace_id: string;
+  before_answer: string;
+  before_at: string;
+  after_trace_id: string;
+  after_answer: string;
+  after_at: string;
+}
+
+export interface Proposal {
+  id: number;
+  relationship_type: string;
+  source: string;
+  target: string;
+  confidence: number;
+  status: string;
+  created_at: string;
+}
+
 export interface ResultSummary {
   trace_id: string;
   user_query: string;
@@ -126,6 +201,12 @@ export const api = {
 
   causalChain: (country: string) =>
     fetchApi<Record<string, unknown>[]>(`/kg/causal-chain/${country}`),
+
+  evalFull: () => fetchApi<EvalFullResult>("/eval/full"),
+
+  evalBeforeAfter: () => fetchApi<BeforeAfterPair[]>("/eval/before-after-pairs"),
+
+  knowledgeProposals: () => fetchApi<Proposal[]>("/knowledge/proposals"),
 
   getResult: (traceId: string) =>
     fetchApi<OrchestratorResult>(`/orchestrator/result/${traceId}`),
