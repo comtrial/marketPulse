@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>MarketPulse — Knowledge Graph Ontology</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--bg:#0a0e17;--sf:#111827;--sf2:#1a2236;--bd:#1e2d4a;--t:#e2e8f0;--t2:#94a3b8;--t3:#64748b;--ac:#3b82f6;--ac2:#60a5fa}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);overflow:hidden;height:100vh}
+.layout{display:grid;grid-template-columns:1fr 360px;grid-template-rows:auto 1fr;height:100vh}
+.header{grid-column:1/-1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#0f1729,var(--bg));border-bottom:1px solid var(--bd)}
+.header-left{display:flex;align-items:center;gap:16px}
+.logo{font-size:13px;font-weight:700;color:var(--ac2);letter-spacing:2px;text-transform:uppercase}
+.header h1{font-size:17px;font-weight:500}.header h1 span{color:var(--t3);font-weight:300}
+.badges{display:flex;gap:8px}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;background:var(--sf2);color:var(--t2);border:1px solid var(--bd)}
+.chart{position:relative;overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+.sidebar{background:var(--sf);border-left:1px solid var(--bd);overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--sf2);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.card-title{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:10px;padding:5px 4px;cursor:pointer;border-radius:6px}
+.legend-item:hover{background:#ffffff08}.legend-item.dim{opacity:0.2}
+.legend-icon{width:20px;text-align:center;font-size:13px}
+.legend-label{font-size:12px;flex:1}.legend-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3)}
+.edge-item{display:flex;align-items:center;gap:10px;padding:4px 0}
+.edge-line{width:28px;height:2px;border-radius:1px;flex-shrink:0}
+.edge-label{font-size:11px;color:var(--t2);flex:1}.edge-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3)}
+.chain{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2);line-height:2.2;padding:10px;background:#0a0e17;border-radius:6px}
+.chain .n{padding:2px 8px;border-radius:3px;color:#fff;font-weight:500}.chain .a{color:var(--t3)}
+.tooltip{position:fixed;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px;pointer-events:none;display:none;z-index:100;font-size:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:340px}
+#detail{display:none}#detail.show{display:block}
+.detail-name{font-size:15px;font-weight:600;margin-bottom:10px}
+.detail-row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;border-bottom:1px solid #ffffff06}
+.detail-key{color:var(--t3)}.detail-val{font-family:'JetBrains Mono',monospace;color:var(--t)}
+.conn{font-size:12px;line-height:2;margin-top:8px}
+.help{font-size:10px;color:var(--t3);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">MarketPulse</div>
+      <h1>Knowledge Graph <span>— Neo4j Causal Ontology</span></h1>
+    </div>
+    <div class="badges">
+      <span class="badge">Neo4j 5.26</span>
+      <span class="badge" id="b-nodes"></span>
+      <span class="badge" id="b-edges"></span>
+      <span class="badge">causal chain inference</span>
+    </div>
+  </div>
+  <div class="chart" id="chart"><canvas id="c"></canvas><div class="tooltip" id="tip"></div></div>
+  <div class="sidebar">
+    <div class="card"><div class="card-title">Node Types <span style="font-weight:400">(click to filter)</span></div><div id="nleg"></div></div>
+    <div class="card"><div class="card-title">Relationship Types</div><div id="eleg"></div></div>
+    <div class="card">
+      <div class="card-title">Causal Chain — Japan</div>
+      <div class="chain">
+        <span class="n" style="background:#FF6B6B">🌏 JP 일본</span><br>
+        <span class="a">&nbsp;&nbsp;——HAS_CLIMATE→</span><br>
+        <span class="n" style="background:#FFA657">🌡️ 온대_고UV여름</span><br>
+        <span class="a">&nbsp;&nbsp;——TRIGGERS (0.88)→</span><br>
+        <span class="n" style="background:#F97583">⚠️ 자외선손상</span><br>
+        <span class="a">&nbsp;&nbsp;——DRIVES_DEMAND (0.92)→</span><br>
+        <span class="n" style="background:#79C0FF">⚙️ UV차단</span><br>
+        <span class="a">&nbsp;&nbsp;←HAS_FUNCTION——</span><br>
+        <span class="n" style="background:#7EE787">🧪 징크옥사이드</span>
+      </div>
+      <div class="help" style="margin-top:8px">strength = 0.88 × 0.92 = <b style="color:var(--ac2)">0.81</b><br>"일본 고UV → 무기자차 수요" 정량적 근거</div>
+    </div>
+    <div class="card" id="detail"><div class="card-title">Selected</div><div id="det"></div></div>
+    <div class="card"><div class="help"><b>조작</b>&nbsp; 드래그: 노드이동 · 스크롤: 줌 · 배경드래그: 패닝 · 클릭: 상세</div></div>
+  </div>
+</div>
+<script>
+const NODES=[{"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:0", "label": "Ingredient", "name": "나이아신아마이드", "nameEn": "Niacinamide", "props": {"commonNameKo": "나이아신아마이드", "inciName": "NIACINAMIDE", "commonNameEn": "Niacinamide", "origin": "합성"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1", "label": "Ingredient", "name": "히알루론산", "nameEn": "Hyaluronic Acid", "props": {"commonNameKo": "히알루론산", "inciName": "SODIUM_HYALURONATE", "origin": "발효", "commonNameEn": "Hyaluronic Acid"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:2", "label": "Ingredient", "name": "센텔라", "nameEn": "Centella Asiatica", "props": {"commonNameKo": "센텔라", "inciName": "CENTELLA_ASIATICA_EXTRACT", "commonNameEn": "Centella Asiatica", "origin": "천연"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:3", "label": "Ingredient", "name": "어성초", "nameEn": "Houttuynia Cordata", "props": {"commonNameKo": "어성초", "inciName": "HOUTTUYNIA_CORDATA_EXTRACT", "commonNameEn": "Houttuynia Cordata", "origin": "천연"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:4", "label": "Ingredient", "name": "녹차", "nameEn": "Green Tea", "props": {"commonNameKo": "녹차", "inciName": "CAMELLIA_SINENSIS_LEAF_EXTRACT", "origin": "천연", "commonNameEn": "Green Tea"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:5", "label": "Ingredient", "name": "세라마이드", "nameEn": "Ceramide", "props": {"commonNameKo": "세라마이드", "inciName": "CERAMIDE_NP", "commonNameEn": "Ceramide", "origin": "합성"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:6", "label": "Ingredient", "name": "징크옥사이드", "nameEn": "Zinc Oxide", "props": {"commonNameKo": "징크옥사이드", "inciName": "ZINC_OXIDE", "commonNameEn": "Zinc Oxide", "origin": "합성"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:7", "label": "Ingredient", "name": "살리실산", "nameEn": "Salicylic Acid", "props": {"commonNameKo": "살리실산", "inciName": "SALICYLIC_ACID", "commonNameEn": "Salicylic Acid", "origin": "합성"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:8", "label": "Ingredient", "name": "프로폴리스", "nameEn": "Propolis", "props": {"commonNameKo": "프로폴리스", "inciName": "PROPOLIS_EXTRACT", "commonNameEn": "Propolis", "origin": "천연"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:9", "label": "Ingredient", "name": "당근", "nameEn": "Carrot", "props": {"commonNameKo": "당근", "inciName": "DAUCUS_CAROTA_SATIVA_ROOT_EXTRACT", "origin": "천연", "commonNameEn": "Carrot"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:10", "label": "Platform", "name": "Cafe24", "nameEn": "Cafe24", "props": {"name": "Cafe24", "countries": "['KR', 'JP', 'SG']", "id": "plat_cafe24"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:11", "label": "Platform", "name": "Qoo10", "nameEn": "Qoo10", "props": {"name": "Qoo10", "countries": "['JP', 'SG']", "id": "plat_qoo10"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:12", "label": "Platform", "name": "Shopee", "nameEn": "Shopee", "props": {"name": "Shopee", "countries": "['SG']", "id": "plat_shopee"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:13", "label": "ProductType", "name": "선크림", "nameEn": "sunscreen", "props": {"name": "선크림", "id": "type_sunscreen", "nameEn": "sunscreen", "parentType": "선케어"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:14", "label": "ProductType", "name": "토너", "nameEn": "toner", "props": {"name": "토너", "id": "type_toner", "nameEn": "toner", "parentType": "스킨케어"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:15", "label": "ProductType", "name": "세럼", "nameEn": "serum", "props": {"name": "세럼", "id": "type_serum", "nameEn": "serum", "parentType": "스킨케어"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:16", "label": "ProductType", "name": "크림", "nameEn": "cream", "props": {"name": "크림", "id": "type_cream", "nameEn": "cream", "parentType": "스킨케어"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:17", "label": "ProductType", "name": "립", "nameEn": "lip", "props": {"name": "립", "id": "type_lip", "nameEn": "lip", "parentType": "메이크업"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:18", "label": "Brand", "name": "이니스프리", "nameEn": "Innisfree", "props": {"country": "KR", "name": "이니스프리", "id": "brand_innisfree", "nameEn": "Innisfree"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:19", "label": "Brand", "name": "토리든", "nameEn": "Torriden", "props": {"country": "KR", "name": "토리든", "id": "brand_torriden", "nameEn": "Torriden"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:20", "label": "Brand", "name": "라운드랩", "nameEn": "Roundlab", "props": {"country": "KR", "name": "라운드랩", "id": "brand_roundlab", "nameEn": "Roundlab"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:21", "label": "Brand", "name": "스킨푸드", "nameEn": "Skinfood", "props": {"country": "KR", "name": "스킨푸드", "id": "brand_skinfood", "nameEn": "Skinfood"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1039", "label": "Country", "name": "South Korea", "nameEn": "South Korea", "props": {"nameKo": "한국", "code": "KR", "name": "South Korea"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1040", "label": "Country", "name": "Japan", "nameEn": "Japan", "props": {"nameKo": "일본", "code": "JP", "name": "Japan"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1041", "label": "Country", "name": "Singapore", "nameEn": "Singapore", "props": {"nameKo": "싱가포르", "code": "SG", "name": "Singapore"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1042", "label": "ClimateZone", "name": "온대_사계절", "nameEn": "", "props": {"avgHumidity": "60-70%", "uvIndex": "중간", "type": "온대_사계절", "avgTemp": "12C"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1043", "label": "ClimateZone", "name": "온대_고UV여름", "nameEn": "", "props": {"avgHumidity": "65-80%", "uvIndex": "높음", "type": "온대_고UV여름", "avgTemp": "16C"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1044", "label": "ClimateZone", "name": "열대_다습", "nameEn": "", "props": {"avgHumidity": "80-90%", "uvIndex": "극심", "type": "열대_다습", "avgTemp": "28C"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "label": "SkinConcern", "name": "UV_damage", "nameEn": "UV_damage", "props": {"nameKo": "자외선손상", "name": "UV_damage", "id": "concern_uv"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1046", "label": "SkinConcern", "name": "excess_oil", "nameEn": "excess_oil", "props": {"nameKo": "과잉유분", "name": "excess_oil", "id": "concern_oil"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1047", "label": "SkinConcern", "name": "dehydration", "nameEn": "dehydration", "props": {"nameKo": "수분부족", "name": "dehydration", "id": "concern_dehydration"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1048", "label": "SkinConcern", "name": "sensitivity", "nameEn": "sensitivity", "props": {"nameKo": "민감성", "name": "sensitivity", "id": "concern_sensitive"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1049", "label": "SkinConcern", "name": "dullness", "nameEn": "dullness", "props": {"nameKo": "칙칙함", "name": "dullness", "id": "concern_dullness"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1050", "label": "Function", "name": "UV차단", "nameEn": "UV차단", "props": {"name": "UV차단", "id": "func_uv", "category": "UV차단"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1051", "label": "Function", "name": "수분공급", "nameEn": "수분공급", "props": {"name": "수분공급", "id": "func_hydra", "category": "보습"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1052", "label": "Function", "name": "피지조절", "nameEn": "피지조절", "props": {"name": "피지조절", "id": "func_sebo", "category": "피지조절"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "label": "Function", "name": "진정", "nameEn": "진정", "props": {"name": "진정", "id": "func_sooth", "category": "진정"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1054", "label": "Function", "name": "브라이트닝", "nameEn": "브라이트닝", "props": {"name": "브라이트닝", "id": "func_bright", "category": "브라이트닝"}}, {"id": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1055", "label": "Function", "name": "항산화", "nameEn": "항산화", "props": {"name": "항산화", "id": "func_antox", "category": "항산화"}}];
+const EDGES=[{"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:0", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1054", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:0", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1052", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "False"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:0", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1", "type": "SYNERGIZES_WITH", "strength": null, "props": {"mechanism": "나이아신아마이드가 히알루론산의 수분 유지를 보조"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1051", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:2", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:2", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:4", "type": "SYNERGIZES_WITH", "strength": null, "props": {"mechanism": "센텔라+녹차의 진정+항산화 복합 효과"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:3", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:4", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1055", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:4", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "False"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:5", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1051", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:5", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1", "type": "SYNERGIZES_WITH", "strength": null, "props": {"mechanism": "세라마이드가 장벽을 복구하고 히알루론산이 수분을 채움"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:6", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1050", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:7", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1052", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:8", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:8", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1055", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "False"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:9", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1055", "type": "HAS_FUNCTION", "strength": null, "props": {"primary": "True"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1039", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1042", "type": "HAS_CLIMATE", "strength": null, "props": {}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1040", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1043", "type": "HAS_CLIMATE", "strength": null, "props": {}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1041", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1044", "type": "HAS_CLIMATE", "strength": null, "props": {}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1042", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1048", "type": "TRIGGERS", "strength": 0.6, "props": {"strength": "0.6", "season": "연중", "mechanism": "미세먼지 등 환경 스트레스"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1042", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1047", "type": "TRIGGERS", "strength": 0.75, "props": {"strength": "0.75", "season": "겨울", "mechanism": "난방 건조로 피부 장벽 약화"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1042", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "type": "TRIGGERS", "strength": 0.7, "props": {"strength": "0.7", "season": "여름", "mechanism": "여름 UV 및 미세먼지 복합 자극"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1043", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1047", "type": "TRIGGERS", "strength": 0.65, "props": {"strength": "0.65", "season": "겨울", "mechanism": "건조한 겨울 공기로 경피 수분 손실"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1043", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "type": "TRIGGERS", "strength": 0.88, "props": {"strength": "0.88", "season": "여름", "mechanism": "높은 UV 지수로 피부 광손상"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1044", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "type": "TRIGGERS", "strength": 0.85, "props": {"strength": "0.85", "season": "연중", "mechanism": "적도 근접으로 연중 강한 UV"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1044", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1047", "type": "TRIGGERS", "strength": 0.82, "props": {"strength": "0.82", "season": "연중", "mechanism": "에어컨 실내환경으로 역설적 탈수"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1044", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1046", "type": "TRIGGERS", "strength": 0.9, "props": {"strength": "0.9", "season": "연중", "mechanism": "고온 다습으로 피지 과다 분비"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1055", "type": "DRIVES_DEMAND", "strength": 0.55, "props": {"strength": "0.55"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1045", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1050", "type": "DRIVES_DEMAND", "strength": 0.92, "props": {"strength": "0.92"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1046", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1051", "type": "DRIVES_DEMAND", "strength": 0.6, "props": {"strength": "0.6"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1046", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1052", "type": "DRIVES_DEMAND", "strength": 0.85, "props": {"strength": "0.85"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1047", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1051", "type": "DRIVES_DEMAND", "strength": 0.88, "props": {"strength": "0.88"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1048", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1053", "type": "DRIVES_DEMAND", "strength": 0.8, "props": {"strength": "0.8"}}, {"source": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1049", "target": "4:68ea0fb9-4264-4033-bbed-bd96a41a9538:1054", "type": "DRIVES_DEMAND", "strength": 0.78, "props": {"strength": "0.78"}}];
+
+
+const NS={
+  Country:{c:"#FF6B6B",ic:"🌏",sh:"hex",sz:40},ClimateZone:{c:"#FFA657",ic:"🌡️",sh:"dia",sz:36},
+  SkinConcern:{c:"#F97583",ic:"⚠️",sh:"cir",sz:32},Function:{c:"#79C0FF",ic:"⚙️",sh:"cir",sz:32},
+  Ingredient:{c:"#7EE787",ic:"🧪",sh:"cir",sz:30},Brand:{c:"#D2A8FF",ic:"🏷️",sh:"rect",sz:34},
+  ProductType:{c:"#A5D6FF",ic:"📦",sh:"rect",sz:30},Platform:{c:"#FFC658",ic:"🛒",sh:"rect",sz:30}
+};
+const ES={HAS_CLIMATE:{c:"#FFA657"},TRIGGERS:{c:"#F97583"},DRIVES_DEMAND:{c:"#79C0FF"},HAS_FUNCTION:{c:"#7EE787"},SYNERGIZES_WITH:{c:"#D2A8FF",d:"6,3"}};
+
+document.getElementById("b-nodes").textContent=NODES.length+" nodes";
+document.getElementById("b-edges").textContent=EDGES.length+" relationships";
+
+const chart=document.getElementById("chart"),can=document.getElementById("c"),ctx=can.getContext("2d"),tip=document.getElementById("tip");
+let dpr,W,H,tf={x:0,y:0,k:1},drag=null,pan=null,hover=-1,sel=-1;
+const nmap={};NODES.forEach((n,i)=>{nmap[n.id]=i});
+
+// Force layout
+const N=NODES.length;
+NODES.forEach((n,i)=>{const a=i/N*Math.PI*2,r=200+Math.random()*60;n.x=400+Math.cos(a)*r;n.y=350+Math.sin(a)*r;n.vx=0;n.vy=0});
+for(let s=0;s<400;s++){
+  for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+    let dx=NODES[i].x-NODES[j].x,dy=NODES[i].y-NODES[j].y,d=Math.sqrt(dx*dx+dy*dy)||1,f=3000/(d*d);
+    NODES[i].vx+=dx/d*f;NODES[i].vy+=dy/d*f;NODES[j].vx-=dx/d*f;NODES[j].vy-=dy/d*f;
+  }
+  EDGES.forEach(e=>{const a=NODES[nmap[e.source]],b=NODES[nmap[e.target]];if(!a||!b)return;
+    let dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=(d-130)*0.006;
+    a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;
+  });
+  NODES.forEach(n=>{n.vx+=(400-n.x)*0.008;n.vy+=(350-n.y)*0.008;n.vx*=0.85;n.vy*=0.85;n.x+=n.vx;n.y+=n.vy});
+}
+
+let activeL=new Set(Object.keys(NS));
+function vis(n){return activeL.has(n.label)}
+function tx(x){return x*tf.k+tf.x}function ty(y){return y*tf.k+tf.y}
+
+function resize(){dpr=devicePixelRatio||1;const r=chart.getBoundingClientRect();W=r.width;H=r.height;can.width=W*dpr;can.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+
+function hexPath(cx,cy,r){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a))}ctx.closePath()}
+function diaPath(cx,cy,r){ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.lineTo(cx+r,cy);ctx.lineTo(cx,cy+r);ctx.lineTo(cx-r,cy);ctx.closePath()}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.fillStyle="#1a223610";
+  for(let x=0;x<W;x+=30)for(let y=0;y<H;y+=30)ctx.fillRect(x,y,1,1);
+
+  // Edges
+  EDGES.forEach(e=>{
+    const ai=nmap[e.source],bi=nmap[e.target];if(ai==null||bi==null)return;
+    const a=NODES[ai],b=NODES[bi],av=vis(a),bv=vis(b);
+    if(!av&&!bv)return;
+    const op=av&&bv?0.65:0.08,es=ES[e.type]||{c:"#555"};
+    const x1=tx(a.x),y1=ty(a.y),x2=tx(b.x),y2=ty(b.y);
+    const dist=Math.sqrt((x2-x1)**2+(y2-y1)**2)||1;
+    const ns=NS[b.label]||{sz:24};
+    const sh=(ns.sz*0.5+8)*tf.k;
+    const ex=x2-(x2-x1)/dist*sh,ey=y2-(y2-y1)/dist*sh;
+
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(ex,ey);
+    ctx.strokeStyle=es.c;ctx.globalAlpha=op;ctx.lineWidth=1.8*tf.k;
+    if(es.d){ctx.setLineDash([6*tf.k,3*tf.k])}else{ctx.setLineDash([])}
+    ctx.stroke();ctx.setLineDash([]);
+
+    // Arrow
+    const ang=Math.atan2(ey-y1,ex-x1),asz=8*tf.k;
+    ctx.beginPath();ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-asz*Math.cos(ang-0.35),ey-asz*Math.sin(ang-0.35));
+    ctx.lineTo(ex-asz*Math.cos(ang+0.35),ey-asz*Math.sin(ang+0.35));
+    ctx.closePath();ctx.fillStyle=es.c;ctx.fill();
+
+    // Label
+    if(op>0.3&&tf.k>0.5){
+      const mx=(x1+x2)/2,my=(y1+y2)/2;
+      let lbl=e.type.replace(/_/g," ");
+      if(e.strength)lbl+=" ("+e.strength+")";
+      ctx.font=(9*tf.k)+"px 'JetBrains Mono'";ctx.textAlign="center";ctx.fillStyle=es.c;
+      const ra=Math.atan2(y2-y1,x2-x1);
+      ctx.save();ctx.translate(mx,my);
+      let rot=ra;if(rot>Math.PI/2||rot<-Math.PI/2)rot+=Math.PI;
+      ctx.rotate(rot);ctx.fillText(lbl,0,-5*tf.k);ctx.restore();
+    }
+    ctx.globalAlpha=1;
+  });
+
+  // Nodes
+  NODES.forEach((n,i)=>{
+    const v=vis(n),op=v?1:0.06,s=NS[n.label]||{c:"#888",sz:24,sh:"cir"};
+    const cx=tx(n.x),cy=ty(n.y),r=s.sz*0.5*tf.k;
+    ctx.globalAlpha=op;
+
+    // Glow
+    if(i===sel){const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*2.5);g.addColorStop(0,s.c+"30");g.addColorStop(1,s.c+"00");ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r*2.5,0,Math.PI*2);ctx.fill()}
+    if(i===hover&&v){const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*2);g.addColorStop(0,s.c+"20");g.addColorStop(1,s.c+"00");ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r*2,0,Math.PI*2);ctx.fill()}
+
+    // Shape
+    if(s.sh==="hex")hexPath(cx,cy,r);
+    else if(s.sh==="dia")diaPath(cx,cy,r);
+    else if(s.sh==="rect"){ctx.beginPath();const rr=4*tf.k;ctx.roundRect(cx-r,cy-r*0.7,r*2,r*1.4,rr)}
+    else{ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2)}
+    ctx.fillStyle=s.c+"18";ctx.fill();
+    ctx.strokeStyle=s.c;ctx.lineWidth=(i===sel||i===hover)?2.5:1.5;ctx.stroke();
+
+    // Text
+    if(v&&tf.k>0.4){
+      ctx.font="500 "+(10*tf.k)+"px Inter";ctx.textAlign="center";ctx.fillStyle=s.c;
+      ctx.fillText(n.name,cx,cy+2*tf.k);
+      if(tf.k>0.7&&n.nameEn&&n.nameEn!==n.name){
+        ctx.font=(8*tf.k)+"px 'JetBrains Mono'";ctx.fillStyle=s.c+"80";
+        ctx.fillText(n.nameEn,cx,cy+(14*tf.k));
+      }
+    }
+    ctx.globalAlpha=1;
+  });
+}
+
+// ── Legend ──
+const nleg=document.getElementById("nleg"),eleg=document.getElementById("eleg");
+const lc={};NODES.forEach(n=>lc[n.label]=(lc[n.label]||0)+1);
+for(const[l,s]of Object.entries(NS)){
+  if(!lc[l])continue;
+  const d=document.createElement("div");d.className="legend-item";
+  d.innerHTML=`<div class="legend-icon">${s.ic}</div><div class="legend-label" style="color:${s.c}">${l}</div><div class="legend-count">${lc[l]}</div>`;
+  d.onclick=()=>{if(activeL.has(l))activeL.delete(l);else activeL.add(l);d.classList.toggle("dim");draw()};
+  nleg.appendChild(d);
+}
+const ec={};EDGES.forEach(e=>ec[e.type]=(ec[e.type]||0)+1);
+for(const[t,s]of Object.entries(ES)){
+  if(!ec[t])continue;
+  eleg.innerHTML+=`<div class="edge-item"><div class="edge-line" style="background:${s.c}"></div><div class="edge-label">${t}</div><div class="edge-count">${ec[t]}</div></div>`;
+}
+
+// ── Interaction ──
+function findNode(mx,my){let best=-1,bd=20*tf.k;NODES.forEach((n,i)=>{if(!vis(n))return;const dx=tx(n.x)-mx,dy=ty(n.y)-my,d=Math.sqrt(dx*dx+dy*dy);if(d<bd){bd=d;best=i}});return best}
+
+can.addEventListener("mousedown",e=>{const r=chart.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const i=findNode(mx,my);if(i>=0){drag=i;return}pan={sx:e.clientX-tf.x,sy:e.clientY-tf.y}});
+window.addEventListener("mousemove",e=>{
+  const r=chart.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  if(drag!=null){NODES[drag].x=(mx-tf.x)/tf.k;NODES[drag].y=(my-tf.y)/tf.k;draw();return}
+  if(pan){tf.x=e.clientX-pan.sx;tf.y=e.clientY-pan.sy;draw();return}
+  const i=findNode(mx,my);
+  if(i!==hover){hover=i;draw()}
+  if(i>=0){const n=NODES[i],s=NS[n.label]||{};
+    let h=`<span style="color:${s.c};font-weight:600">${s.ic||""} ${n.label}</span><br><b>${n.name}</b>`;
+    if(n.nameEn&&n.nameEn!==n.name)h+=` <span style="color:var(--t3)">(${n.nameEn})</span>`;
+    const extra=Object.entries(n.props).filter(([k])=>!["id","name","nameKo","nameEn","code","type","commonNameKo","commonNameEn","inciName"].includes(k));
+    if(extra.length)h+=`<br><span style="color:var(--t3)">${extra.map(([k,v])=>k+":"+v).join(" · ")}</span>`;
+    tip.innerHTML=h;tip.style.display="block";tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-8)+"px";
+  }else{tip.style.display="none"}
+});
+window.addEventListener("mouseup",()=>{drag=null;pan=null});
+can.addEventListener("wheel",e=>{e.preventDefault();const r=chart.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const d=e.deltaY>0?0.9:1.1,nk=Math.min(Math.max(tf.k*d,0.15),5);
+  tf.x=mx-(mx-tf.x)*(nk/tf.k);tf.y=my-(my-tf.y)*(nk/tf.k);tf.k=nk;draw()},{passive:false});
+
+can.addEventListener("click",e=>{
+  const r=chart.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const i=findNode(mx,my);if(i<0)return;sel=i;
+  const n=NODES[i],s=NS[n.label]||{};
+  const panel=document.getElementById("detail");panel.classList.add("show");
+  const conns=EDGES.filter(e=>e.source===n.id||e.target===n.id);
+  let ch=conns.map(ed=>{
+    const oi=ed.source===n.id?nmap[ed.target]:nmap[ed.source];
+    const o=NODES[oi],dir=ed.source===n.id?"→":"←",ec=ES[ed.type]||{c:"#555"};
+    return `<span style="color:${ec.c}">${dir} ${ed.type}</span> ${o?o.name:"?"}`+(ed.strength?` <span style="color:var(--t3)">(${ed.strength})</span>`:"");
+  }).join("<br>");
+  document.getElementById("det").innerHTML=`<div class="detail-name" style="color:${s.c}">${s.ic||""} ${n.name}</div>`+
+    Object.entries(n.props).map(([k,v])=>`<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`).join("")+
+    `<div style="margin-top:10px;font-size:11px;color:var(--t3)">Connections (${conns.length})</div><div class="conn">${ch}</div>`;
+  draw();
+});
+
+window.addEventListener("resize",resize);resize();
+</script>
+</body>
+</html>

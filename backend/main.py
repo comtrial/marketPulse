@@ -67,11 +67,20 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
+    from fastapi.middleware.cors import CORSMiddleware
+
     app = FastAPI(
         title="MarketPulse",
         description="Cross-Border Ecommerce Intelligence — Beauty & Cosmetics",
         version="0.1.0",
         lifespan=lifespan,
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000"],
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     from api.routes_health import router as health_router

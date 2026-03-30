@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketPulse — Embedding Space Visualization</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0a0e17; --surface: #111827; --surface2: #1a2236;
+  --border: #1e2d4a; --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
+  --accent: #3b82f6; --accent2: #60a5fa;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow:hidden; height:100vh; }
+
+.layout { display:grid; grid-template-columns:1fr 340px; grid-template-rows:auto 1fr; height:100vh; }
+
+/* Header */
+.header {
+  grid-column:1/-1; padding:16px 28px; display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(180deg, #0f1729 0%, var(--bg) 100%); border-bottom:1px solid var(--border);
+}
+.header-left { display:flex; align-items:center; gap:16px; }
+.logo { font-size:13px; font-weight:700; color:var(--accent2); letter-spacing:2px; text-transform:uppercase; }
+.header h1 { font-size:17px; font-weight:500; color:var(--text); }
+.header h1 span { color:var(--text3); font-weight:300; }
+.tech-badges { display:flex; gap:8px; }
+.badge {
+  font-family:'JetBrains Mono',monospace; font-size:10px; padding:4px 10px;
+  border-radius:4px; background:var(--surface2); color:var(--text2); border:1px solid var(--border);
+}
+
+/* Main chart */
+.chart-area { position:relative; overflow:hidden; }
+canvas { display:block; width:100%; height:100%; }
+
+/* Sidebar */
+.sidebar {
+  background:var(--surface); border-left:1px solid var(--border);
+  overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:20px;
+}
+.card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:10px; padding:16px;
+}
+.card-title {
+  font-size:11px; font-weight:600; color:var(--text3); letter-spacing:1.5px;
+  text-transform:uppercase; margin-bottom:12px;
+}
+
+/* Legend */
+.legend-item { display:flex; align-items:center; gap:10px; padding:6px 0; }
+.legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.legend-label { font-size:13px; flex:1; }
+.legend-count { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text3); }
+.legend-sim { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent2); }
+
+/* Stats */
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.stat { text-align:center; }
+.stat-value { font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:600; color:var(--accent2); }
+.stat-label { font-size:10px; color:var(--text3); margin-top:2px; }
+
+/* Search demo */
+.demo-item { padding:8px 0; border-bottom:1px solid var(--border); }
+.demo-item:last-child { border:none; }
+.demo-query { font-size:11px; color:var(--text2); margin-bottom:4px; font-family:'JetBrains Mono',monospace; }
+.demo-result { font-size:12px; color:var(--text); }
+.demo-sim { font-family:'JetBrains Mono',monospace; color:#34d399; font-size:12px; font-weight:600; }
+
+/* Tooltip */
+.tooltip {
+  position:fixed; background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:14px; pointer-events:none; display:none;
+  max-width:380px; z-index:100; box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+}
+.tt-id { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent2); }
+.tt-name { font-size:13px; font-weight:500; margin:4px 0; }
+.tt-meta { font-size:11px; color:var(--text3); }
+.tt-attrs { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.tt-tag { font-size:10px; padding:2px 7px; border-radius:3px; background:var(--surface2); color:var(--text2); }
+
+/* Detail panel */
+#detail-panel { display:none; }
+#detail-panel.active { display:block; }
+.detail-name { font-size:14px; font-weight:500; margin-bottom:8px; line-height:1.4; }
+.detail-row { display:flex; justify-content:space-between; padding:4px 0; font-size:12px; }
+.detail-key { color:var(--text3); }
+.detail-val { color:var(--text); font-family:'JetBrains Mono',monospace; }
+
+/* Annotations */
+.annotation {
+  position:absolute; font-size:10px; color:var(--text3); pointer-events:none;
+  font-family:'JetBrains Mono',monospace; opacity:0.6;
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">MarketPulse</div>
+      <h1>Embedding Space <span>— Gold Example Vector Index</span></h1>
+    </div>
+    <div class="tech-badges">
+      <span class="badge">multilingual-e5-large</span>
+      <span class="badge">1024d → t-SNE 2d</span>
+      <span class="badge">ChromaDB</span>
+      <span class="badge">cosine similarity</span>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <canvas id="canvas"></canvas>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <div class="card-title">Index Stats</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-value">50</div><div class="stat-label">Gold Examples</div></div>
+        <div class="stat"><div class="stat-value">1024</div><div class="stat-label">Dimensions</div></div>
+        <div class="stat"><div class="stat-value">5</div><div class="stat-label">Product Types</div></div>
+        <div class="stat"><div class="stat-value">4</div><div class="stat-label">Brands</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Clusters & Intra-Similarity</div>
+      <div id="legend"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vector Search Demo</div>
+      <div id="demos"></div>
+    </div>
+
+    <div class="card" id="detail-panel">
+      <div class="card-title">Selected Example</div>
+      <div id="detail-content"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Architecture</div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.7;font-family:'JetBrains Mono',monospace">
+        product_name<br>
+        &nbsp;&nbsp;→ e5-large encode<br>
+        &nbsp;&nbsp;→ ChromaDB cosine search<br>
+        &nbsp;&nbsp;→ top-3 gold examples<br>
+        &nbsp;&nbsp;→ LLM few-shot extraction<br>
+        &nbsp;&nbsp;→ structured attributes
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const points = [{"id": "gold_001", "x": 82.4, "y": 42.2, "type": "sunscreen", "brand": "Innisfree", "name": "이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 톤업", "attrs": 2, "eo": {"productType": "선크림", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": ["톤업"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_002", "x": 84.18, "y": 32.6, "type": "sunscreen", "brand": "Innisfree", "name": "이니스프리 아쿠아 UV 프로텍션 크림 SPF50+ PA++++ 50ml 비건 무기자차", "attrs": 3, "eo": {"productType": "선크림", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": [], "valueClaims": ["비건"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {"자차타입": "무기자차"}}}, {"id": "gold_003", "x": 81.58, "y": 38.68, "type": "sunscreen", "brand": "Innisfree", "name": "이니스프리 데일리 UV 프로텍션 크림 SPF50+ PA++++ 50ml 톤업 비건", "attrs": 3, "eo": {"productType": "선크림", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": ["톤업"], "valueClaims": ["비건"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_004", "x": 81.07, "y": 53.1, "type": "sunscreen", "brand": "Innisfree", "name": "이니스프리 인텐시브 안티폴루션 선스크린 SPF50+ PA++++ 50ml 워터프루프 저자극", "attrs": 3, "eo": {"productType": "선크림", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": ["워터프루프"], "valueClaims": ["저자극"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_005", "x": 60.73, "y": 26.92, "type": "sunscreen", "brand": "Torriden", "name": "토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 워터프루프 수분", "attrs": 3, "eo": {"productType": "선크림", "brand": "토리든", "keyIngredients": [], "concentration": null, "volume": "60ml", "functionalClaims": ["워터프루프", "수분"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_006", "x": 68.16, "y": 21.1, "type": "sunscreen", "brand": "Torriden", "name": "토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 비건", "attrs": 2, "eo": {"productType": "선크림", "brand": "토리든", "keyIngredients": [], "concentration": null, "volume": "60ml", "functionalClaims": [], "valueClaims": ["비건"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_007", "x": 65.55, "y": 26.28, "type": "sunscreen", "brand": "Torriden", "name": "토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml 톤업 비건", "attrs": 3, "eo": {"productType": "선크림", "brand": "토리든", "keyIngredients": [], "concentration": null, "volume": "60ml", "functionalClaims": ["톤업"], "valueClaims": ["비건"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_008", "x": 65.11, "y": 17.54, "type": "sunscreen", "brand": "Torriden", "name": "토리든 다이브인 마일드 선스크린 SPF50+ PA++++ 60ml 톤업 자외선차단", "attrs": 3, "eo": {"productType": "선크림", "brand": "토리든", "keyIngredients": [], "concentration": null, "volume": "60ml", "functionalClaims": ["톤업", "자외선차단"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_009", "x": 77.09, "y": 84.94, "type": "sunscreen", "brand": "Roundlab", "name": "라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 워터프루프 저자극", "attrs": 4, "eo": {"productType": "선크림", "brand": "라운드랩", "keyIngredients": ["자작나무"], "concentration": null, "volume": "50ml", "functionalClaims": ["워터프루프"], "valueClaims": ["저자극"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_010", "x": 77.4, "y": 74.68, "type": "sunscreen", "brand": "Roundlab", "name": "라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 톤업 노세범", "attrs": 4, "eo": {"productType": "선크림", "brand": "라운드랩", "keyIngredients": ["소나무"], "concentration": null, "volume": "40ml", "functionalClaims": ["톤업", "노세범"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_011", "x": 74.14, "y": 88.09, "type": "sunscreen", "brand": "Roundlab", "name": "라운드랩 자작나무 수분 선크림 SPF50+ PA++++ 50ml 톤업 비건", "attrs": 4, "eo": {"productType": "선크림", "brand": "라운드랩", "keyIngredients": ["자작나무"], "concentration": null, "volume": "50ml", "functionalClaims": ["톤업"], "valueClaims": ["비건"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_012", "x": 73.31, "y": 76.96, "type": "sunscreen", "brand": "Roundlab", "name": "라운드랩 소나무 진정 선크림 SPF50+ PA++++ 40ml 저자극", "attrs": 4, "eo": {"productType": "선크림", "brand": "라운드랩", "keyIngredients": ["소나무"], "concentration": null, "volume": "40ml", "functionalClaims": ["진정"], "valueClaims": ["저자극"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_013", "x": 78.42, "y": 59.9, "type": "sunscreen", "brand": "Skinfood", "name": "스킨푸드 선플라워 노세범 선 SPF50+ PA++++ 50ml 워터프루프 노세범", "attrs": 3, "eo": {"productType": "선크림", "brand": "스킨푸드", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": ["노세범", "워터프루프"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_014", "x": 66.14, "y": 50.04, "type": "sunscreen", "brand": "Skinfood", "name": "스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 톤업 자외선차단", "attrs": 3, "eo": {"productType": "선크림", "brand": "스킨푸드", "keyIngredients": [], "concentration": null, "volume": "40ml", "functionalClaims": ["톤업", "자외선차단"], "valueClaims": [], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_015", "x": 67.54, "y": 47.02, "type": "sunscreen", "brand": "Skinfood", "name": "스킨푸드 토마토 선 크림 SPF50+ PA++++ 40ml 비건 저자극", "attrs": 3, "eo": {"productType": "선크림", "brand": "스킨푸드", "keyIngredients": [], "concentration": null, "volume": "40ml", "functionalClaims": [], "valueClaims": ["비건", "저자극"], "skinType": null, "spf": "50+", "pa": "++++", "additionalAttrs": {}}}, {"id": "gold_016", "x": 9.36, "y": 42.77, "type": "toner", "brand": "Innisfree", "name": "이니스프리 그린티 씨드 히알루론산 토너 170ml 나이아신아마이드 센텔라", "attrs": 4, "eo": {"productType": "토너", "brand": "이니스프리", "keyIngredients": ["녹차", "히알루론산", "나이아신아마이드", "센텔라"], "concentration": null, "volume": "170ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_017", "x": 10.38, "y": 54.06, "type": "toner", "brand": "Innisfree", "name": "이니스프리 시카 리페어 토너 200ml 히알루론산", "attrs": 2, "eo": {"productType": "토너", "brand": "이니스프리", "keyIngredients": ["센텔라", "히알루론산"], "concentration": null, "volume": "200ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_018", "x": 5.0, "y": 46.92, "type": "toner", "brand": "Innisfree", "name": "이니스프리 그린티 밸런싱 토너 200ml 나이아신아마이드 보습", "attrs": 3, "eo": {"productType": "토너", "brand": "이니스프리", "keyIngredients": ["녹차", "나이아신아마이드"], "concentration": null, "volume": "200ml", "functionalClaims": ["보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_019", "x": 37.12, "y": 18.92, "type": "toner", "brand": "Torriden", "name": "토리든 다이브인 저분자 히알루론산 토너 300ml 센텔라", "attrs": 2, "eo": {"productType": "토너", "brand": "토리든", "keyIngredients": ["히알루론산", "센텔라"], "concentration": null, "volume": "300ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_020", "x": 47.22, "y": 5.0, "type": "toner", "brand": "Torriden", "name": "토리든 다이브인 마이크로바이옴 토너 200ml 유산균 피부장벽", "attrs": 3, "eo": {"productType": "토너", "brand": "토리든", "keyIngredients": ["유산균"], "concentration": null, "volume": "200ml", "functionalClaims": ["피부장벽"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {"성분카테고리": "마이크로바이옴"}}}, {"id": "gold_021", "x": 30.75, "y": 16.21, "type": "toner", "brand": "Torriden", "name": "토리든 다이브인 클리어패드 토너 200ml 나이아신아마이드 센텔라 피부장벽", "attrs": 3, "eo": {"productType": "토너", "brand": "토리든", "keyIngredients": ["나이아신아마이드", "센텔라"], "concentration": null, "volume": "200ml", "functionalClaims": ["피부장벽"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_022", "x": 46.34, "y": 87.42, "type": "toner", "brand": "Roundlab", "name": "라운드랩 독도 토너 300ml 센텔라 히알루론산 진정", "attrs": 3, "eo": {"productType": "토너", "brand": "라운드랩", "keyIngredients": ["센텔라", "히알루론산"], "concentration": null, "volume": "300ml", "functionalClaims": ["진정"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_023", "x": 56.97, "y": 92.89, "type": "toner", "brand": "Roundlab", "name": "라운드랩 자작나무 수분 토너 200ml 센텔라 히알루론산 진정", "attrs": 5, "eo": {"productType": "토너", "brand": "라운드랩", "keyIngredients": ["자작나무", "센텔라", "히알루론산"], "concentration": null, "volume": "200ml", "functionalClaims": ["수분", "진정"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_024", "x": 42.65, "y": 84.89, "type": "toner", "brand": "Roundlab", "name": "라운드랩 독도 토너 300ml 나이아신아마이드 센텔라 히알루론산", "attrs": 3, "eo": {"productType": "토너", "brand": "라운드랩", "keyIngredients": ["나이아신아마이드", "센텔라", "히알루론산"], "concentration": null, "volume": "300ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_025", "x": 22.42, "y": 58.4, "type": "toner", "brand": "Skinfood", "name": "스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 수분", "attrs": 2, "eo": {"productType": "토너", "brand": "스킨푸드", "keyIngredients": ["프로폴리스"], "concentration": null, "volume": "180ml", "functionalClaims": ["수분"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_026", "x": 14.21, "y": 74.03, "type": "toner", "brand": "Skinfood", "name": "스킨푸드 캐롯 카로틴 진정 토너 300ml 나이아신아마이드 히알루론산 항산화", "attrs": 5, "eo": {"productType": "토너", "brand": "스킨푸드", "keyIngredients": ["카로틴", "나이아신아마이드", "히알루론산"], "concentration": null, "volume": "300ml", "functionalClaims": ["진정", "항산화"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_027", "x": 19.49, "y": 62.57, "type": "toner", "brand": "Skinfood", "name": "스킨푸드 로열허니 프로폴리스 인리치드 토너 180ml 나이아신아마이드 히알루론산 진정", "attrs": 4, "eo": {"productType": "토너", "brand": "스킨푸드", "keyIngredients": ["프로폴리스", "나이아신아마이드", "히알루론산"], "concentration": null, "volume": "180ml", "functionalClaims": ["진정"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_028", "x": 8.94, "y": 34.37, "type": "serum", "brand": "Innisfree", "name": "이니스프리 그린티 씨드 히알루론산 세럼 80ml 센텔라 항산화", "attrs": 4, "eo": {"productType": "세럼", "brand": "이니스프리", "keyIngredients": ["녹차", "히알루론산", "센텔라"], "concentration": null, "volume": "80ml", "functionalClaims": ["항산화"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_029", "x": 19.4, "y": 39.64, "type": "serum", "brand": "Innisfree", "name": "이니스프리 비자 시카 세럼 50ml 나이아신아마이드 보습", "attrs": 3, "eo": {"productType": "세럼", "brand": "이니스프리", "keyIngredients": ["센텔라", "나이아신아마이드"], "concentration": null, "volume": "50ml", "functionalClaims": ["보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_030", "x": 13.11, "y": 35.72, "type": "serum", "brand": "Innisfree", "name": "이니스프리 그린티 씨드 세럼 80ml 나이아신아마이드 히알루론산 피부장벽", "attrs": 4, "eo": {"productType": "세럼", "brand": "이니스프리", "keyIngredients": ["녹차", "나이아신아마이드", "히알루론산"], "concentration": null, "volume": "80ml", "functionalClaims": ["피부장벽"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_031", "x": 42.42, "y": 21.39, "type": "serum", "brand": "Torriden", "name": "토리든 다이브인 저분자 히알루론산 세럼 50ml 수분", "attrs": 2, "eo": {"productType": "세럼", "brand": "토리든", "keyIngredients": ["히알루론산"], "concentration": null, "volume": "50ml", "functionalClaims": ["수분"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_032", "x": 36.46, "y": 30.67, "type": "serum", "brand": "Torriden", "name": "토리든 셀마이드 세라마이드 세럼 50ml 센텔라 히알루론산 보습", "attrs": 4, "eo": {"productType": "세럼", "brand": "토리든", "keyIngredients": ["세라마이드", "센텔라", "히알루론산"], "concentration": null, "volume": "50ml", "functionalClaims": ["보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_033", "x": 49.24, "y": 7.81, "type": "serum", "brand": "Torriden", "name": "토리든 다이브인 마이크로바이옴 세럼 50ml 유산균 피부장벽", "attrs": 3, "eo": {"productType": "세럼", "brand": "토리든", "keyIngredients": ["유산균"], "concentration": null, "volume": "50ml", "functionalClaims": ["피부장벽"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {"성분카테고리": "마이크로바이옴"}}}, {"id": "gold_034", "x": 40.78, "y": 79.24, "type": "serum", "brand": "Roundlab", "name": "라운드랩 독도 세럼 50ml 나이아신아마이드 히알루론산 수분", "attrs": 3, "eo": {"productType": "세럼", "brand": "라운드랩", "keyIngredients": ["나이아신아마이드", "히알루론산"], "concentration": null, "volume": "50ml", "functionalClaims": ["수분"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_035", "x": 62.93, "y": 95.0, "type": "serum", "brand": "Roundlab", "name": "라운드랩 자작나무 수분 세럼 50ml 센텔라 항산화", "attrs": 3, "eo": {"productType": "세럼", "brand": "라운드랩", "keyIngredients": ["자작나무", "센텔라"], "concentration": null, "volume": "50ml", "functionalClaims": ["항산화"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_036", "x": 25.61, "y": 65.55, "type": "serum", "brand": "Skinfood", "name": "스킨푸드 로열허니 프로폴리스 인리치드 에센스 50ml 나이아신아마이드 센텔라", "attrs": 3, "eo": {"productType": "세럼", "brand": "스킨푸드", "keyIngredients": ["프로폴리스", "나이아신아마이드", "센텔라"], "concentration": null, "volume": "50ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_037", "x": 14.81, "y": 81.81, "type": "serum", "brand": "Skinfood", "name": "스킨푸드 캐롯 카로틴 진정 세럼 50ml 히알루론산 보습", "attrs": 4, "eo": {"productType": "세럼", "brand": "스킨푸드", "keyIngredients": ["카로틴", "히알루론산"], "concentration": null, "volume": "50ml", "functionalClaims": ["진정", "보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_038", "x": 13.87, "y": 27.16, "type": "cream", "brand": "Innisfree", "name": "이니스프리 그린티 씨드 크림 50ml 수분", "attrs": 2, "eo": {"productType": "크림", "brand": "이니스프리", "keyIngredients": ["녹차"], "concentration": null, "volume": "50ml", "functionalClaims": ["수분"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_039", "x": 90.17, "y": 47.56, "type": "cream", "brand": "Innisfree", "name": "이니스프리 한란 보습 크림 50ml 저자극", "attrs": 2, "eo": {"productType": "크림", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "50ml", "functionalClaims": ["보습"], "valueClaims": ["저자극"], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_040", "x": 52.58, "y": 21.97, "type": "cream", "brand": "Torriden", "name": "토리든 다이브인 수분크림 100ml 보습", "attrs": 2, "eo": {"productType": "크림", "brand": "토리든", "keyIngredients": [], "concentration": null, "volume": "100ml", "functionalClaims": ["수분", "보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_041", "x": 39.39, "y": 35.44, "type": "cream", "brand": "Torriden", "name": "토리든 셀마이드 세라마이드 크림 80ml 진정", "attrs": 2, "eo": {"productType": "크림", "brand": "토리든", "keyIngredients": ["세라마이드"], "concentration": null, "volume": "80ml", "functionalClaims": ["진정"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_042", "x": 66.24, "y": 86.41, "type": "cream", "brand": "Roundlab", "name": "라운드랩 자작나무 수분 크림 80ml 보습", "attrs": 2, "eo": {"productType": "크림", "brand": "라운드랩", "keyIngredients": ["자작나무"], "concentration": null, "volume": "80ml", "functionalClaims": ["보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_043", "x": 67.65, "y": 77.06, "type": "cream", "brand": "Roundlab", "name": "라운드랩 소나무 진정 크림 80ml 저자극", "attrs": 3, "eo": {"productType": "크림", "brand": "라운드랩", "keyIngredients": ["소나무"], "concentration": null, "volume": "80ml", "functionalClaims": ["진정"], "valueClaims": ["저자극"], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_044", "x": 28.68, "y": 59.07, "type": "cream", "brand": "Skinfood", "name": "스킨푸드 로열허니 프로폴리스 인리치드 크림 63ml 보습", "attrs": 2, "eo": {"productType": "크림", "brand": "스킨푸드", "keyIngredients": ["프로폴리스"], "concentration": null, "volume": "63ml", "functionalClaims": ["보습"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_045", "x": 17.5, "y": 83.9, "type": "cream", "brand": "Skinfood", "name": "스킨푸드 캐롯 카로틴 진정 크림 50ml 진정", "attrs": 2, "eo": {"productType": "크림", "brand": "스킨푸드", "keyIngredients": ["카로틴"], "concentration": null, "volume": "50ml", "functionalClaims": ["진정"], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_046", "x": 48.94, "y": 54.53, "type": "lip", "brand": "Innisfree", "name": "이니스프리 비비드 코튼 잉크 틴트 4g #09 밀키코랄 글로시", "attrs": 2, "eo": {"productType": "립틴트", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "4g", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {"컬러": "#09 밀키코랄", "마감": "글로시"}}}, {"id": "gold_047", "x": 95.0, "y": 58.54, "type": "lip", "brand": "Innisfree", "name": "이니스프리 마이 립 밤 3.5g", "attrs": 0, "eo": {"productType": "립밤", "brand": "이니스프리", "keyIngredients": [], "concentration": null, "volume": "3.5g", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_048", "x": 45.96, "y": 35.2, "type": "lip", "brand": "Torriden", "name": "토리든 솔리드인 세라마이드 립 에센스 11ml", "attrs": 1, "eo": {"productType": "립에센스", "brand": "토리든", "keyIngredients": ["세라마이드"], "concentration": null, "volume": "11ml", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_049", "x": 52.82, "y": 77.24, "type": "lip", "brand": "Roundlab", "name": "라운드랩 독도 립밤 12g", "attrs": 0, "eo": {"productType": "립밤", "brand": "라운드랩", "keyIngredients": [], "concentration": null, "volume": "12g", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {}}}, {"id": "gold_050", "x": 47.91, "y": 57.85, "type": "lip", "brand": "Skinfood", "name": "스킨푸드 프레쉬 과일 립앤치크 틴트 8g #04 코랄핑크 벨벳", "attrs": 2, "eo": {"productType": "립틴트", "brand": "스킨푸드", "keyIngredients": [], "concentration": null, "volume": "8g", "functionalClaims": [], "valueClaims": [], "skinType": null, "spf": null, "pa": null, "additionalAttrs": {"컬러": "#04 코랄핑크", "마감": "벨벳"}}}];
+const hulls = {"sunscreen": [[74.14, 88.09], [60.73, 26.92], [65.11, 17.54], [84.18, 32.6], [77.09, 84.94], [74.14, 88.09]], "toner": [[47.22, 5.0], [56.97, 92.89], [14.21, 74.03], [5.0, 46.92], [30.75, 16.21], [47.22, 5.0]], "serum": [[8.94, 34.37], [49.24, 7.81], [62.93, 95.0], [14.81, 81.81], [8.94, 34.37]], "cream": [[90.17, 47.56], [66.24, 86.41], [17.5, 83.9], [13.87, 27.16], [52.58, 21.97], [90.17, 47.56]], "lip": [[45.96, 35.2], [95.0, 58.54], [52.82, 77.24], [47.91, 57.85], [45.96, 35.2]]};
+const demos = [{"query": "토리든 다이브인 워터리 선크림 SPF50+ PA++++ 60ml...", "qx": 64.8, "qy": 24.78, "target_idx": 6, "sim": 0.986, "type": "sunscreen"}, {"query": "라운드랩 독도 토너 300ml 히알루론산...", "qx": 43.29, "qy": 83.92, "target_idx": 21, "sim": 0.975, "type": "toner"}, {"query": "스킨푸드 캐롯 카로틴 진정 세럼 50ml 센텔라...", "qx": 15.53, "qy": 80.02, "target_idx": 36, "sim": 0.97, "type": "serum"}];
+const typeMeta = {"sunscreen": {"ko": "선크림", "icon": "☀️", "color": "#FF6B6B", "accent": "#FF8E8E"}, "toner": {"ko": "토너", "icon": "💧", "color": "#4ECDC4", "accent": "#7EDDD6"}, "serum": {"ko": "세럼", "icon": "✨", "color": "#45B7D1", "accent": "#6FC9DD"}, "cream": {"ko": "크림", "icon": "🧴", "color": "#A78BFA", "accent": "#BFA8FF"}, "lip": {"ko": "립", "icon": "💄", "color": "#F59E0B", "accent": "#FBBF4E"}};
+const typeSim = {"sunscreen": 0.904, "toner": 0.898, "serum": 0.896, "cream": 0.881, "lip": 0.857};
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const tooltip = document.getElementById("tooltip");
+const PAD = 50;
+let dpr, W, H, hovered = -1;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function tx(v) { return PAD + (W - PAD*2) * v / 100; }
+function ty(v) { return PAD + (H - PAD*2) * (1 - v / 100); }
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid dots
+  ctx.fillStyle = "#1a2236";
+  for (let x = 0; x <= 100; x += 5)
+    for (let y = 0; y <= 100; y += 5)
+      ctx.fillRect(tx(x)-0.5, ty(y)-0.5, 1, 1);
+
+  // Convex hulls with gradient fill
+  for (const [t, verts] of Object.entries(hulls)) {
+    const color = typeMeta[t].color;
+    ctx.beginPath();
+    ctx.moveTo(tx(verts[0][0]), ty(verts[0][1]));
+    for (let i = 1; i < verts.length; i++) ctx.lineTo(tx(verts[i][0]), ty(verts[i][1]));
+    ctx.closePath();
+    ctx.fillStyle = color + "08";
+    ctx.fill();
+    ctx.strokeStyle = color + "25";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Cluster label at centroid
+    const cx = verts.slice(0,-1).reduce((s,v)=>s+v[0],0) / (verts.length-1);
+    const cy = verts.slice(0,-1).reduce((s,v)=>s+v[1],0) / (verts.length-1);
+    ctx.font = "500 11px 'Inter'";
+    ctx.fillStyle = color + "60";
+    ctx.textAlign = "center";
+    ctx.fillText(typeMeta[t].ko, tx(cx), ty(cy));
+  }
+
+  // Search demo paths
+  demos.forEach(d => {
+    const p = points[d.target_idx];
+    const color = typeMeta[d.type].color;
+    ctx.beginPath();
+    ctx.moveTo(tx(d.qx), ty(d.qy));
+    ctx.lineTo(tx(p.x), ty(p.y));
+    ctx.strokeStyle = color + "50";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Query point (diamond)
+    ctx.save();
+    ctx.translate(tx(d.qx), ty(d.qy));
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = color + "90";
+    ctx.fillRect(-4, -4, 8, 8);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-4, -4, 8, 8);
+    ctx.restore();
+  });
+
+  // Points with glow
+  points.forEach((p, i) => {
+    const color = typeMeta[p.type]?.color || "#888";
+    const cx = tx(p.x), cy = ty(p.y);
+    const isHover = i === hovered;
+    const r = isHover ? 10 : 5 + Math.min(p.attrs, 6) * 0.5;
+
+    // Outer glow
+    if (isHover) {
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 24);
+      grad.addColorStop(0, color + "40");
+      grad.addColorStop(1, color + "00");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 24, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Main dot
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = isHover ? color : color + "CC";
+    ctx.fill();
+
+    // Inner highlight
+    ctx.beginPath();
+    ctx.arc(cx - r*0.25, cy - r*0.25, r*0.35, 0, Math.PI*2);
+    ctx.fillStyle = "#ffffff20";
+    ctx.fill();
+  });
+
+  // Sim labels on demo paths
+  ctx.font = "500 10px 'JetBrains Mono'";
+  demos.forEach(d => {
+    const p = points[d.target_idx];
+    const mx = (tx(d.qx) + tx(p.x)) / 2;
+    const my = (ty(d.qy) + ty(p.y)) / 2;
+    ctx.fillStyle = "#34d399";
+    ctx.textAlign = "center";
+    ctx.fillText("sim=" + d.sim, mx, my - 6);
+  });
+}
+
+// Legend
+const legend = document.getElementById("legend");
+const typeCounts = {};
+points.forEach(p => typeCounts[p.type] = (typeCounts[p.type]||0) + 1);
+for (const [t, meta] of Object.entries(typeMeta)) {
+  const sim = typeSim[t] || "-";
+  legend.innerHTML += `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${meta.color}"></div>
+      <div class="legend-label">${meta.icon} ${meta.ko}</div>
+      <div class="legend-count">${typeCounts[t]||0}</div>
+      <div class="legend-sim">${sim}</div>
+    </div>`;
+}
+
+// Demos
+const demosEl = document.getElementById("demos");
+demos.forEach(d => {
+  const p = points[d.target_idx];
+  demosEl.innerHTML += `
+    <div class="demo-item">
+      <div class="demo-query">→ ${d.query}</div>
+      <div class="demo-result">${p.name.substring(0,40)}...</div>
+      <div class="demo-sim">cosine: ${d.sim}</div>
+    </div>`;
+});
+
+// Mouse interaction
+canvas.addEventListener("mousemove", e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  let closest = -1, minD = 20;
+  points.forEach((p, i) => {
+    const dx = tx(p.x) - mx, dy = ty(p.y) - my;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    if (d < minD) { minD = d; closest = i; }
+  });
+
+  if (closest !== hovered) { hovered = closest; draw(); }
+
+  if (closest >= 0) {
+    const p = points[closest];
+    const meta = typeMeta[p.type] || {};
+    const eo = p.eo;
+    let tags = [...(eo.keyIngredients||[]), ...(eo.functionalClaims||[]), ...(eo.valueClaims||[])];
+    if (eo.spf) tags.push("SPF"+eo.spf);
+    const tagsHtml = tags.map(t => `<span class="tt-tag">${t}</span>`).join("");
+
+    tooltip.innerHTML = `
+      <div class="tt-id">${p.id}</div>
+      <div class="tt-name">${p.name}</div>
+      <div class="tt-meta">${meta.icon||""} ${meta.ko||p.type} · ${p.brand} · attrs: ${p.attrs}</div>
+      <div class="tt-attrs">${tagsHtml}</div>`;
+    tooltip.style.display = "block";
+    tooltip.style.left = (e.clientX + 16) + "px";
+    tooltip.style.top = (e.clientY - 8) + "px";
+  } else {
+    tooltip.style.display = "none";
+  }
+});
+
+canvas.addEventListener("click", e => {
+  if (hovered < 0) return;
+  const p = points[hovered];
+  const eo = p.eo;
+  const panel = document.getElementById("detail-panel");
+  panel.classList.add("active");
+
+  let rows = `<div class="detail-name">${p.name}</div>`;
+  rows += `<div class="detail-row"><span class="detail-key">ID</span><span class="detail-val">${p.id}</span></div>`;
+  rows += `<div class="detail-row"><span class="detail-key">Type</span><span class="detail-val">${eo.productType}</span></div>`;
+  rows += `<div class="detail-row"><span class="detail-key">Brand</span><span class="detail-val">${eo.brand}</span></div>`;
+  if (eo.keyIngredients?.length) rows += `<div class="detail-row"><span class="detail-key">Ingredients</span><span class="detail-val">${eo.keyIngredients.join(", ")}</span></div>`;
+  if (eo.functionalClaims?.length) rows += `<div class="detail-row"><span class="detail-key">Functions</span><span class="detail-val">${eo.functionalClaims.join(", ")}</span></div>`;
+  if (eo.valueClaims?.length) rows += `<div class="detail-row"><span class="detail-key">Values</span><span class="detail-val">${eo.valueClaims.join(", ")}</span></div>`;
+  if (eo.spf) rows += `<div class="detail-row"><span class="detail-key">SPF/PA</span><span class="detail-val">${eo.spf} / ${eo.pa}</span></div>`;
+  if (Object.keys(eo.additionalAttrs||{}).length) rows += `<div class="detail-row"><span class="detail-key">Additional</span><span class="detail-val">${JSON.stringify(eo.additionalAttrs)}</span></div>`;
+  document.getElementById("detail-content").innerHTML = rows;
+});
+
+window.addEventListener("resize", resize);
+resize();
+</script>
+</body>
+</html>
