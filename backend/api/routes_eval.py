@@ -107,12 +107,85 @@ def list_proposals(engine: Engine = Depends(get_sync_engine)):
 
 
 @router.post("/knowledge/proposals/{proposal_id}/approve")
-def approve_proposal(proposal_id: int):
-    """제안 승인. Step 5에서 구현."""
-    raise HTTPException(status_code=501, detail="PatternScout Phase 2에서 구현 예정")
+def approve_proposal(
+    proposal_id: int,
+    engine: Engine = Depends(get_sync_engine),
+):
+    """제안 승인 → PROPOSED_LINK를 DISCOVERED_LINK로 전환.
+
+    1. PG: status → 'approved'
+    2. Neo4j: PROPOSED_LINK 삭제 → DISCOVERED_LINK 생성
+    """
+    import json
+    from sqlalchemy import text as sa_text
+
+    with engine.connect() as conn:
+        # 제안 조회
+        row = conn.execute(
+            sa_text("SELECT * FROM relationship_proposals WHERE id = :id"),
+            {"id": proposal_id},
+        ).mappings().first()
+        if not row:
+            raise HTTPException(status_code=404, detail="Proposal not found")
+        if row["status"] != "proposed":
+            raise HTTPException(status_code=400, detail=f"Cannot approve: status={row['status']}")
+
+        # PG status 변경
+        conn.execute(
+            sa_text("UPDATE relationship_proposals SET status='approved', approved_at=NOW() WHERE id = :id"),
+            {"id": proposal_id},
+        )
+        conn.commit()
+
+    # Neo4j: PROPOSED_LINK → DISCOVERED_LINK
+    evidence = row["evidence"] if isinstance(row["evidence"], str) else json.dumps(row["evidence"], ensure_ascii=False)
+    with neo4j_driver.session() as session:
+        session.run(
+            """
+            MATCH (s)-[r:PROPOSED_LINK {proposalId: $pid}]->(t)
+            DELETE r
+            CREATE (s)-[new:DISCOVERED_LINK {
+                type: $rtype,
+                evidence: $evidence,
+                source: 'pattern_scout'
+            }]->(t)
+            """,
+            pid=proposal_id,
+            rtype=row["relationship_type"],
+            evidence=evidence,
+        )
+
+    return {"status": "approved", "proposal_id": proposal_id}
 
 
 @router.post("/knowledge/proposals/{proposal_id}/reject")
-def reject_proposal(proposal_id: int):
-    """제안 거부. Step 5에서 구현."""
-    raise HTTPException(status_code=501, detail="PatternScout Phase 2에서 구현 예정")
+def reject_proposal(
+    proposal_id: int,
+    reason: str = "",
+    engine: Engine = Depends(get_sync_engine),
+):
+    """제안 거부 → PROPOSED_LINK 삭제."""
+    from sqlalchemy import text as sa_text
+
+    with engine.connect() as conn:
+        row = conn.execute(
+            sa_text("SELECT status FROM relationship_proposals WHERE id = :id"),
+            {"id": proposal_id},
+        ).mappings().first()
+        if not row:
+            raise HTTPException(status_code=404, detail="Proposal not found")
+
+        conn.execute(
+            sa_text("UPDATE relationship_proposals SET status='rejected', rejected_at=NOW(), rejection_reason=:reason WHERE id = :id"),
+            {"id": proposal_id, "reason": reason},
+        )
+        conn.commit()
+
+    # Neo4j: PROPOSED_LINK 삭제
+    with neo4j_driver.session() as session:
+        session.run(
+            "MATCH ()-[r:PROPOSED_LINK {proposalId: $pid}]->() DELETE r",
+            pid=proposal_id,
+        )
+
+    return {"status": "rejected", "proposal_id": proposal_id}

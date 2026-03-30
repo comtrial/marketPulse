@@ -39,21 +39,35 @@ async def lifespan(app: FastAPI):
     from api.routes_intelligence import init_order_server
     from api.routes_kg import init_kg_server
     from api.routes_orchestrator import init_orchestrator
+    from mcp_servers.action_server import ActionServer
     from mcp_servers.kg_server import KnowledgeGraphServer
+    from mcp_servers.logic_server import LogicServer
     from mcp_servers.order_server import OrderDataServer
     from orchestrator.llm_orchestrator import LLMOrchestrator
+    from orchestrator.pattern_scout import PatternScout
     from orchestrator.trace_logger import TraceLogger
 
     sync_engine = create_engine(settings.database_url_sync)
 
     kg_server = KnowledgeGraphServer(driver=neo4j_driver)
     order_server = OrderDataServer(engine=sync_engine)
+    logic_server = LogicServer(engine=sync_engine, neo4j_driver=neo4j_driver)
+    action_server = ActionServer(engine=sync_engine, neo4j_driver=neo4j_driver)
     trace_logger = TraceLogger(engine=sync_engine, tool_to_server={})
+
+    pattern_scout = PatternScout(
+        kg_server=kg_server,
+        order_server=order_server,
+        logic_server=logic_server,
+        action_server=action_server,
+        trace_logger=trace_logger,
+    )
 
     orchestrator = LLMOrchestrator(
         kg_server=kg_server,
         order_server=order_server,
         trace_logger=trace_logger,
+        pattern_scout=pattern_scout,
     )
 
     init_kg_server(kg_server)

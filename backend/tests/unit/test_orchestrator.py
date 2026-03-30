@@ -108,6 +108,7 @@ def make_mock_orchestrator(responses: list[MockResponse]) -> LLMOrchestrator:
         "get_country_attribute_heatmap": "order",
     }
     orch.tools = []  # mock이므로 빈 리스트
+    orch.pattern_scout = None  # PatternScout 비활성 (단위 테스트)
 
     return orch, kg_server, order_server, trace_logger
 

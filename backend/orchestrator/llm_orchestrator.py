@@ -51,6 +51,8 @@ class OrchestratorResult:
     total_input_tokens: int = 0
     total_output_tokens: int = 0
     total_cost_usd: float = 0.0
+    scout_trace_id: str | None = None
+    scout_proposals: int = 0
 
 
 class LLMOrchestrator:
@@ -69,12 +71,14 @@ class LLMOrchestrator:
         model: str | None = None,
         prompt_version: str = "v1",
         max_steps: int = 5,
+        pattern_scout=None,
     ):
         self.client = client or anthropic.Anthropic(api_key=settings.anthropic_api_key)
         self.model = model or settings.smart_model
         self.max_steps = max_steps
         self.trace_logger = trace_logger
         self.prompt_template = self._load_prompt(prompt_version)
+        self.pattern_scout = pattern_scout  # None이면 PatternScout 비활성
 
         # @tool 데코레이터에서 스키마 + 레지스트리 자동 수집
         # 수동으로 도구 정의를 쓰지 않음 — Pydantic 모델이 단일 진실 소스
@@ -279,6 +283,24 @@ class LLMOrchestrator:
         except Exception as e:
             logger.error("save_result_failed", trace_id=trace_id, error=str(e))
 
+        # PatternScout 자동 실행 (ADR-009: MVP에서 매 턴 실행)
+        if self.pattern_scout is not None:
+            try:
+                scout_result = self.pattern_scout.run_discovery(
+                    analyst_trace_id=trace_id,
+                    analyst_query=user_query,
+                )
+                result.scout_trace_id = scout_result.trace_id
+                result.scout_proposals = scout_result.proposals_made
+                logger.info(
+                    "pattern_scout_triggered",
+                    analyst_trace=trace_id,
+                    scout_trace=scout_result.trace_id,
+                    proposals=scout_result.proposals_made,
+                )
+            except Exception as e:
+                logger.error("pattern_scout_failed", trace_id=trace_id, error=str(e))
+
         return result
 
     @staticmethod
@@ -287,15 +309,32 @@ class LLMOrchestrator:
         if isinstance(output, dict) and "error" in output:
             return f"ERROR: {output['error'][:100]}"
 
-        if tool_name == "query_causal_chain" and isinstance(output, list):
-            if not output:
-                return "인과 체인 없음"
-            top = output[0]
-            return (
-                f"{top.get('skinConcern', '?')}({top.get('triggerStrength', '?')})"
-                f"→{top.get('function', '?')}({top.get('demandStrength', '?')}) "
-                f"외 {len(output)-1}건"
-            )
+        if tool_name == "query_causal_chain":
+            # dict 반환 (Phase 2): {"seed_chains": [...], "discovered_links": [...]}
+            if isinstance(output, dict) and "seed_chains" in output:
+                seeds = output.get("seed_chains", [])
+                discovered = output.get("discovered_links", [])
+                parts = []
+                if seeds:
+                    top = seeds[0]
+                    parts.append(
+                        f"{top.get('skinConcern', '?')}({top.get('triggerStrength', '?')})"
+                        f"→{top.get('function', '?')}({top.get('demandStrength', '?')}) "
+                        f"외 {len(seeds)-1}건"
+                    )
+                if discovered:
+                    parts.append(f"+발견된 관계 {len(discovered)}건")
+                return " | ".join(parts) if parts else "인과 체인 없음"
+            # list 반환 (Phase 1 하위 호환)
+            if isinstance(output, list):
+                if not output:
+                    return "인과 체인 없음"
+                top = output[0]
+                return (
+                    f"{top.get('skinConcern', '?')}({top.get('triggerStrength', '?')})"
+                    f"→{top.get('function', '?')}({top.get('demandStrength', '?')}) "
+                    f"외 {len(output)-1}건"
+                )
 
         if tool_name == "get_attribute_trend" and isinstance(output, dict):
             trend = output.get("trend", {})

@@ -50,6 +50,8 @@ class AskResponse(BaseModel):
     total_input_tokens: int
     total_output_tokens: int
     total_cost_usd: float
+    scout_trace_id: str | None = None
+    scout_proposals: int = 0
 
 
 @router.post("/ask", response_model=AskResponse)
@@ -72,6 +74,8 @@ async def ask(
         total_input_tokens=result.total_input_tokens,
         total_output_tokens=result.total_output_tokens,
         total_cost_usd=result.total_cost_usd,
+        scout_trace_id=result.scout_trace_id,
+        scout_proposals=result.scout_proposals,
     )
 
 
